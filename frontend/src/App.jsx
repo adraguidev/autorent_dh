@@ -1,13 +1,12 @@
 import './App.css';
 import Header from './components/Header';
+import MainContent from './components/MainContent';
 
 function App() {
   return (
     <>
       <Header />
-      <main style={{ padding: '2rem' }}>
-        {/* Aquí irá el contenido de cada página */}
-      </main>
+      <MainContent />
     </>
   );
 }

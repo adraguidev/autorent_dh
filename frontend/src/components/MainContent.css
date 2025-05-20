@@ -1,0 +1,46 @@
+.main-content {
+  background-color: #f0f2f5; /* Color de fondo principal */
+  min-height: calc(100vh - 64px); /* Ocupa el alto restante después del header (ajustar 64px si cambia altura del header) */
+  padding: 2rem; /* Espaciado interno */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Espacio entre secciones */
+}
+
+.search-section,
+.categories-section,
+.recommendations-section {
+  background-color: #ffffff; /* Fondo blanco para las secciones */
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  /* Estilos básicos para visualización, se pueden expandir */
+  min-height: 150px; /* Altura mínima para que sean visibles */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-section h2,
+.categories-section h2,
+.recommendations-section h2 {
+  color: #0d2235; /* Color de título acorde al header */
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .search-section,
+  .categories-section,
+  .recommendations-section {
+    padding: 1rem;
+    min-height: 120px;
+  }
+}
