@@ -1,0 +1,31 @@
+.product-list-container h2 {
+  color: #0d2235;
+  text-align: center;
+  margin-bottom: 1.5rem; /* Espacio debajo del título 'Recomendaciones Destacadas' */
+  font-size: 1.8rem;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  gap: 1.5rem; /* Espacio entre las tarjetas */
+  padding: 1rem; /* Espacio alrededor de la lista */
+}
+
+/* Responsive: 1 columna en pantallas más pequeñas */
+@media (max-width: 768px) {
+  .product-list {
+    grid-template-columns: 1fr; /* 1 columna */
+    gap: 1rem;
+  }
+  .product-list-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Para pantallas muy pequeñas, ajustar el padding o gap si es necesario */
+@media (max-width: 480px) {
+  .product-list {
+    padding: 0.5rem;
+  }
+}

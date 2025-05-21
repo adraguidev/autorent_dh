@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Importar Link
+import { Link } from 'react-router-dom';
+import ProductList from './ProductList'; // Importar ProductList
 import './MainContent.css';
 
 const MainContent = () => {
@@ -14,8 +15,7 @@ const MainContent = () => {
         {/* Contenido de categorías aquí */}
       </section>
       <section className="recommendations-section">
-        <h2>Recomendaciones</h2>
-        {/* Contenido de recomendaciones aquí */}
+        <ProductList /> {/* Renderizar ProductList aquí */}
       </section>
 
       <section className="admin-panel-section">
