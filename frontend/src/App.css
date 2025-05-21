@@ -1,6 +1,8 @@
 #root {
   width: 100%; /* Ocupar todo el ancho */
-  min-height: 100vh; /* Asegurar que al menos ocupe toda la altura de la pantalla */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que #root ocupe al menos toda la altura de la ventana */
   margin: 0; /* Eliminar margen automático */
   /* Considera añadir un padding global aquí si quieres que TODO el contenido 
      tenga un respiro de los bordes, por ejemplo: padding: 0 2rem; 

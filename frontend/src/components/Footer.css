@@ -1,0 +1,54 @@
+/* src/components/Footer.css */
+.app-footer {
+  width: 100%;
+  background-color: #0d2235; /* Mismo color que el header para consistencia */
+  color: #f8f9fa; /* Texto claro sobre fondo oscuro */
+  padding: 1.5rem 0; 
+  border-top: 3px solid #f5a623; /* Línea superior de acento */
+  box-sizing: border-box;
+  margin-top: auto; /* Empuja el footer al final si el contenido es corto */
+}
+
+.footer-content { /* Contenedor para el bloque de información */
+  max-width: 1280px; 
+  margin: 0 auto; 
+  padding: 0 2rem; 
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center; /* Centra el bloque de info en móvil */
+}
+
+.footer-info-block { /* El bloque que contiene logo y texto */
+  display: flex;
+  flex-direction: column; /* Logo y texto apilados en móvil */
+  align-items: center; /* Centrar elementos dentro del bloque en móvil */
+  gap: 0.5rem; /* Espacio entre logo y texto cuando están apilados */
+  text-align: center; /* Texto centrado en móvil */
+}
+
+.footer-logo-placeholder {
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 1px dashed #f5a623; /* Placeholder visual */
+  padding: 0.3rem 0.6rem;
+  display: inline-block;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: #adb5bd; /* Un gris un poco más suave */
+}
+
+/* Responsividad del Footer */
+@media (min-width: 768px) {
+  .footer-content {
+    justify-content: flex-start; /* Alinea el .footer-info-block a la izquierda */
+  }
+
+  .footer-info-block {
+    flex-direction: row; /* Logo y texto en línea en escritorio */
+    align-items: center; /* Alinear verticalmente logo y texto */
+    gap: 1rem; /* Espacio entre logo y texto cuando están en línea */
+    text-align: left; /* Texto alineado a la izquierda dentro del bloque */
+  }
+}
