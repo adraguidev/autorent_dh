@@ -82,3 +82,34 @@
     min-height: 120px;
   }
 }
+
+/* Estilos para la lista de productos */
+.product-list {
+  display: grid;
+  grid-template-columns: 1fr; /* 1 columna por defecto (móviles) */
+  gap: 1.5rem; /* Espacio entre product cards */
+  width: 100%;
+  padding: 1rem 0; /* Padding vertical opcional */
+}
+
+/* 2 columnas para tablets y escritorio */
+@media (min-width: 768px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Opcional: Ajustes para pantallas más grandes (ej. 3 o 4 columnas) */
+/* @media (min-width: 1024px) {
+  .product-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+} */
+
+/* @media (min-width: 1280px) {
+  .product-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+} */
+

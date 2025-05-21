@@ -1,0 +1,88 @@
+/* src/components/AdminPage.css */
+.admin-page-container {
+  padding: 2rem;
+  max-width: 1200px; /* Un ancho máximo para que no se extienda demasiado en pantallas grandes */
+  margin: 2rem auto; /* Centrar y dar espacio arriba/abajo */
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 4rem - 110px - 88px); /* 100vh - padding - header - footer approx. */
+}
+
+.mobile-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 60vh; /* Ocupar buena parte de la pantalla */
+  background-color: #fff; /* Fondo blanco para el mensaje */
+}
+
+.mobile-unavailable-message {
+  font-size: 1.2rem;
+  color: #dc3545; /* Un color de advertencia/error */
+  font-weight: bold;
+  padding: 20px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  background-color: #f8d7da;
+}
+
+.admin-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.admin-page-header h1 {
+  font-size: 2.2rem;
+  color: #0d2235; /* Color primario de la app */
+}
+
+.admin-menu {
+  margin-bottom: 2rem;
+}
+
+.admin-menu-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column; /* Menú vertical */
+  gap: 0.75rem; /* Espacio entre ítems del menú */
+  align-items: flex-start; /* Alinear items a la izquierda */
+}
+
+/* .admin-menu-item se eliminó ya que no tenía estilos específicos */
+
+.admin-menu-link {
+  display: block;
+  padding: 0.8rem 1.2rem;
+  background-color: #e9ecef;
+  color: #0d2235;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border: 1px solid #ced4da;
+}
+
+.admin-menu-link:hover,
+.admin-menu-link:focus {
+  background-color: #0d2235;
+  color: #fff;
+  border-color: #0d2235;
+}
+
+.admin-content-area {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+.admin-content-area p {
+  font-size: 1rem;
+  color: #495057;
+}
