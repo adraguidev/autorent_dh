@@ -1,0 +1,126 @@
+.product-detail-page {
+  width: 100%; /* Ocupar todo el ancho */
+  margin: 0;
+  padding-bottom: 2rem; /* Solo padding inferior, el horizontal lo maneja el body */
+  background-color: #fff; 
+  box-sizing: border-box; /* Para que el padding no aumente el ancho total */
+}
+
+.product-detail-header {
+  background-color: #0d2235; /* Mismo color que el header principal */
+  color: #fff;
+  width: 100%; /* 100% del ancho */
+  box-sizing: border-box;
+  /* Padding se mueve al contenido interno */
+}
+
+.product-detail-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem; /* Padding que antes estaba en .product-detail-header */
+  max-width: 1280px; /* Opcional: si quieres limitar el ancho del contenido del header como en el header principal */
+  margin: 0 auto; /* Centrar si max-width está activo */
+  width: 100%; /* Asegurar que use el espacio disponible dentro del posible max-width */
+  box-sizing: border-box;
+}
+
+.product-detail-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0; /* Alineado a la izquierda por defecto */
+  flex-grow: 1; /* Para que ocupe el espacio disponible y empuje la flecha */
+}
+
+.back-arrow {
+  font-size: 1rem;
+  color: #f5a623; /* Color de acento */
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.back-arrow:hover {
+  background-color: rgba(245, 166, 35, 0.1);
+}
+
+.product-detail-body {
+  padding: 2rem; /* Este padding es para el contenido DENTRO del body */
+  display: grid;
+  grid-template-columns: 1fr; /* Por defecto una columna para móvil */
+  gap: 2rem;
+  max-width: 1280px; /* Opcional: para alinear con el contenido del header si tiene max-width */
+  margin: 0 auto; /* Centrar si max-width está activo */
+}
+
+.product-detail-images {
+  text-align: center; /* Centra la imagen si es más pequeña que el contenedor */
+}
+
+.product-detail-main-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem; /* Espacio si hay galería debajo */
+}
+
+.product-detail-thumbnail-gallery {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap; /* Si hay muchas thumbnails */
+}
+
+.product-detail-thumbnail {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.product-detail-thumbnail:hover {
+  border-color: #f5a623;
+}
+
+.product-detail-info h2 {
+  color: #0d2235;
+  font-size: 1.5rem;
+  margin-top: 0; /* El espaciado lo da el grid gap */
+  margin-bottom: 1rem;
+}
+
+.product-detail-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.product-detail-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #0d2235;
+  margin-bottom: 1rem;
+}
+
+/* Responsive para el layout del body */
+@media (min-width: 768px) {
+  .product-detail-body {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 2 columnas si hay espacio, si no 1 */
+    align-items: flex-start; /* Alinea los items al inicio si tienen alturas diferentes */
+  }
+  /* La regla .product-detail-images que estaba aquí (y que estaba completamente comentada) ha sido eliminada para resolver un lint error. */
+}
+
+@media (min-width: 992px) {
+  .product-detail-body {
+    grid-template-columns: 1fr 1fr; /* Forza 2 columnas en pantallas más grandes */
+  }
+  /* Anteriormente había un comentario o regla vacía aquí que fue eliminada para resolver un lint error. */
+}

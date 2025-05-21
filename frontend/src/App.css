@@ -1,6 +1,12 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%; /* Ocupar todo el ancho */
+  min-height: 100vh; /* Asegurar que al menos ocupe toda la altura de la pantalla */
+  margin: 0; /* Eliminar margen automático */
+  /* Considera añadir un padding global aquí si quieres que TODO el contenido 
+     tenga un respiro de los bordes, por ejemplo: padding: 0 2rem; 
+     O manejar el padding en componentes más específicos como MainContent.
+     Por ahora, lo dejaré sin padding aquí para mayor control en los componentes. */
+  box-sizing: border-box;
 }
 
 .logo {

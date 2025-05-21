@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Importar Link
 import './ProductCard.css';
 import placeholderImage from '../assets/placeholder_image.webp'; // Importar la imagen local
 
@@ -8,7 +9,8 @@ const ProductCard = ({ product }) => {
   }
 
   return (
-    <div className="product-card">
+    <Link to={`/product/${product.id}`} className="product-card-link">
+      <div className="product-card">
       <img src={placeholderImage} alt={product.name} className="product-card-image" /> {/* Usar la imagen importada */}
       <div className="product-card-content">
         <h3 className="product-card-name">{product.name}</h3>
@@ -16,7 +18,8 @@ const ProductCard = ({ product }) => {
         <p className="product-card-price">{product.price}</p>
         {/* Podríamos añadir un botón de 'Ver más' o 'Alquilar' aquí */}
       </div>
-    </div>
+          </div>
+    </Link>
   );
 };
 

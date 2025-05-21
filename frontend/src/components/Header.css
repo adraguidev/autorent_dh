@@ -10,7 +10,7 @@
   justify-content: space-between;
   background: #0d2235;
   color: #fff;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 2rem; /* Padding vertical 0.5rem, horizontal 2rem */
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   min-height: 64px;
   gap: 0.8rem;

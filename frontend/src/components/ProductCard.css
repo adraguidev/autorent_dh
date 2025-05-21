@@ -56,3 +56,9 @@
   color: #f5a623;
   margin-top: auto; /* Empuja el precio al final de la card */
 }
+
+.product-card-link {
+  text-decoration: none; /* Eliminar subrayado del enlace */
+  color: inherit; /* Heredar color de texto para que no se vea azul por defecto */
+  display: block; /* Hacer que el enlace ocupe todo el espacio de la tarjeta */
+}
