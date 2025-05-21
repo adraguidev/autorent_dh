@@ -30,6 +30,44 @@
   margin-bottom: 1rem;
 }
 
+.admin-panel-section {
+  background-color: #e9ecef; /* Un fondo ligeramente diferente para el panel admin */
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-panel-section h2 {
+  color: #0d2235;
+  margin-bottom: 1rem;
+}
+
+.admin-add-product-btn {
+  background-color: #f5a623; /* Color primario del header */
+  color: #0d2235;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-add-product-btn:hover {
+  background-color: #e0930f;
+}
+
+.admin-add-product-btn-link {
+  text-decoration: none; /* Quitar subrayado del link */
+  display: inline-block; /* Para que el link no ocupe todo el ancho si el botón es más pequeño */
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
