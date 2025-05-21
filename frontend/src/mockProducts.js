@@ -22,6 +22,7 @@ export const mockProducts = [
     name: 'Vehículo Compacto Económico',
     description: 'Ideal para la ciudad, bajo consumo y fácil de estacionar.',
     price: '$25/día',
+    categoryId: 1,
     images: [
       { id: '1_img1', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo Compacto Económico - Vista 1' },
       { id: '1_img2', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo Compacto Económico - Vista 2' },
@@ -35,6 +36,7 @@ export const mockProducts = [
     name: 'Sedán Familiar Confortable',
     description: 'Espacioso y seguro, perfecto para viajes largos en familia.',
     price: '$40/día',
+    categoryId: 2,
     images: [
       { id: '2_img1', url: '/src/assets/placeholder_image.webp', alt: 'Sedán Familiar Confortable - Vista 1' },
       { id: '2_img2', url: '/src/assets/placeholder_image.webp', alt: 'Sedán Familiar Confortable - Vista 2' },
@@ -48,6 +50,7 @@ export const mockProducts = [
     name: 'SUV Todoterreno Aventurero',
     description: 'Potencia y versatilidad para explorar cualquier camino.',
     price: '$60/día',
+    categoryId: 3,
     images: [
       { id: '3_img1', url: '/src/assets/placeholder_image.webp', alt: 'SUV Todoterreno Aventurero - Vista 1' },
       { id: '3_img2', url: '/src/assets/placeholder_image.webp', alt: 'SUV Todoterreno Aventurero - Vista 2' },
@@ -61,6 +64,7 @@ export const mockProducts = [
     name: 'Deportivo Descapotable Lujoso',
     description: 'Siente la velocidad y el estilo con este impresionante deportivo.',
     price: '$90/día',
+    categoryId: 4,
     images: [
       { id: '4_img1', url: '/src/assets/placeholder_image.webp', alt: 'Deportivo Descapotable Lujoso - Vista 1' },
       { id: '4_img2', url: '/src/assets/placeholder_image.webp', alt: 'Deportivo Descapotable Lujoso - Vista 2' },
@@ -74,6 +78,7 @@ export const mockProducts = [
     name: 'Furgoneta de Carga Espaciosa',
     description: 'Gran capacidad para mudanzas o transporte de mercancías.',
     price: '$50/día',
+    categoryId: 5,
     images: [
       { id: '5_img1', url: '/src/assets/placeholder_image.webp', alt: 'Furgoneta de Carga Espaciosa - Vista 1' },
       { id: '5_img2', url: '/src/assets/placeholder_image.webp', alt: 'Furgoneta de Carga Espaciosa - Vista 2' },
@@ -87,6 +92,7 @@ export const mockProducts = [
     name: 'Minivan 7 Plazas Viajera',
     description: 'Comodidad para grupos grandes, ideal para vacaciones.',
     price: '$70/día',
+    categoryId: 6,
     images: [
       { id: '6_img1', url: '/src/assets/placeholder_image.webp', alt: 'Minivan 7 Plazas Viajera - Vista 1' },
       { id: '6_img2', url: '/src/assets/placeholder_image.webp', alt: 'Minivan 7 Plazas Viajera - Vista 2' },
@@ -100,6 +106,7 @@ export const mockProducts = [
     name: 'Vehículo Eléctrico Ecológico',
     description: 'Conducción silenciosa y amigable con el medio ambiente.',
     price: '$55/día',
+    categoryId: 7,
     images: [
       { id: '7_img1', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo Eléctrico Ecológico - Vista 1' },
       { id: '7_img2', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo Eléctrico Ecológico - Vista 2' },
@@ -113,6 +120,7 @@ export const mockProducts = [
     name: 'Moto Scooter Urbana Ágil',
     description: 'La forma más rápida y divertida de moverte por la ciudad.',
     price: '$15/día',
+    categoryId: 8,
     images: [
       { id: '8_img1', url: '/src/assets/placeholder_image.webp', alt: 'Moto Scooter Urbana Ágil - Vista 1' },
       { id: '8_img2', url: '/src/assets/placeholder_image.webp', alt: 'Moto Scooter Urbana Ágil - Vista 2' },
@@ -126,6 +134,7 @@ export const mockProducts = [
     name: 'Coche Clásico Elegante',
     description: 'Un toque de distinción para eventos especiales o bodas.',
     price: '$120/día',
+    categoryId: 9,
     images: [
       { id: '9_img1', url: '/src/assets/placeholder_image.webp', alt: 'Coche Clásico Elegante - Vista 1' },
       { id: '9_img2', url: '/src/assets/placeholder_image.webp', alt: 'Coche Clásico Elegante - Vista 2' },
@@ -139,6 +148,7 @@ export const mockProducts = [
     name: 'Bicicleta de Montaña Robusta',
     description: 'Para los amantes de la naturaleza y las rutas de montaña.',
     price: '$10/día',
+    categoryId: 10,
     images: [
       { id: '10_img1', url: '/src/assets/placeholder_image.webp', alt: 'Bicicleta de Montaña Robusta - Vista 1' },
       { id: '10_img2', url: '/src/assets/placeholder_image.webp', alt: 'Bicicleta de Montaña Robusta - Vista 2' },
@@ -152,6 +162,7 @@ export const mockProducts = [
     name: 'Vehículo de Lujo Premium',
     description: 'Máximo confort, tecnología y prestaciones de alta gama.',
     price: '$150/día',
+    categoryId: 11,
     images: [
       { id: '11_img1', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo de Lujo Premium - Vista 1' },
       { id: '11_img2', url: '/src/assets/placeholder_image.webp', alt: 'Vehículo de Lujo Premium - Vista 2' },
@@ -165,6 +176,7 @@ export const mockProducts = [
     name: 'Autocaravana Equipada Completa',
     description: 'Tu casa sobre ruedas para una aventura sin límites.',
     price: '$100/día',
+    categoryId: 12,
     images: [
       { id: '12_img1', url: '/src/assets/placeholder_image.webp', alt: 'Autocaravana Equipada Completa - Vista 1' },
       { id: '12_img2', url: '/src/assets/placeholder_image.webp', alt: 'Autocaravana Equipada Completa - Vista 2' },
@@ -178,6 +190,7 @@ export const mockProducts = [
     name: 'Camioneta Pickup Fuerte',
     description: 'Ideal para carga pesada y terrenos difíciles.',
     price: '$75/día',
+    categoryId: 13,
     images: [
       { id: '13_img1', url: '/src/assets/placeholder_image.webp', alt: 'Camioneta Pickup Fuerte - Vista 1' },
       { id: '13_img2', url: '/src/assets/placeholder_image.webp', alt: 'Camioneta Pickup Fuerte - Vista 2' },
@@ -191,6 +204,7 @@ export const mockProducts = [
     name: 'Quad ATV Diversión Off-Road',
     description: 'Emoción y adrenalina en rutas de tierra y arena.',
     price: '$45/día',
+    categoryId: 14,
     images: [
       { id: '14_img1', url: '/src/assets/placeholder_image.webp', alt: 'Quad ATV Diversión Off-Road - Vista 1' },
       { id: '14_img2', url: '/src/assets/placeholder_image.webp', alt: 'Quad ATV Diversión Off-Road - Vista 2' },
@@ -204,6 +218,7 @@ export const mockProducts = [
     name: 'Coche Urbano Pequeño y Práctico',
     description: 'Perfecto para estudiantes o presupuestos ajustados.',
     price: '$20/día',
+    categoryId: 1,
     images: [
       { id: '15_img1', url: '/src/assets/placeholder_image.webp', alt: 'Coche Urbano Pequeño y Práctico - Vista 1' },
       { id: '15_img2', url: '/src/assets/placeholder_image.webp', alt: 'Coche Urbano Pequeño y Práctico - Vista 2' },

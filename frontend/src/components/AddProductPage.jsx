@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { mockCategories } from '../mockCategories'; // Importar categorías
 import './AddProductPage.css';
 
-const AddProductPage = () => {
+const AddProductPage = ({ handleAddProduct }) => {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productImages, setProductImages] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(''); // Estado para la categoría seleccionada
 
   const handleImageChange = (e) => {
     // Lógica para manejar múltiples imágenes (simplificada por ahora)
@@ -20,9 +22,28 @@ const AddProductPage = () => {
     console.log('Producto a agregar:', { 
       name: productName, 
       description: productDescription, 
+      categoryId: selectedCategoryId, // Incluir categoryId
       images: productImages 
     });
     // Aquí se conectaría con el backend más adelante
+
+    if (handleAddProduct) {
+      handleAddProduct({ 
+        name: productName, 
+        description: productDescription, 
+        categoryId: selectedCategoryId,
+        images: productImages // Aunque handleAddProduct en App.jsx no usa las File objects directamente aun
+      });
+
+      // Limpiar formulario
+      setProductName('');
+      setProductDescription('');
+      setProductImages([]);
+      setSelectedCategoryId('');
+      // Opcional: Redirigir o mostrar mensaje de éxito más prominente
+    } else {
+      console.error('handleAddProduct no fue proporcionado a AddProductPage');
+    }
   };
 
   return (
@@ -48,6 +69,23 @@ const AddProductPage = () => {
             onChange={(e) => setProductDescription(e.target.value)} 
             required 
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="productCategory">Categoría:</label>
+          <select 
+            id="productCategory" 
+            value={selectedCategoryId} 
+            onChange={(e) => setSelectedCategoryId(e.target.value)} 
+            required
+          >
+            <option value="" disabled>Seleccione una categoría</option>
+            {mockCategories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

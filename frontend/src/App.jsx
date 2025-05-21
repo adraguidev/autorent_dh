@@ -9,11 +9,43 @@ import AddProductPage from './components/AddProductPage'; // Importar AddProduct
 import ProductDetailPage from './components/ProductDetailPage'; // Importar ProductDetailPage
 import AdminPage from './components/AdminPage'; // Importar AdminPage
 import AdminProductListPage from './components/AdminProductListPage'; // Importar AdminProductListPage
+import EditProductPage from './components/EditProductPage'; // Importar EditProductPage
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import React, { useState } from 'react'; // Importar useState
 
 function App() {
   const [products, setProducts] = useState(initialProducts);
+
+  const handleAddProduct = (newProductData) => {
+    setProducts(prevProducts => {
+      const newId = prevProducts.length > 0 ? Math.max(...prevProducts.map(p => p.id)) + 1 : 1;
+      const productToAdd = {
+        id: newId,
+        name: newProductData.name,
+        description: newProductData.description,
+        price: '$TBD/día', // Placeholder price
+        categoryId: parseInt(newProductData.categoryId), // Ensure categoryId is an integer
+        images: [
+          { id: `${newId}_img1`, url: '/src/assets/placeholder_image.webp', alt: `${newProductData.name} - Vista 1` }
+          // We can extend this if newProductData.images provides more info
+        ]
+      };
+      return [...prevProducts, productToAdd];
+    });
+    // Aquí, en una aplicación real, también harías una llamada a la API para crearlo en el backend.
+    alert("Producto agregado con éxito."); // Feedback al usuario
+    // Consider navigating the user, e.g., to the admin product list
+  };
+
+  const handleEditProduct = (productId, updatedData) => {
+    setProducts(prevProducts => 
+      prevProducts.map(p => 
+        p.id === productId ? { ...p, ...updatedData } : p
+      )
+    );
+    alert('Producto actualizado con éxito.');
+    // La navegación ya la hace EditProductPage
+  };
 
   const handleDeleteProduct = (productId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
@@ -29,10 +61,11 @@ function App() {
       <div className="app-content-wrapper"> {/* Contenedor para el contenido principal */} 
         <Routes> {/* Definir las rutas */} 
           <Route path="/" element={<MainContent products={products} />} />
-          <Route path="/admin/add-product" element={<AddProductPage />} /> {/* AddProductPage podría necesitar setProducts si añade productos */}
+          <Route path="/admin/add-product" element={<AddProductPage handleAddProduct={handleAddProduct} />} /> {/* AddProductPage podría necesitar setProducts si añade productos */}
           <Route path="/product/:productId" element={<ProductDetailPage products={products} />} /> 
           <Route path="/administracion" element={<AdminPage />} /> 
           <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
+          <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
           {/* Aquí se pueden añadir más rutas en el futuro */}        
         </Routes>
       </div>

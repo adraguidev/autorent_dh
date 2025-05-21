@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // import { mockProducts } from '../mockProducts'; // Ya no se importa aquí, se recibe por props
+import { mockCategories } from '../mockCategories'; // Importar categorías
 import './AdminProductListPage.css';
 
 const AdminProductListPage = ({ products, handleDeleteProduct }) => { // Recibir products y handleDeleteProduct como props
@@ -42,6 +43,7 @@ const AdminProductListPage = ({ products, handleDeleteProduct }) => { // Recibir
               <tr>
                 <th>Id</th>
                 <th>Nombre</th>
+                <th>Categoría</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -50,8 +52,9 @@ const AdminProductListPage = ({ products, handleDeleteProduct }) => { // Recibir
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
+                  <td>{mockCategories.find(cat => cat.id === product.categoryId)?.name || 'Sin categoría'}</td>
                   <td className="actions-cell">
-                    <button className="action-button edit-button">Editar</button>
+                    <Link to={`/admin/edit-product/${product.id}`} className="action-button edit-button">Editar</Link>
                     <button className="action-button delete-button" onClick={() => handleDeleteProduct(product.id)}>Eliminar</button>
                   </td>
                 </tr>
