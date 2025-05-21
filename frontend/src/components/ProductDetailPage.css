@@ -124,3 +124,138 @@
   }
   /* Anteriormente había un comentario o regla vacía aquí que fue eliminada para resolver un lint error. */
 }
+
+/* === Estilos para la Galería de Imágenes del Producto === */
+
+.product-gallery-block {
+  display: flex; 
+  flex-wrap: wrap; /* Para que los elementos se muevan a la siguiente línea en mobile si es necesario antes del cambio a flex-direction: column */
+  width: 100%; /* Ocupa todo el ancho disponible en product-detail-page */
+  box-sizing: border-box;
+  position: relative; /* Necesario para posicionar el enlace "Ver más" de forma absoluta */
+  gap: 10px; /* Espacio entre la imagen principal y la cuadrícula de miniaturas */
+  margin-bottom: 2rem; /* Espacio antes del bloque de descripción del producto */
+  /* background-color: #f0f0f0; */ /* Descomentar para depurar el área del bloque */
+}
+
+.gallery-main-image-container {
+  flex: 1 1 calc(50% - 5px); /* En desktop, ocupa el 50% del ancho menos la mitad del gap */
+  box-sizing: border-box;
+}
+
+.gallery-main-image {
+  display: block; /* Para evitar espacio extra debajo de la imagen */
+  width: 100%;
+  height: 400px; /* Altura fija para la imagen principal; ajustar según diseño */
+  object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+  border-radius: 8px; /* Bordes redondeados suaves */
+}
+
+.gallery-thumbnail-grid {
+  flex: 1 1 calc(50% - 5px); /* En desktop, ocupa el 50% del ancho menos la mitad del gap */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Cuadrícula de 2x2 para las miniaturas */
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px; /* Espacio entre las miniaturas */
+  box-sizing: border-box;
+  max-height: 400px; /* Para que la altura total de la grilla coincida con la imagen principal */
+}
+
+.gallery-thumbnail-item {
+  width: 100%;
+  height: 100%; /* Para que la imagen llene la celda de la cuadrícula */
+  overflow: hidden; /* Asegura que la imagen no se desborde */
+  border-radius: 4px; /* Bordes redondeados para las miniaturas */
+}
+
+.gallery-thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.gallery-thumbnail-image:hover {
+  transform: scale(1.05); /* Ligero zoom al pasar el mouse */
+  opacity: 0.85;
+}
+
+.gallery-see-more {
+  position: absolute;
+  bottom: 10px; 
+  right: 10px;  
+  z-index: 10; /* Para asegurar que esté sobre las imágenes si hay superposición */
+}
+
+.see-more-link {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.see-more-link:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* === Media Queries para Responsividad de la Galería === */
+
+/* Tabletas y Escritorios Pequeños (layout se mantiene 50/50 pero se ajusta altura) */
+@media (max-width: 1024px) {
+  .gallery-main-image,
+  .gallery-thumbnail-grid {
+    height: 320px; /* Reducir altura en pantallas medianas */
+  }
+}
+
+/* Móviles */
+@media (max-width: 767px) {
+  .product-gallery-block {
+    flex-direction: column; /* Apila la imagen principal y la cuadrícula de miniaturas */
+  }
+
+  .gallery-main-image-container,
+  .gallery-thumbnail-grid {
+    flex-basis: 100%; /* Cada sección ocupa el ancho completo */
+    /* flex: 1 1 100%; */ /* Alternativa para resetear flex-basis */
+  }
+  
+  .gallery-main-image {
+    height: 280px; /* Altura ajustada para la imagen principal en móviles */
+    /* Considerar aspect-ratio: 16/9; height: auto; para una altura dinámica */
+  }
+
+  .gallery-thumbnail-grid {
+    height: auto; /* La altura será definida por el contenido (las miniaturas) */
+    /* grid-template-columns: repeat(2, 1fr); */ /* Mantenemos 2 columnas para miniaturas */
+    /* Las miniaturas serán más pequeñas, pero es una opción compacta */
+  }
+  
+  .gallery-thumbnail-item {
+     aspect-ratio: 16/10; /* Proporción para las miniaturas en móvil para que no sean demasiado cuadradas/altas */
+     height: auto; 
+  }
+
+  .gallery-see-more {
+    position: static; /* Quita el posicionamiento absoluto */
+    width: 100%;
+    text-align: right; /* Alinea el enlace a la derecha */
+    margin-top: 10px; 
+    padding: 0 5px 10px 5px; /* Padding para que no toque los bordes del bloque */
+    box-sizing: border-box;
+  }
+
+  .see-more-link {
+    background-color: transparent; /* Fondo transparente en móvil */
+    color: var(--primary-color, #007bff); /* Color primario del tema o azul por defecto */
+    padding: 8px 0; 
+    font-weight: bold;
+  }
+}
+
