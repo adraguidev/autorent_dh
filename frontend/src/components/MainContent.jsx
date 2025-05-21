@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Importar useEffect
 import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import './MainContent.css';
@@ -13,6 +13,19 @@ const MainContent = ({ products }) => {
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
+
+  useEffect(() => {
+    // Ajustar currentPage si es necesario después de que los productos cambian (ej. por eliminación)
+    const newTotalPages = Math.ceil(products.length / productsPerPage);
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+      setCurrentPage(newTotalPages); // Si la página actual excede el nuevo total, ir a la última página válida
+    } else if (currentPage > 1 && newTotalPages === 0) { // Si no quedan productos y no estamos en la página 1
+      setCurrentPage(1); // Resetear a la página 1
+    } else if (currentPage === 0 && newTotalPages > 0) { // Si currentPage es 0 por alguna razón y hay páginas
+      setCurrentPage(1);
+    }
+    // Si no hay productos y estábamos en la página 1, currentPage sigue siendo 1, lo cual está bien.
+  }, [products, productsPerPage, currentPage]);
 
   // Cambiar de página
   const paginate = (pageNumber) => {
