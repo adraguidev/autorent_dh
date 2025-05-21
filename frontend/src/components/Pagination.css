@@ -1,0 +1,56 @@
+/* src/components/Pagination.css */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  margin-top: 20px;
+  flex-wrap: wrap; /* Para que los botones se ajusten en pantallas pequeñas */
+  gap: 8px; /* Espacio entre botones */
+}
+
+.pagination-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 8px 12px;
+  margin: 0 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.pagination-button:disabled {
+  background-color: #f8f8f8;
+  color: #aaa;
+  cursor: not-allowed;
+  border-color: #ddd;
+}
+
+.pagination-button.active {
+  background-color: #0d2235; /* Color primario de la app */
+  color: white;
+  border-color: #0d2235;
+  font-weight: bold;
+}
+
+.pagination-button.first-page,
+.pagination-button.prev-next {
+  /* Estilos específicos si se quieren diferenciar más */
+  padding: 8px 15px;
+}
+
+@media (max-width: 480px) {
+  .pagination-button {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  .pagination-controls {
+    gap: 5px;
+  }
+}
