@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockProducts } from '../mockProducts'; // Ajusta la ruta si es necesario
 import placeholderImage from '../assets/placeholder_image.webp'; // Usaremos la misma imagen para todas por ahora
 import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
 import './ProductDetailPage.css';
 
-const ProductDetailPage = () => {
+const ProductDetailPage = ({ products }) => { // Recibir products como prop
   const { productId } = useParams(); // Obtiene el ID del producto de la URL
-  const product = mockProducts.find(p => p.id.toString() === productId);
+  const product = products.find(p => p.id === parseInt(productId));
 
   if (!product) {
-    return <div className="product-detail-page"><p>Producto no encontrado.</p></div>;
+    return (
+      <div className="product-detail-container product-not-found">
+        <h2>Producto no encontrado</h2>
+        <p>El producto que buscas ya no está disponible o ha sido eliminado.</p>
+        <Link to="/" className="back-to-home-link">Volver al inicio</Link>
+      </div>
+    );
   }
 
   // Asegurarse de que product.images exista y tenga elementos

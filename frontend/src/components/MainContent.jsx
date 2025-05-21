@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { mockProducts } from '../mockProducts'; // Ajusta la ruta según sea necesario
 import ProductCard from './ProductCard';
 import './MainContent.css';
 import './Pagination.css'; // Crearemos este archivo para los estilos de paginación
 
-const MainContent = () => {
+const MainContent = ({ products }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8; // Mostrar 8 productos por página
 
   // Lógica de paginación
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = mockProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(mockProducts.length / productsPerPage);
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   // Cambiar de página
   const paginate = (pageNumber) => {

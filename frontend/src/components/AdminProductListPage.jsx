@@ -1,12 +1,12 @@
 // src/components/AdminProductListPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { mockProducts } from '../mockProducts'; // Asegúrate que la ruta sea correcta
+// import { mockProducts } from '../mockProducts'; // Ya no se importa aquí, se recibe por props
 import './AdminProductListPage.css';
 
-const AdminProductListPage = () => {
+const AdminProductListPage = ({ products, handleDeleteProduct }) => { // Recibir products y handleDeleteProduct como props
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
-  const products = mockProducts; // Usar los mockProducts
+  // const products = mockProducts; // Se elimina la asignación local, se usan las props
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,7 +52,7 @@ const AdminProductListPage = () => {
                   <td>{product.name}</td>
                   <td className="actions-cell">
                     <button className="action-button edit-button">Editar</button>
-                    <button className="action-button delete-button">Eliminar</button>
+                    <button className="action-button delete-button" onClick={() => handleDeleteProduct(product.id)}>Eliminar</button>
                   </td>
                 </tr>
               ))}
