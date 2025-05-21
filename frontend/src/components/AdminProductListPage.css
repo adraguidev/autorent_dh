@@ -1,0 +1,122 @@
+/* src/components/AdminProductListPage.css */
+.admin-product-list-page-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 4rem - 110px - 88px); /* Adaptar según sea necesario */
+}
+
+/* Mensaje para móviles (puede ser similar a AdminPage.css) */
+.admin-product-list-page-container.mobile-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 60vh;
+  background-color: #fff;
+}
+
+.mobile-unavailable-message { /* Reutilizar si ya está definido globalmente o en AdminPage.css */
+  font-size: 1.2rem;
+  color: #dc3545;
+  font-weight: bold;
+  padding: 20px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  background-color: #f8d7da;
+}
+
+.admin-product-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.admin-product-list-header h1 {
+  font-size: 2rem;
+  color: #0d2235;
+}
+
+.back-to-admin-link {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.back-to-admin-link:hover {
+  background-color: #5a6268;
+}
+
+.table-container {
+  overflow-x: auto; /* Para tablas anchas en pantallas pequeñas (aunque no sea móvil) */
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.product-table th,
+.product-table td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.product-table th {
+  background-color: #e9ecef;
+  color: #0d2235;
+  font-weight: 600;
+}
+
+.product-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.product-table tbody tr:hover {
+  background-color: #e2e6ea;
+}
+
+.actions-cell {
+  text-align: center; /* Centrar botones de acción */
+}
+
+.action-button {
+  padding: 0.4rem 0.8rem;
+  margin: 0 0.25rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.action-button:hover {
+  opacity: 0.8;
+}
+
+.edit-button {
+  background-color: #ffc107; /* Amarillo */
+  color: #212529;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Rojo */
+  color: white;
+}

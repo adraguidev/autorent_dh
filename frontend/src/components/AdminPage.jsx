@@ -38,6 +38,11 @@ const AdminPage = () => {
               Agregar Nuevo Producto
             </Link>
           </li>
+          <li className="admin-menu-item">
+            <Link to="/administracion/productos" className="admin-menu-link">
+              Lista de productos
+            </Link>
+          </li>
           {/* Aquí se podrán añadir más enlaces a futuras funciones de administración */}
           {/* <li className="admin-menu-item">
             <Link to="/administracion/gestionar-productos" className="admin-menu-link">

@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import AddProductPage from './components/AddProductPage'; // Importar AddProductPage
 import ProductDetailPage from './components/ProductDetailPage'; // Importar ProductDetailPage
 import AdminPage from './components/AdminPage'; // Importar AdminPage
+import AdminProductListPage from './components/AdminProductListPage'; // Importar AdminProductListPage
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Route path="/admin/add-product" element={<AddProductPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} /> {/* Ruta para detalle de producto */}
           <Route path="/administracion" element={<AdminPage />} /> {/* Ruta para el panel de administración */}
-          {/* Aquí se pueden añadir más rutas en el futuro */}
+          <Route path="/administracion/productos" element={<AdminProductListPage />} /> {/* Ruta para la lista de productos en admin */}
+          {/* Aquí se pueden añadir más rutas en el futuro */}        
         </Routes>
       </div>
       <Footer /> {/* Footer fuera de Routes, pero dentro del fragmento principal */}
