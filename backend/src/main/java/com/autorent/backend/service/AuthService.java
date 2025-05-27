@@ -1,11 +1,15 @@
 package com.autorent.backend.service;
 
+import com.autorent.backend.dto.LoginRequestDto;
+import com.autorent.backend.dto.LoginResponseDto;
 import com.autorent.backend.dto.RegisterRequestDto;
 import com.autorent.backend.model.User;
 import com.autorent.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -34,5 +38,27 @@ public class AuthService {
         // user.setRole("ROLE_USER"); 
 
         return userRepository.save(user);
+    }
+
+    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
+        Optional<User> userOptional = userRepository.findByEmail(loginRequestDto.getEmail());
+        
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("Error: Usuario no encontrado!");
+        }
+        
+        User user = userOptional.get();
+        
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Error: Contraseña incorrecta!");
+        }
+        
+        return new LoginResponseDto(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            "Login exitoso"
+        );
     }
 }

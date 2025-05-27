@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { api } from '../services/api';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
@@ -9,9 +10,10 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Limpiar errores previos
 
@@ -24,34 +26,45 @@ const RegisterPage = () => {
       setError('Las contraseñas no coinciden.');
       return;
     }
-    // Aquí irían validaciones más específicas (longitud, formato de email, complejidad de contraseña)
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
 
-    console.log('Datos de registro:', {
-      firstName,
-      lastName,
-      email,
-      password,
-    });
+    setLoading(true);
 
-    // Simulación de registro exitoso
-    alert('¡Registro exitoso! Serás redirigido a la página principal.'); // Feedback temporal
-    // Aquí, en una app real, se llamaría a una API y se manejaría la respuesta
-    // Por ahora, no guardaremos el usuario, solo simulamos el flujo
+    try {
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        password
+      };
 
-    // Limpiar formulario (opcional, ya que redirigimos)
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    
-    navigate('/'); // Redirigir a la página principal o a login después del registro
+      const response = await api.registerUser(userData);
+      
+      // Limpiar formulario
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      
+      alert('¡Registro exitoso! ' + response);
+      navigate('/'); // Redirigir a la página principal
+    } catch (error) {
+      console.error('Error en el registro:', error);
+      setError('Error al registrar usuario. Por favor, intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="register-page-container"> {/* Usaremos esta clase para el CSS */}
-      <h2>Crear Cuenta</h2>
-      <form onSubmit={handleSubmit} className="register-form">
+    <div className="register-page-container">
+      <div className="register-form-wrapper">
+        <h2>Crear Cuenta</h2>
+        <form onSubmit={handleSubmit} className="register-form">
         {error && <p className="error-message">{error}</p>}
         <div className="form-group">
           <label htmlFor="firstName">Nombre:</label>
@@ -103,8 +116,14 @@ const RegisterPage = () => {
             required
           />
         </div>
-        <button type="submit" className="submit-btn">Registrarse</button>
-      </form>
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? 'Registrando...' : 'Registrarse'}
+        </button>
+        </form>
+        <div className="auth-links">
+          <p>¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link></p>
+        </div>
+      </div>
     </div>
   );
 };

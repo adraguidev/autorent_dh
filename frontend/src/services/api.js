@@ -113,5 +113,26 @@ export const api = {
       console.error('Error registering user:', error);
       throw error;
     }
+  },
+
+  // Login de usuarios
+  async loginUser(userData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json(); // El backend devuelve un objeto LoginResponseDto
+    } catch (error) {
+      console.error('Error logging in user:', error);
+      throw error;
+    }
   }
 }; 

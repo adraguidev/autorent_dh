@@ -1,5 +1,7 @@
 package com.autorent.backend.controller;
 
+import com.autorent.backend.dto.LoginRequestDto;
+import com.autorent.backend.dto.LoginResponseDto;
 import com.autorent.backend.dto.RegisterRequestDto;
 import com.autorent.backend.model.User;
 import com.autorent.backend.service.AuthService;
@@ -34,9 +36,13 @@ public class AuthController {
         }
     }
 
-    // Aquí iría el endpoint de login en el futuro
-    // @PostMapping("/login")
-    // public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDto loginRequestDto) {
-    //     // ... Lógica de autenticación ...
-    // }
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDto loginRequestDto) {
+        try {
+            LoginResponseDto loginResponse = authService.loginUser(loginRequestDto);
+            return ResponseEntity.ok(loginResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
 }

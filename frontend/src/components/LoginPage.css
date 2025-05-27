@@ -1,5 +1,5 @@
 /* Contenedor principal que ocupa toda la pantalla con el mismo fondo */
-.register-page-container {
+.login-page-container {
   background-color: #f0f2f5;
   min-height: calc(100vh - 64px);
   display: flex;
@@ -10,17 +10,17 @@
 }
 
 /* Formulario principal con diseño moderno */
-.register-form-wrapper {
+.login-form-wrapper {
   background-color: #ffffff;
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.register-page-container h2 {
+.login-page-container h2 {
   text-align: center;
   margin-bottom: 2rem;
   color: #0d2235;
@@ -29,10 +29,10 @@
   letter-spacing: 0.5px;
 }
 
-.register-form {
+.login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .form-group {
@@ -47,17 +47,13 @@
   font-size: 0.95rem;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
+.form-group input {
   padding: 0.875rem 1rem;
   border: 2px solid #e1e5e9;
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   background-color: #fafbfc;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -133,15 +129,15 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .register-page-container {
+  .login-page-container {
     padding: 1rem;
   }
   
-  .register-form-wrapper {
+  .login-form-wrapper {
     padding: 2rem 1.5rem;
   }
   
-  .register-page-container h2 {
+  .login-page-container h2 {
     font-size: 1.6rem;
   }
-}
+} 
