@@ -12,30 +12,51 @@ import AdminProductListPage from './components/AdminProductListPage'; // Importa
 import EditProductPage from './components/EditProductPage'; // Importar EditProductPage
 import RegisterPage from './components/RegisterPage'; // Importar RegisterPage
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
-import React, { useState } from 'react'; // Importar useState
+import { api } from './services/api'; // Importar el servicio API
+import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
 
 function App() {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleAddProduct = (newProductData) => {
-    setProducts(prevProducts => {
-      const newId = prevProducts.length > 0 ? Math.max(...prevProducts.map(p => p.id)) + 1 : 1;
-      const productToAdd = {
-        id: newId,
+  // Cargar productos del backend al iniciar la aplicación
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const productsFromAPI = await api.getProducts();
+        setProducts(productsFromAPI);
+        setError(null);
+      } catch (err) {
+        console.error('Error loading products from API, falling back to mock data:', err);
+        setProducts(initialProducts); // Fallback a datos mock si falla la API
+        setError('No se pudo conectar al servidor. Usando datos de prueba.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const handleAddProduct = async (newProductData) => {
+    try {
+      const productToCreate = {
         name: newProductData.name,
         description: newProductData.description,
-        price: '$TBD/día', // Placeholder price
-        categoryId: parseInt(newProductData.categoryId), // Ensure categoryId is an integer
-        images: [
-          { id: `${newId}_img1`, url: '/src/assets/placeholder_image.webp', alt: `${newProductData.name} - Vista 1` }
-          // We can extend this if newProductData.images provides more info
-        ]
+        price: newProductData.price || '$TBD/día',
+        categoryId: parseInt(newProductData.categoryId),
+        imageUrls: ['/src/assets/placeholder_image.webp'] // Placeholder images
       };
-      return [...prevProducts, productToAdd];
-    });
-    // Aquí, en una aplicación real, también harías una llamada a la API para crearlo en el backend.
-    alert("Producto agregado con éxito."); // Feedback al usuario
-    // Consider navigating the user, e.g., to the admin product list
+      
+      const createdProduct = await api.createProduct(productToCreate);
+      setProducts(prevProducts => [...prevProducts, createdProduct]);
+      alert("Producto agregado con éxito.");
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert("Error al agregar el producto. Por favor, intenta de nuevo.");
+    }
   };
 
   const handleEditProduct = (productId, updatedData) => {
@@ -48,17 +69,45 @@ function App() {
     // La navegación ya la hace EditProductPage
   };
 
-  const handleDeleteProduct = (productId) => {
+  const handleDeleteProduct = async (productId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-      setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
-      // Aquí, en una aplicación real, también harías una llamada a la API para eliminarlo del backend.
-      // Por ahora, solo actualizamos el estado local, que simula nuestra "base de datos" mock.
-      alert("Producto eliminado con éxito."); // Feedback al usuario
+      try {
+        await api.deleteProduct(productId);
+        setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+        alert("Producto eliminado con éxito.");
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert("Error al eliminar el producto. Por favor, intenta de nuevo.");
+      }
     }
   };
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div className="app-content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+          <div>Cargando productos...</div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
+      {error && (
+        <div style={{ 
+          backgroundColor: '#fff3cd', 
+          color: '#856404', 
+          padding: '10px', 
+          margin: '10px', 
+          borderRadius: '5px',
+          textAlign: 'center'
+        }}>
+          {error}
+        </div>
+      )}
       <div className="app-content-wrapper"> {/* Contenedor para el contenido principal */} 
         <Routes> {/* Definir las rutas */} 
           <Route path="/" element={<MainContent products={products} />} />
