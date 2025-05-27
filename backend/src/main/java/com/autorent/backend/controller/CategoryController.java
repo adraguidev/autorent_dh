@@ -1,6 +1,7 @@
 package com.autorent.backend.controller;
 
 import com.autorent.backend.dto.CategoryDto;
+import com.autorent.backend.dto.CategoryRequestDto;
 import com.autorent.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +35,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
         try {
-            CategoryDto createdCategory = categoryService.createCategory(categoryDto);
+            CategoryDto createdCategory = categoryService.createCategory(categoryRequestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -44,10 +45,14 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
-        return categoryService.updateCategory(id, categoryDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto categoryRequestDto) {
+        try {
+            return categoryService.updateCategory(id, categoryRequestDto)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

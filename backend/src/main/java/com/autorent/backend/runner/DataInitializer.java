@@ -33,13 +33,37 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional // Asegura que toda la operación se ejecute dentro de una transacción
     public void run(String... args) throws Exception {
         if (categoryRepository.count() == 0) { // Solo si no hay categorías
-            // Crear Categorías
-            Category catCompact = categoryRepository.save(new Category("Compacto"));
-            Category catSedan = categoryRepository.save(new Category("Sedán"));
-            Category catSUV = categoryRepository.save(new Category("SUV"));
-            Category catLujo = categoryRepository.save(new Category("Lujo"));
-            Category catVan = categoryRepository.save(new Category("Van/Minivan"));
-            Category catDeportivo = categoryRepository.save(new Category("Deportivo"));
+            // Crear Categorías con descripción e imagen
+            Category catCompact = categoryRepository.save(new Category(
+                "Compacto", 
+                "Vehículos pequeños y eficientes, perfectos para la ciudad y viajes cortos.", 
+                "/src/assets/categories/compacto.webp"
+            ));
+            Category catSedan = categoryRepository.save(new Category(
+                "Sedán", 
+                "Automóviles cómodos y espaciosos, ideales para familias y viajes largos.", 
+                "/src/assets/categories/sedan.webp"
+            ));
+            Category catSUV = categoryRepository.save(new Category(
+                "SUV", 
+                "Vehículos utilitarios deportivos con mayor altura y capacidad todoterreno.", 
+                "/src/assets/categories/suv.webp"
+            ));
+            Category catLujo = categoryRepository.save(new Category(
+                "Lujo", 
+                "Vehículos premium con las mejores comodidades y tecnología avanzada.", 
+                "/src/assets/categories/lujo.webp"
+            ));
+            Category catVan = categoryRepository.save(new Category(
+                "Van/Minivan", 
+                "Vehículos espaciosos para grupos grandes y transporte de carga.", 
+                "/src/assets/categories/van.webp"
+            ));
+            Category catDeportivo = categoryRepository.save(new Category(
+                "Deportivo", 
+                "Vehículos de alto rendimiento diseñados para la velocidad y la emoción.", 
+                "/src/assets/categories/deportivo.webp"
+            ));
 
             // Crear características si no existen
             if (characteristicRepository.count() == 0) {

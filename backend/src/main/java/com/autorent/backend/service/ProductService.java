@@ -36,7 +36,12 @@ public class ProductService {
     }
 
     private ProductResponseDto convertToDto(Product product) {
-        CategoryDto categoryDto = new CategoryDto(product.getCategory().getId(), product.getCategory().getName());
+        CategoryDto categoryDto = new CategoryDto(
+            product.getCategory().getId(), 
+            product.getCategory().getName(),
+            product.getCategory().getDescription(),
+            product.getCategory().getImage()
+        );
         
         List<CharacteristicDto> characteristicDtos = product.getCharacteristics() != null && !product.getCharacteristics().isEmpty() ? 
             product.getCharacteristics().stream()

@@ -1,0 +1,261 @@
+/* AddCategoryPage.css */
+
+.add-category-page {
+  min-height: calc(100vh - 64px - 88px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.add-category-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 2rem;
+}
+
+.add-category-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.add-category-header h1 {
+  color: #0d2235;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.add-category-header p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.add-category-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #0d2235;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #f5a623;
+  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.char-count {
+  color: #6c757d;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.help-text {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Vista previa de imagen */
+.image-preview {
+  margin-top: 1rem;
+}
+
+.image-preview label {
+  font-weight: 600;
+  color: #0d2235;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.preview-container {
+  border: 2px dashed #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.preview-container img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-error {
+  color: #dc3545;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.preview-error i {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+/* Mensajes */
+.error-message,
+.success-message {
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error-message i,
+.success-message i {
+  font-size: 1.1rem;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+.submit-btn {
+  background-color: #f5a623;
+  color: #0d2235;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #e59400;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+.cancel-btn:disabled,
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-category-page {
+    padding: 1rem;
+  }
+
+  .add-category-container {
+    padding: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .add-category-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-category-page {
+    padding: 0.5rem;
+  }
+
+  .add-category-container {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .add-category-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .add-category-header p {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+} 

@@ -95,6 +95,61 @@ export const api = {
     }
   },
 
+  async createCategory(categoryData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(categoryData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating category:', error);
+      throw error;
+    }
+  },
+
+  async updateCategory(id, categoryData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(categoryData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating category:', error);
+      throw error;
+    }
+  },
+
+  async deleteCategory(id) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      throw error;
+    }
+  },
+
   // Registro de usuarios
   async registerUser(userData) {
     try {
