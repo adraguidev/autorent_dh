@@ -84,6 +84,23 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
           <p className="product-detail-description">{product.description}</p>
           <p className="product-detail-price">Precio: {product.price}</p>
         </div>
+
+        {/* Bloque de Características */}
+        {product.characteristics && product.characteristics.length > 0 && (
+          <div className="product-characteristics-block">
+            <h2>Características</h2>
+            <div className="characteristics-grid">
+              {product.characteristics.map((characteristic) => (
+                <div key={characteristic.id} className="characteristic-item">
+                  <div className="characteristic-icon">
+                    <i className={characteristic.icon}></i>
+                  </div>
+                  <span className="characteristic-name">{characteristic.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {isModalOpen && (
