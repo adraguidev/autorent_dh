@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import ErrorMessage from './ErrorMessage';
+import ResendConfirmationModal from './ResendConfirmationModal';
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showResendModal, setShowResendModal] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -83,8 +85,24 @@ const LoginPage = () => {
         </form>
         <div className="auth-links">
           <p>¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link></p>
+          <p>
+            ¿No recibiste el email de confirmación? 
+            <button 
+              type="button" 
+              className="link-button" 
+              onClick={() => setShowResendModal(true)}
+            >
+              Reenviar email
+            </button>
+          </p>
         </div>
       </div>
+
+      {/* Modal de reenvío de confirmación */}
+      <ResendConfirmationModal 
+        isOpen={showResendModal} 
+        onClose={() => setShowResendModal(false)} 
+      />
     </div>
   );
 };

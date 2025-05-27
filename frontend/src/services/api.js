@@ -321,5 +321,27 @@ export const api = {
       console.error('Error deleting characteristic:', error);
       throw error;
     }
+  },
+
+  // === FUNCIONES DE EMAIL ===
+
+  // Reenviar email de confirmación
+  async resendConfirmationEmail(email) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/resend-confirmation?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.text();
+    } catch (error) {
+      console.error('Error resending confirmation email:', error);
+      throw error;
+    }
   }
 }; 

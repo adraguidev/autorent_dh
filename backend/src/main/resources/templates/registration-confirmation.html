@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Registro - AutoRent</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0d2235 0%, #1e3a5f 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header .logo {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-message {
+            font-size: 18px;
+            color: #0d2235;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .user-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f5a623;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        .user-info h3 {
+            margin: 0 0 15px 0;
+            color: #0d2235;
+            font-size: 16px;
+        }
+        .user-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #f5a623;
+            color: #0d2235;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 25px 0;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #e59400;
+        }
+        .features {
+            margin: 30px 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .feature-icon {
+            background-color: #f5a623;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .footer a {
+            color: #f5a623;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, #f5a623 0%, #e59400 100%);
+            margin: 25px 0;
+            border: none;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .content {
+                padding: 25px 20px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🚗</div>
+            <h1 th:text="${appName}">AutoRent</h1>
+            <p>Tu plataforma de renta de autos de confianza</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="welcome-message">
+                ¡Bienvenido/a a AutoRent, <span th:text="${firstName}">Usuario</span>!
+            </div>
+
+            <p>Nos complace confirmar que tu registro en <strong th:text="${appName}">AutoRent</strong> ha sido exitoso. Ya puedes comenzar a explorar nuestra amplia selección de vehículos disponibles para renta.</p>
+
+            <div class="user-info">
+                <h3>📋 Información de tu cuenta:</h3>
+                <p><strong>Nombre:</strong> <span th:text="${firstName + ' ' + lastName}">Nombre Completo</span></p>
+                <p><strong>Email:</strong> <span th:text="${email}">usuario@email.com</span></p>
+                <p><strong>Fecha de registro:</strong> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">Fecha actual</span></p>
+            </div>
+
+            <hr class="divider">
+
+            <div style="text-align: center;">
+                <p>¿Listo para comenzar? Inicia sesión en tu cuenta y descubre los mejores vehículos disponibles.</p>
+                <a th:href="${loginUrl}" class="cta-button">🔑 Iniciar Sesión</a>
+            </div>
+
+            <div class="features">
+                <h3 style="color: #0d2235; margin-bottom: 20px;">🌟 ¿Qué puedes hacer ahora?</h3>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div>
+                        <strong>Explorar vehículos</strong><br>
+                        <small>Navega por nuestra amplia selección de autos disponibles</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📅</div>
+                    <div>
+                        <strong>Realizar reservas</strong><br>
+                        <small>Reserva el vehículo perfecto para tus necesidades</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">⭐</div>
+                    <div>
+                        <strong>Gestionar tu perfil</strong><br>
+                        <small>Actualiza tu información y preferencias</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                <h4 style="margin: 0 0 10px 0; color: #1976d2;">💡 Consejo:</h4>
+                <p style="margin: 0; font-size: 14px;">Si no recibiste este correo en tu bandeja de entrada, revisa tu carpeta de spam o correo no deseado. También puedes solicitar el reenvío desde nuestra página de inicio de sesión.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong th:text="${appName}">AutoRent</strong> - Tu compañero de viaje confiable</p>
+            <p>
+                ¿Necesitas ayuda? Contáctanos en 
+                <a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}">support@autorent.com</a>
+            </p>
+            <p>
+                <a th:href="${baseUrl}">Visitar sitio web</a> | 
+                <a th:href="${baseUrl + '/terms'}">Términos de servicio</a> | 
+                <a th:href="${baseUrl + '/privacy'}">Política de privacidad</a>
+            </p>
+            <p style="font-size: 12px; color: #999;">
+                Este es un correo automático, por favor no respondas a esta dirección.
+            </p>
+        </div>
+    </div>
+</body>
+</html> 
