@@ -235,5 +235,91 @@ export const api = {
       console.error('Error checking admin status:', error);
       throw error;
     }
+  },
+
+  // === FUNCIONES DE CARACTERÍSTICAS ===
+
+  // Obtener todas las características
+  async getCharacteristics() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/characteristics`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching characteristics:', error);
+      throw error;
+    }
+  },
+
+  // Obtener característica por ID
+  async getCharacteristicById(id) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/characteristics/${id}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching characteristic:', error);
+      throw error;
+    }
+  },
+
+  // Crear nueva característica
+  async createCharacteristic(characteristicData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/characteristics`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(characteristicData),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating characteristic:', error);
+      throw error;
+    }
+  },
+
+  // Actualizar característica
+  async updateCharacteristic(id, characteristicData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/characteristics/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(characteristicData),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating characteristic:', error);
+      throw error;
+    }
+  },
+
+  // Eliminar característica
+  async deleteCharacteristic(id) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/characteristics/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error deleting characteristic:', error);
+      throw error;
+    }
   }
 }; 

@@ -13,6 +13,7 @@ public class ProductRequestDto {
     private String name;
     private String description;
     private String price;
-    private Long categoryId; // Recibimos el ID de la categoría
+    private Long categoryId;
     private List<String> imageUrls;
+    private List<Long> characteristicIds;
 }

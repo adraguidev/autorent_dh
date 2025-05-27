@@ -14,6 +14,7 @@ import EditProductPage from './components/EditProductPage'; // Importar EditProd
 import RegisterPage from './components/RegisterPage'; // Importar RegisterPage
 import LoginPage from './components/LoginPage'; // Importar LoginPage
 import AdminUserManagement from './components/AdminUserManagement'; // Importar AdminUserManagement
+import AdminCharacteristics from './components/AdminCharacteristics'; // Importar AdminCharacteristics
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
 import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
@@ -50,15 +51,16 @@ function App() {
         description: newProductData.description,
         price: newProductData.price || '$TBD/día',
         categoryId: parseInt(newProductData.categoryId),
-        imageUrls: ['/src/assets/placeholder_image.webp'] // Placeholder images
+        imageUrls: newProductData.imageUrls || ['/src/assets/placeholder_image.webp'],
+        characteristicIds: newProductData.characteristicIds || []
       };
       
       const createdProduct = await api.createProduct(productToCreate);
       setProducts(prevProducts => [...prevProducts, createdProduct]);
-      alert("Producto agregado con éxito.");
+      // No mostrar alert aquí, el componente AddProductPage maneja el mensaje de éxito
     } catch (error) {
       console.error('Error adding product:', error);
-      alert("Error al agregar el producto. Por favor, intenta de nuevo.");
+      throw error; // Re-lanzar el error para que AddProductPage lo maneje
     }
   };
 
@@ -120,6 +122,7 @@ function App() {
           <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
           <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
           <Route path="/admin/users" element={<AdminUserManagement />} />
+          <Route path="/admin/characteristics" element={<AdminCharacteristics />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* Aquí se pueden añadir más rutas en el futuro */}        
