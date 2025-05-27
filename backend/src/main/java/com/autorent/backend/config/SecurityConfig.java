@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll() // Permitir todo en /api/auth/** (registro, login)
                 .requestMatchers("/api/products/**").permitAll() // Permitir endpoints de productos (temporalmente todos los métodos)
                 .requestMatchers("/api/categories/**").permitAll() // Permitir endpoints de categorías (temporalmente todos los métodos)
+                .requestMatchers("/api/admin/**").permitAll() // Permitir endpoints de administración (temporalmente para pruebas)
                 .anyRequest().authenticated() // Todas las demás rutas requieren autenticación (se configurará JWT más adelante)
             );
         return http.build();

@@ -34,8 +34,7 @@ public class AuthService {
         user.setLastName(registerRequestDto.getLastName());
         user.setEmail(registerRequestDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
-        // Aquí se podrían asignar roles por defecto si los tuviéramos
-        // user.setRole("ROLE_USER"); 
+        user.setIsAdmin(false); // Por defecto, nuevos usuarios no son administradores 
 
         return userRepository.save(user);
     }
@@ -58,6 +57,7 @@ public class AuthService {
             user.getFirstName(),
             user.getLastName(),
             user.getEmail(),
+            user.getIsAdmin(),
             "Login exitoso"
         );
     }

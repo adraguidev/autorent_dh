@@ -13,6 +13,7 @@ import AdminProductListPage from './components/AdminProductListPage'; // Importa
 import EditProductPage from './components/EditProductPage'; // Importar EditProductPage
 import RegisterPage from './components/RegisterPage'; // Importar RegisterPage
 import LoginPage from './components/LoginPage'; // Importar LoginPage
+import AdminUserManagement from './components/AdminUserManagement'; // Importar AdminUserManagement
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
 import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
@@ -118,6 +119,7 @@ function App() {
           <Route path="/administracion" element={<AdminPage />} /> 
           <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
           <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
+          <Route path="/admin/users" element={<AdminUserManagement />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* Aquí se pueden añadir más rutas en el futuro */}        

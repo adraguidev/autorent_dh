@@ -28,6 +28,6 @@ public class User {
     @Column(nullable = false)
     private String password; // La contraseña se almacenará hasheada
 
-    // Podríamos añadir roles u otra información del usuario aquí en el futuro
-    // private String role; // Ejemplo: "USER", "ADMIN"
+    @Column(nullable = false)
+    private Boolean isAdmin = false; // Por defecto, los usuarios no son administradores
 }
