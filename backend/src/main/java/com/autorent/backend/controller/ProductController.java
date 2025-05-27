@@ -22,6 +22,21 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponseDto>> searchProducts(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String priceRange) {
+        List<ProductResponseDto> products = productService.searchProducts(query, categoryId, priceRange);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<String>> getSearchSuggestions(@RequestParam String query) {
+        List<String> suggestions = productService.getSearchSuggestions(query);
+        return ResponseEntity.ok(suggestions);
+    }
+
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getAllProducts(
             @RequestParam(required = false) String name,

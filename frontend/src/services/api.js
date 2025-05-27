@@ -398,5 +398,43 @@ export const api = {
       console.error('Error resending confirmation email:', error);
       throw error;
     }
+  },
+
+  // === FUNCIONES DE BÚSQUEDA ===
+
+  // Búsqueda avanzada de productos
+  async searchProducts(query, categoryId, priceRange) {
+    try {
+      const params = new URLSearchParams();
+      if (query) params.append('query', query);
+      if (categoryId) params.append('categoryId', categoryId);
+      if (priceRange) params.append('priceRange', priceRange);
+
+      const response = await fetch(`${API_BASE_URL}/products/search?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error searching products:', error);
+      throw error;
+    }
+  },
+
+  // Obtener sugerencias de búsqueda
+  async getSearchSuggestions(query) {
+    try {
+      if (!query || query.length < 2) {
+        return [];
+      }
+      const response = await fetch(`${API_BASE_URL}/products/suggestions?query=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting search suggestions:', error);
+      return [];
+    }
   }
 }; 

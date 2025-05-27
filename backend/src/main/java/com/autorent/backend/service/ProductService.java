@@ -149,4 +149,41 @@ public class ProductService {
             .map(this::convertToDto)
             .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> searchProducts(String query, Long categoryId, String priceRange) {
+        List<Product> products;
+        
+        if (query != null && !query.trim().isEmpty() && categoryId != null) {
+            // Búsqueda por nombre y categoría
+            products = productRepository.findByNameContainingIgnoreCaseAndCategoryId(query.trim(), categoryId);
+        } else if (query != null && !query.trim().isEmpty()) {
+            // Búsqueda solo por nombre
+            products = productRepository.findByNameContainingIgnoreCase(query.trim());
+        } else if (categoryId != null) {
+            // Búsqueda solo por categoría
+            products = productRepository.findByCategoryId(categoryId);
+        } else {
+            // Sin filtros, devolver todos
+            products = productRepository.findAll();
+        }
+        
+        return products.stream()
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getSearchSuggestions(String query) {
+        if (query == null || query.trim().length() < 2) {
+            return List.of();
+        }
+        
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(query.trim());
+        return products.stream()
+            .map(Product::getName)
+            .distinct()
+            .limit(5)
+            .collect(Collectors.toList());
+    }
 }
