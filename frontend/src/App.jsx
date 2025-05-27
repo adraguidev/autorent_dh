@@ -1,5 +1,6 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom'; // Importar Routes y Route
+import { AuthProvider } from './contexts/AuthContext'; // Importar AuthProvider
 import Header from './components/Header';
 import MainContent from './components/MainContent';
 // Footer ya está importado, solo reestructuramos su posición en el return.
@@ -84,18 +85,18 @@ function App() {
   };
   if (loading) {
     return (
-      <>
+      <AuthProvider>
         <Header />
         <div className="app-content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
           <div>Cargando productos...</div>
         </div>
         <Footer />
-      </>
+      </AuthProvider>
     );
   }
 
   return (
-    <>
+    <AuthProvider>
       <Header />
       {error && (
         <div style={{ 
@@ -123,7 +124,7 @@ function App() {
         </Routes>
       </div>
       <Footer /> {/* Footer fuera de Routes, pero dentro del fragmento principal */}
-    </>
+    </AuthProvider>
   );
 }
 

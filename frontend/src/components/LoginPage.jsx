@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import ErrorMessage from './ErrorMessage';
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -9,6 +11,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,13 +33,14 @@ const LoginPage = () => {
 
       const response = await api.loginUser(userData);
       
-      // Guardar información del usuario en localStorage (temporal)
-      localStorage.setItem('user', JSON.stringify(response));
+      // Usar el contexto de autenticación
+      login(response);
       
       // Limpiar formulario
       setEmail('');
       setPassword('');
       
+      // Mostrar mensaje de bienvenida y redirigir
       alert(`¡Bienvenido ${response.firstName}!`);
       navigate('/'); // Redirigir a la página principal
     } catch (error) {
@@ -52,7 +56,7 @@ const LoginPage = () => {
       <div className="login-form-wrapper">
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
-        {error && <p className="error-message">{error}</p>}
+        <ErrorMessage message={error} type="error" />
         <div className="form-group">
           <label htmlFor="email">Correo Electrónico:</label>
           <input

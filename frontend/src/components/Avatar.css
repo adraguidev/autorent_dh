@@ -1,0 +1,47 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f5a623;
+  color: #0d2235;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  user-select: none;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.avatar--small {
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+}
+
+.avatar--medium {
+  width: 36px;
+  height: 36px;
+  font-size: 0.875rem;
+}
+
+.avatar--large {
+  width: 48px;
+  height: 48px;
+  font-size: 1.125rem;
+}
+
+.avatar[role="button"] {
+  cursor: pointer;
+}
+
+.avatar[role="button"]:hover {
+  background-color: #e0930f;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.avatar[role="button"]:focus {
+  outline: none;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.3);
+} 

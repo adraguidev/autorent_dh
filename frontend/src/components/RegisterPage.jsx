@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
+import ErrorMessage from './ErrorMessage';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
@@ -65,7 +66,7 @@ const RegisterPage = () => {
       <div className="register-form-wrapper">
         <h2>Crear Cuenta</h2>
         <form onSubmit={handleSubmit} className="register-form">
-        {error && <p className="error-message">{error}</p>}
+        <ErrorMessage message={error} type="error" />
         <div className="form-group">
           <label htmlFor="firstName">Nombre:</label>
           <input

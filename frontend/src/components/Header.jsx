@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import UserMenu from './UserMenu';
 import "./Header.css";
 
 const Header = () => {
+  const { isAuthenticated, loading } = useAuth();
+
   return (
     <header className="header">
       <div className="header-left">
@@ -12,8 +16,16 @@ const Header = () => {
         </a>
       </div>
       <div className="header-right">
-        <Link to="/register" className="header-btn">Crear cuenta</Link>
-        <Link to="/login" className="header-btn header-btn--primary">Iniciar sesión</Link>
+        {loading ? (
+          <div className="header-loading">Cargando...</div>
+        ) : isAuthenticated() ? (
+          <UserMenu />
+        ) : (
+          <>
+            <Link to="/register" className="header-btn">Crear cuenta</Link>
+            <Link to="/login" className="header-btn header-btn--primary">Iniciar sesión</Link>
+          </>
+        )}
       </div>
     </header>
   );
