@@ -634,3 +634,135 @@
   border-color: rgba(245, 166, 35, 0.5);
 }
 
+/* === Estilos para el Bloque de Políticas del Producto === */
+
+.product-policies-block {
+  width: 100%; /* Cubrir el 100% del contenedor */
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-sizing: border-box;
+}
+
+.policies-title {
+  color: #0d2235;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+  text-align: center;
+  text-decoration: underline; /* Título subrayado para destacar */
+  text-decoration-color: #f5a623;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+
+.policies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Distribución en columnas */
+  gap: 2rem;
+  margin: 0;
+}
+
+.policy-item {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: fit-content;
+}
+
+.policy-item:hover {
+  border-color: #f5a623;
+  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.15);
+  transform: translateY(-2px);
+}
+
+.policy-title {
+  color: #0d2235;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f5a623;
+  display: inline-block;
+}
+
+.policy-description {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  text-align: justify;
+}
+
+/* === Responsive para Políticas === */
+
+/* Tabletas */
+@media (max-width: 768px) {
+  .product-policies-block {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .policies-title {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .policies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .policy-item {
+    padding: 1.25rem;
+  }
+
+  .policy-title {
+    font-size: 1.1rem;
+  }
+
+  .policy-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .product-policies-block {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .policies-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .policies-grid {
+    grid-template-columns: 1fr; /* Una sola columna en móviles */
+    gap: 1rem;
+  }
+
+  .policy-item {
+    padding: 1rem;
+  }
+
+  .policy-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .policy-description {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+}
+

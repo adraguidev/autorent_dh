@@ -141,6 +141,65 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
             </div>
           </div>
         )}
+
+        {/* Bloque de Políticas del Producto */}
+        <div className="product-policies-block">
+          <h2 className="policies-title">Políticas del Producto</h2>
+          <div className="policies-grid">
+            <div className="policy-item">
+              <h3 className="policy-title">Política de Uso</h3>
+              <p className="policy-description">
+                El producto debe ser utilizado únicamente para los fines especificados. 
+                Se requiere un manejo cuidadoso y responsable durante todo el período de alquiler. 
+                Cualquier uso inadecuado puede resultar en cargos adicionales.
+              </p>
+            </div>
+            
+            <div className="policy-item">
+              <h3 className="policy-title">Cuidados y Mantenimiento</h3>
+              <p className="policy-description">
+                Mantener el producto en condiciones óptimas durante el alquiler. 
+                Evitar exposición a condiciones extremas de temperatura o humedad. 
+                Reportar inmediatamente cualquier daño o mal funcionamiento.
+              </p>
+            </div>
+            
+            <div className="policy-item">
+              <h3 className="policy-title">Política de Devolución</h3>
+              <p className="policy-description">
+                El producto debe ser devuelto en las mismas condiciones en que fue entregado. 
+                La devolución debe realizarse en la fecha y hora acordadas. 
+                Retrasos en la devolución pueden generar cargos adicionales.
+              </p>
+            </div>
+            
+            <div className="policy-item">
+              <h3 className="policy-title">Responsabilidades del Usuario</h3>
+              <p className="policy-description">
+                El usuario es responsable de cualquier daño, pérdida o robo del producto durante el período de alquiler. 
+                Se requiere proporcionar identificación válida y depósito de seguridad cuando sea aplicable.
+              </p>
+            </div>
+            
+            <div className="policy-item">
+              <h3 className="policy-title">Cancelaciones</h3>
+              <p className="policy-description">
+                Las cancelaciones deben realizarse con al menos 24 horas de anticipación. 
+                Cancelaciones tardías pueden estar sujetas a penalizaciones. 
+                Consulte nuestros términos y condiciones para más detalles.
+              </p>
+            </div>
+            
+            <div className="policy-item">
+              <h3 className="policy-title">Soporte y Asistencia</h3>
+              <p className="policy-description">
+                Ofrecemos soporte técnico durante el período de alquiler. 
+                Contacte nuestro servicio al cliente para cualquier consulta o problema. 
+                Disponible de lunes a viernes de 9:00 AM a 6:00 PM.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Modal de galería de imágenes */}
