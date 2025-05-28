@@ -4,6 +4,7 @@ import placeholderImage from '../assets/placeholder_image.webp'; // Usaremos la 
 import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
 import AvailabilityCalendar from './AvailabilityCalendar';
 import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
+import ShareButton from './ShareButton'; // Importar ShareButton
 import './ProductDetailPage.css';
 
 const ProductDetailPage = ({ products }) => { // Recibir products como prop
@@ -74,8 +75,11 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
       <div className="product-detail-header">
         <div className="product-detail-header-content">
           <h1 className="product-detail-title">{product.name}</h1>
-          <Link to="/" className="back-arrow">← Volver</Link>
-          <FavoriteButton productId={product.id} />
+          <div className="product-detail-actions">
+            <Link to="/" className="back-arrow">← Volver</Link>
+            <ShareButton product={product} />
+            <FavoriteButton productId={product.id} />
+          </div>
         </div>
       </div>
 

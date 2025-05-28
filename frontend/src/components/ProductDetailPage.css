@@ -33,6 +33,12 @@
   flex-grow: 1; /* Para que ocupe el espacio disponible y empuje la flecha */
 }
 
+.product-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .back-arrow {
   font-size: 1rem;
   color: #f5a623; /* Color de acento */
@@ -617,7 +623,6 @@
 .product-detail-header-content .favorite-button-container {
   position: static; /* Cambiar de absolute a static para el header */
   display: inline-block;
-  margin-left: 1rem;
 }
 
 .product-detail-header-content .favorite-button {
@@ -632,6 +637,19 @@
 .product-detail-header-content .favorite-button:hover {
   background-color: rgba(245, 166, 35, 0.2);
   border-color: rgba(245, 166, 35, 0.5);
+}
+
+/* Estilos específicos para el botón de compartir en el header del producto */
+.product-detail-header-content .share-button {
+  background-color: rgba(245, 166, 35, 0.1);
+  border: 2px solid rgba(245, 166, 35, 0.3);
+  color: #f5a623;
+}
+
+.product-detail-header-content .share-button:hover {
+  background-color: rgba(245, 166, 35, 0.2);
+  border-color: rgba(245, 166, 35, 0.5);
+  color: #e59400;
 }
 
 /* === Estilos para el Bloque de Políticas del Producto === */

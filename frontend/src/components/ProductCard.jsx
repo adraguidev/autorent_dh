@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Importar Link
 import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
+import ShareButton from './ShareButton'; // Importar ShareButton
 import './ProductCard.css';
 import placeholderImage from '../assets/placeholder_image.webp'; // Importar la imagen local
 
@@ -15,7 +16,10 @@ const ProductCard = ({ product }) => {
         <div className="product-card">
           <div className="product-card-image-container">
             <img src={placeholderImage} alt={product.name} className="product-card-image" />
-            <FavoriteButton productId={product.id} />
+            <div className="product-card-actions">
+              <FavoriteButton productId={product.id} />
+              <ShareButton product={product} />
+            </div>
           </div>
           <div className="product-card-content">
             <h3 className="product-card-name">{product.name}</h3>
