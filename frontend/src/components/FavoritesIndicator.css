@@ -1,0 +1,120 @@
+.favorites-indicator {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.favorites-indicator-link {
+  position: relative;
+  background: none;
+  border: none;
+  color: #f5a623;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  text-decoration: none;
+}
+
+.favorites-indicator-link:hover {
+  background-color: rgba(245, 166, 35, 0.1);
+  transform: scale(1.1);
+  color: #f5a623;
+}
+
+.favorites-indicator-link:active {
+  transform: scale(0.95);
+}
+
+.favorites-count-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  animation: favoriteBadgePulse 2s infinite;
+}
+
+@keyframes favoriteBadgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .favorites-indicator {
+    margin-right: 0.5rem;
+  }
+  
+  .favorites-indicator-link {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.1rem;
+  }
+  
+  .favorites-count-badge {
+    font-size: 0.65rem;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    top: -1px;
+    right: -1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-indicator-link {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+  
+  .favorites-count-badge {
+    font-size: 0.6rem;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0.15rem 0.3rem;
+  }
+}
+
+/* Estados de accesibilidad */
+.favorites-indicator-link:focus {
+  outline: 2px solid #f5a623;
+  outline-offset: 2px;
+}
+
+.favorites-indicator-link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Para usuarios que prefieren movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .favorites-indicator-link {
+    transition: none;
+  }
+  
+  .favorites-count-badge {
+    animation: none;
+  }
+} 

@@ -1,0 +1,259 @@
+.favorites-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 60vh;
+}
+
+.favorites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.favorites-header h1 {
+  color: #0d2235;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.back-link {
+  color: #f5a623;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-link:hover {
+  background-color: rgba(245, 166, 35, 0.1);
+  transform: translateX(-2px);
+}
+
+/* Estados de carga */
+.favorites-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+}
+
+.favorites-loading i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #f5a623;
+}
+
+.favorites-loading span {
+  font-size: 1.1rem;
+}
+
+/* Estado vacío */
+.favorites-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 1.5rem;
+}
+
+.empty-icon i {
+  font-size: 4rem;
+  color: #dee2e6;
+}
+
+.favorites-empty h2 {
+  color: #0d2235;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.favorites-empty p {
+  color: #6c757d;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #f5a623;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #e59400;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #0d2235;
+  border: 2px solid #0d2235;
+}
+
+.btn-secondary:hover {
+  background-color: #0d2235;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 34, 53, 0.3);
+}
+
+/* Contenido de favoritos */
+.favorites-content {
+  margin-top: 1rem;
+}
+
+.favorites-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #f5a623;
+}
+
+.favorites-summary p {
+  margin: 0;
+  color: #0d2235;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .favorites-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .favorites-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .favorites-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .back-link {
+    align-self: flex-start;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .empty-actions {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 300px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .favorites-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .empty-icon i {
+    font-size: 3rem;
+  }
+
+  .favorites-empty h2 {
+    font-size: 1.3rem;
+  }
+
+  .favorites-empty p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Animaciones */
+.favorites-grid .product-card-container {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Para usuarios que prefieren movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .back-link:hover {
+    transform: none;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+  
+  .favorites-grid .product-card-container {
+    animation: none;
+  }
+} 

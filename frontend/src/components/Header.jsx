@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import UserMenu from './UserMenu';
+import FavoritesIndicator from './FavoritesIndicator';
 import "./Header.css";
 
 const Header = () => {
@@ -19,7 +20,10 @@ const Header = () => {
         {loading ? (
           <div className="header-loading">Cargando...</div>
         ) : isAuthenticated() ? (
-          <UserMenu />
+          <>
+            <FavoritesIndicator />
+            <UserMenu />
+          </>
         ) : (
           <>
             <Link to="/register" className="header-btn">Crear cuenta</Link>

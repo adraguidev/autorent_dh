@@ -508,5 +508,70 @@ export const api = {
       console.error('Error checking availability:', error);
       throw error;
     }
+  },
+
+  // === FUNCIONES DE FAVORITOS ===
+
+  // Obtener favoritos del usuario
+  async getFavorites(userId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+      throw error;
+    }
+  },
+
+  // Agregar producto a favoritos
+  async addToFavorites(userId, productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites/${productId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error adding to favorites:', error);
+      throw error;
+    }
+  },
+
+  // Remover producto de favoritos
+  async removeFromFavorites(userId, productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites/${productId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error removing from favorites:', error);
+      throw error;
+    }
+  },
+
+  // Verificar si un producto está en favoritos
+  async isFavorite(userId, productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites/${productId}/check`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+      throw error;
+    }
   }
 }; 

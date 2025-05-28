@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import placeholderImage from '../assets/placeholder_image.webp'; // Usaremos la misma imagen para todas por ahora
 import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
 import AvailabilityCalendar from './AvailabilityCalendar';
+import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
 import './ProductDetailPage.css';
 
 const ProductDetailPage = ({ products }) => { // Recibir products como prop
@@ -74,6 +75,7 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
         <div className="product-detail-header-content">
           <h1 className="product-detail-title">{product.name}</h1>
           <Link to="/" className="back-arrow">← Volver</Link>
+          <FavoriteButton productId={product.id} />
         </div>
       </div>
 

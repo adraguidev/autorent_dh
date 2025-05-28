@@ -1,6 +1,7 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom'; // Importar Routes y Route
 import { AuthProvider } from './contexts/AuthContext'; // Importar AuthProvider
+import { FavoritesProvider } from './contexts/FavoritesContext'; // Importar FavoritesProvider
 import Header from './components/Header';
 import MainContent from './components/MainContent';
 // Footer ya está importado, solo reestructuramos su posición en el return.
@@ -16,6 +17,7 @@ import LoginPage from './components/LoginPage'; // Importar LoginPage
 import AdminUserManagement from './components/AdminUserManagement'; // Importar AdminUserManagement
 import AdminCharacteristics from './components/AdminCharacteristics'; // Importar AdminCharacteristics
 import AddCategoryPage from './components/AddCategoryPage'; // Importar AddCategoryPage
+import FavoritesPage from './components/FavoritesPage'; // Importar FavoritesPage
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
 import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
@@ -90,47 +92,52 @@ function App() {
   if (loading) {
     return (
       <AuthProvider>
-        <Header />
-        <div className="app-content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-          <div>Cargando productos...</div>
-        </div>
-        <Footer />
+        <FavoritesProvider>
+          <Header />
+          <div className="app-content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+            <div>Cargando productos...</div>
+          </div>
+          <Footer />
+        </FavoritesProvider>
       </AuthProvider>
     );
   }
 
   return (
     <AuthProvider>
-      <Header />
-      {error && (
-        <div style={{ 
-          backgroundColor: '#fff3cd', 
-          color: '#856404', 
-          padding: '10px', 
-          margin: '10px', 
-          borderRadius: '5px',
-          textAlign: 'center'
-        }}>
-          {error}
+      <FavoritesProvider>
+        <Header />
+        {error && (
+          <div style={{ 
+            backgroundColor: '#fff3cd', 
+            color: '#856404', 
+            padding: '10px', 
+            margin: '10px', 
+            borderRadius: '5px',
+            textAlign: 'center'
+          }}>
+            {error}
+          </div>
+        )}
+        <div className="app-content-wrapper"> {/* Contenedor para el contenido principal */} 
+          <Routes> {/* Definir las rutas */} 
+            <Route path="/" element={<MainContent products={products} />} />
+            <Route path="/admin/add-product" element={<AddProductPage handleAddProduct={handleAddProduct} />} /> {/* AddProductPage podría necesitar setProducts si añade productos */}
+            <Route path="/product/:productId" element={<ProductDetailPage products={products} />} /> 
+            <Route path="/administracion" element={<AdminPage />} /> 
+            <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
+            <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
+            <Route path="/admin/users" element={<AdminUserManagement />} />
+            <Route path="/admin/characteristics" element={<AdminCharacteristics />} />
+            <Route path="/admin/add-category" element={<AddCategoryPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/favorites" element={<FavoritesPage products={products} />} />
+            {/* Aquí se pueden añadir más rutas en el futuro */}        
+          </Routes>
         </div>
-      )}
-      <div className="app-content-wrapper"> {/* Contenedor para el contenido principal */} 
-        <Routes> {/* Definir las rutas */} 
-          <Route path="/" element={<MainContent products={products} />} />
-          <Route path="/admin/add-product" element={<AddProductPage handleAddProduct={handleAddProduct} />} /> {/* AddProductPage podría necesitar setProducts si añade productos */}
-          <Route path="/product/:productId" element={<ProductDetailPage products={products} />} /> 
-          <Route path="/administracion" element={<AdminPage />} /> 
-          <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
-          <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
-          <Route path="/admin/users" element={<AdminUserManagement />} />
-          <Route path="/admin/characteristics" element={<AdminCharacteristics />} />
-          <Route path="/admin/add-category" element={<AddCategoryPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          {/* Aquí se pueden añadir más rutas en el futuro */}        
-        </Routes>
-      </div>
-      <Footer /> {/* Footer fuera de Routes, pero dentro del fragmento principal */}
+        <Footer /> {/* Footer fuera de Routes, pero dentro del fragmento principal */}
+      </FavoritesProvider>
     </AuthProvider>
   );
 }

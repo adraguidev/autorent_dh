@@ -23,6 +23,7 @@
   margin: 0 auto; /* Centrar si max-width está activo */
   width: 100%; /* Asegurar que use el espacio disponible dentro del posible max-width */
   box-sizing: border-box;
+  position: relative; /* Para posicionar el botón de favoritos */
 }
 
 .product-detail-title {
@@ -610,5 +611,26 @@
   .detail-value {
     font-size: 1rem;
   }
+}
+
+/* Estilos específicos para el botón de favoritos en el header del producto */
+.product-detail-header-content .favorite-button-container {
+  position: static; /* Cambiar de absolute a static para el header */
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+.product-detail-header-content .favorite-button {
+  position: static; /* Cambiar de absolute a static */
+  top: auto;
+  right: auto;
+  background-color: rgba(245, 166, 35, 0.1);
+  border: 2px solid rgba(245, 166, 35, 0.3);
+  color: #f5a623;
+}
+
+.product-detail-header-content .favorite-button:hover {
+  background-color: rgba(245, 166, 35, 0.2);
+  border-color: rgba(245, 166, 35, 0.5);
 }
 

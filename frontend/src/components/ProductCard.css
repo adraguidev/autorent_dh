@@ -1,22 +1,55 @@
+.product-card-container {
+  position: relative;
+  width: 100%;
+}
+
 .product-card {
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .product-card:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-card-image-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+/* Estilos específicos para el botón de favoritos en las tarjetas */
+.product-card-image-container .favorite-button-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+}
+
+.product-card-image-container .favorite-button {
+  position: relative;
+  top: 0.75rem;
+  right: 0.75rem;
 }
 
 .product-card-image {
   width: 100%;
-  height: 180px; /* Altura fija para la imagen */
+  height: 100%;
   object-fit: cover; /* Asegura que la imagen cubra el espacio sin deformarse */
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card-image {
+  transform: scale(1.05);
 }
 
 .product-card-content {
@@ -32,6 +65,7 @@
   color: #0d2235;
   margin-bottom: 0.5rem;
   min-height: 2.4em; /* Espacio para dos líneas de título */
+  line-height: 1.2;
 }
 
 .product-card-description {
@@ -61,4 +95,56 @@
   text-decoration: none; /* Eliminar subrayado del enlace */
   color: inherit; /* Heredar color de texto para que no se vea azul por defecto */
   display: block; /* Hacer que el enlace ocupe todo el espacio de la tarjeta */
+  height: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-card-image-container {
+    height: 160px;
+  }
+  
+  .product-card-content {
+    padding: 0.875rem;
+  }
+  
+  .product-card-name {
+    font-size: 1rem;
+    min-height: 2.2em;
+  }
+  
+  .product-card-description {
+    font-size: 0.8rem;
+    min-height: 3.2em;
+  }
+  
+  .product-card-price {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card-image-container {
+    height: 140px;
+  }
+  
+  .product-card-content {
+    padding: 0.75rem;
+  }
+  
+  .product-card-name {
+    font-size: 0.95rem;
+    min-height: 2em;
+  }
+  
+  .product-card-description {
+    font-size: 0.75rem;
+    min-height: 3em;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  .product-card-price {
+    font-size: 0.9rem;
+  }
 }
