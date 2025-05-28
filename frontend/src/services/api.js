@@ -409,8 +409,8 @@ export const api = {
       if (query) params.append('query', query);
       if (categoryId) params.append('categoryId', categoryId);
       if (priceRange) params.append('priceRange', priceRange);
-
-      const response = await fetch(`${API_BASE_URL}/products/search?${params.toString()}`);
+      
+      const response = await fetch(`${API_BASE_URL}/products/search?${params}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
@@ -424,17 +424,89 @@ export const api = {
   // Obtener sugerencias de búsqueda
   async getSearchSuggestions(query) {
     try {
-      if (!query || query.length < 2) {
-        return [];
-      }
       const response = await fetch(`${API_BASE_URL}/products/suggestions?query=${encodeURIComponent(query)}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       return await response.json();
     } catch (error) {
-      console.error('Error getting search suggestions:', error);
-      return [];
+      console.error('Error fetching search suggestions:', error);
+      throw error;
+    }
+  },
+
+  // === FUNCIONES DE DISPONIBILIDAD Y RESERVAS ===
+
+  // Obtener disponibilidad de un producto
+  async getProductAvailability(productId, startDate, endDate) {
+    try {
+      const params = new URLSearchParams();
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      
+      const response = await fetch(`${API_BASE_URL}/products/${productId}/availability?${params}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching product availability:', error);
+      throw error;
+    }
+  },
+
+  // Obtener fechas ocupadas de un producto
+  async getProductBookedDates(productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${productId}/booked-dates`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching booked dates:', error);
+      throw error;
+    }
+  },
+
+  // Crear una reserva
+  async createReservation(reservationData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reservations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reservationData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating reservation:', error);
+      throw error;
+    }
+  },
+
+  // Verificar disponibilidad para fechas específicas
+  async checkAvailability(productId, startDate, endDate) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${productId}/check-availability`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ startDate, endDate }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error checking availability:', error);
+      throw error;
     }
   }
 }; 

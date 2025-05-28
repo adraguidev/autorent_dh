@@ -1,0 +1,420 @@
+.availability-calendar {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  margin-bottom: 2rem;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-header h3 {
+  color: #0d2235;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-header p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Estados de carga y error */
+.calendar-loading,
+.calendar-error {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.calendar-loading {
+  color: #6c757d;
+}
+
+.calendar-loading i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #f5a623;
+}
+
+.calendar-error {
+  color: #dc3545;
+}
+
+.error-icon i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #dc3545;
+}
+
+.calendar-error h4 {
+  color: #0d2235;
+  margin-bottom: 0.5rem;
+}
+
+.retry-btn {
+  background-color: #f5a623;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retry-btn:hover {
+  background-color: #e59400;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+/* Leyenda del calendario */
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.legend-color.available {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.legend-color.booked {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Contenedor del calendario */
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos personalizados para react-datepicker */
+.custom-availability-calendar {
+  border: none;
+  box-shadow: none;
+  font-family: inherit;
+}
+
+.custom-availability-calendar .react-datepicker__month-container {
+  margin: 0 0.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.custom-availability-calendar .react-datepicker__header {
+  background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
+  color: white;
+  border-bottom: none;
+  padding: 1rem;
+}
+
+.custom-availability-calendar .react-datepicker__current-month {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.custom-availability-calendar .react-datepicker__day-name {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.custom-availability-calendar .react-datepicker__month {
+  background: white;
+  padding: 0.5rem;
+}
+
+.custom-availability-calendar .react-datepicker__day {
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  margin: 0.1rem;
+  border-radius: 50%;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.custom-availability-calendar .react-datepicker__day:hover {
+  background-color: rgba(245, 166, 35, 0.1);
+  color: #f5a623;
+}
+
+.custom-availability-calendar .react-datepicker__day--selected {
+  background-color: #f5a623 !important;
+  color: white !important;
+}
+
+.custom-availability-calendar .react-datepicker__day--in-selecting-range,
+.custom-availability-calendar .react-datepicker__day--in-range {
+  background-color: rgba(245, 166, 35, 0.2) !important;
+  color: #f5a623 !important;
+}
+
+.custom-availability-calendar .react-datepicker__day--range-start,
+.custom-availability-calendar .react-datepicker__day--range-end {
+  background-color: #f5a623 !important;
+  color: white !important;
+}
+
+.custom-availability-calendar .react-datepicker__day--disabled {
+  color: #dee2e6 !important;
+  cursor: not-allowed !important;
+}
+
+.custom-availability-calendar .react-datepicker__day--disabled:hover {
+  background-color: transparent !important;
+}
+
+/* Clases personalizadas para fechas */
+.custom-availability-calendar .available-date {
+  background-color: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.custom-availability-calendar .booked-date {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  border: 1px solid rgba(220, 53, 69, 0.3) !important;
+  color: #dc3545 !important;
+  cursor: not-allowed !important;
+}
+
+.custom-availability-calendar .booked-date:hover {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Navegación del calendario */
+.custom-availability-calendar .react-datepicker__navigation {
+  background: none;
+  border: none;
+  top: 1.2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.custom-availability-calendar .react-datepicker__navigation:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.custom-availability-calendar .react-datepicker__navigation-icon::before {
+  border-color: white;
+  border-width: 2px 2px 0 0;
+  width: 8px;
+  height: 8px;
+}
+
+/* Resumen de selección */
+.selection-summary {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.selected-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.date-info {
+  padding: 0.8rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+.nights-info {
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #f5a623 0%, #e59400 100%);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Estados de verificación */
+.checking-availability {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.checking-availability i {
+  color: #f5a623;
+}
+
+.availability-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.availability-result.available {
+  background-color: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  color: #28a745;
+}
+
+.availability-result.unavailable {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
+.result-icon i {
+  font-size: 1.2rem;
+}
+
+/* Acciones del calendario */
+.calendar-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.clear-dates-btn,
+.reserve-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+}
+
+.clear-dates-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.clear-dates-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.reserve-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.reserve-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .availability-calendar {
+    padding: 1.5rem;
+  }
+
+  .calendar-legend {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .custom-availability-calendar .react-datepicker__month-container {
+    margin: 0.25rem;
+  }
+
+  .custom-availability-calendar .react-datepicker__day {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    font-size: 0.8rem;
+  }
+
+  .selected-dates {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .calendar-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clear-dates-btn,
+  .reserve-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .availability-calendar {
+    padding: 1rem;
+  }
+
+  .calendar-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .custom-availability-calendar {
+    font-size: 0.8rem;
+  }
+
+  .custom-availability-calendar .react-datepicker__day {
+    width: 1.8rem;
+    height: 1.8rem;
+    line-height: 1.8rem;
+    font-size: 0.7rem;
+  }
+} 

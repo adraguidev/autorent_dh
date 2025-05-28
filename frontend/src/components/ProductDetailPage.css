@@ -112,17 +112,15 @@
 /* Responsive para el layout del body */
 @media (min-width: 768px) {
   .product-detail-body {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 2 columnas si hay espacio, si no 1 */
-    align-items: flex-start; /* Alinea los items al inicio si tienen alturas diferentes */
+    grid-template-columns: 1fr 1fr; /* Información del producto y calendario lado a lado */
+    align-items: flex-start;
   }
-  /* La regla .product-detail-images que estaba aquí (y que estaba completamente comentada) ha sido eliminada para resolver un lint error. */
 }
 
 @media (min-width: 992px) {
   .product-detail-body {
-    grid-template-columns: 1fr 1fr; /* Forza 2 columnas en pantallas más grandes */
+    grid-template-columns: 1fr 1fr; /* Mantener 2 columnas en pantallas grandes */
   }
-  /* Anteriormente había un comentario o regla vacía aquí que fue eliminada para resolver un lint error. */
 }
 
 /* === Estilos para la Galería de Imágenes del Producto === */
@@ -387,6 +385,230 @@
 
   .characteristic-name {
     font-size: 0.875rem;
+  }
+}
+
+/* === Sección de Disponibilidad === */
+.product-availability-section {
+  grid-column: 1 / -1; /* Ocupar todo el ancho en móvil */
+}
+
+@media (min-width: 768px) {
+  .product-availability-section {
+    grid-column: 2; /* Segunda columna en desktop */
+  }
+}
+
+/* === Modal de Confirmación de Reserva === */
+.reservation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.reservation-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.reservation-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.reservation-modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.reservation-modal-content {
+  padding: 2rem;
+}
+
+.reservation-summary h4 {
+  color: #0d2235;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.reservation-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row.total-row {
+  border-top: 2px solid #f5a623;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.detail-label {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: #0d2235;
+  font-weight: 600;
+}
+
+.total-row .detail-value {
+  color: #f5a623;
+  font-size: 1.2rem;
+}
+
+.reservation-modal-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+.cancel-reservation-btn,
+.confirm-reservation-btn {
+  flex: 1;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cancel-reservation-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-reservation-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.confirm-reservation-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.confirm-reservation-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .reservation-modal {
+    margin: 1rem;
+    max-width: none;
+  }
+
+  .reservation-modal-header,
+  .reservation-modal-content,
+  .reservation-modal-actions {
+    padding: 1rem 1.5rem;
+  }
+
+  .reservation-modal-actions {
+    flex-direction: column;
+  }
+
+  .cancel-reservation-btn,
+  .confirm-reservation-btn {
+    width: 100%;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .detail-label {
+    font-size: 0.9rem;
+  }
+
+  .detail-value {
+    font-size: 1rem;
   }
 }
 
