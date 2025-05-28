@@ -57,7 +57,9 @@
 /* .admin-menu-item se eliminó ya que no tenía estilos específicos */
 
 .admin-menu-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   padding: 0.8rem 1.2rem;
   background-color: #e9ecef;
   color: #0d2235;
@@ -66,6 +68,8 @@
   font-weight: 500;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   border: 1px solid #ced4da;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-menu-link:hover,
@@ -73,6 +77,13 @@
   background-color: #0d2235;
   color: #fff;
   border-color: #0d2235;
+  text-decoration: none;
+}
+
+.admin-menu-link i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
 }
 
 .admin-content-area {
@@ -85,4 +96,197 @@
 .admin-content-area p {
   font-size: 1rem;
   color: #495057;
+}
+
+/* === Bienvenida del Admin === */
+.admin-welcome h2 {
+  color: #0d2235;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.admin-welcome p {
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* === Estadísticas === */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #f5a623;
+}
+
+.stat-card i {
+  font-size: 2rem;
+  padding: 1rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f5a623 0%, #e59400 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0d2235;
+  line-height: 1;
+}
+
+.stat-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* === Acciones Rápidas === */
+.quick-actions {
+  text-align: center;
+}
+
+.quick-actions h3 {
+  color: #0d2235;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-btn.primary {
+  background: linear-gradient(135deg, #f5a623 0%, #e59400 100%);
+  color: white;
+}
+
+.quick-action-btn.primary:hover {
+  background: linear-gradient(135deg, #e59400 0%, #cc8400 100%);
+  color: white;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(245, 166, 35, 0.3);
+}
+
+.quick-action-btn.secondary {
+  background: white;
+  color: #0d2235;
+  border-color: #e9ecef;
+}
+
+.quick-action-btn.secondary:hover {
+  background: #0d2235;
+  color: white;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(13, 34, 53, 0.2);
+}
+
+.quick-action-btn i {
+  font-size: 2rem;
+}
+
+.quick-action-btn span {
+  font-size: 0.95rem;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .admin-page-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .admin-page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-card i {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .quick-action-btn {
+    padding: 1rem;
+  }
+
+  .quick-action-btn i {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-welcome h2 {
+    font-size: 1.5rem;
+  }
+
+  .admin-welcome p {
+    font-size: 1rem;
+  }
+
+  .quick-actions h3 {
+    font-size: 1.2rem;
+  }
 }

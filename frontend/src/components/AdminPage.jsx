@@ -35,30 +35,96 @@ const AdminPage = () => {
         <ul className="admin-menu-list">
           <li className="admin-menu-item">
             <Link to="/admin/add-product" className="admin-menu-link">
+              <i className="fas fa-plus-circle"></i>
               Agregar Nuevo Producto
             </Link>
           </li>
           <li className="admin-menu-item">
             <Link to="/administracion/productos" className="admin-menu-link">
-              Lista de productos
+              <i className="fas fa-list"></i>
+              Lista de Productos
+            </Link>
+          </li>
+          <li className="admin-menu-item">
+            <Link to="/admin/categories" className="admin-menu-link">
+              <i className="fas fa-tags"></i>
+              Gestionar Categorías
+            </Link>
+          </li>
+          <li className="admin-menu-item">
+            <Link to="/admin/add-category" className="admin-menu-link">
+              <i className="fas fa-plus"></i>
+              Agregar Categoría
+            </Link>
+          </li>
+          <li className="admin-menu-item">
+            <Link to="/admin/characteristics" className="admin-menu-link">
+              <i className="fas fa-cogs"></i>
+              Gestionar Características
+            </Link>
+          </li>
+          <li className="admin-menu-item">
+            <Link to="/admin/users" className="admin-menu-link">
+              <i className="fas fa-users"></i>
+              Gestionar Usuarios
             </Link>
           </li>
           {/* Aquí se podrán añadir más enlaces a futuras funciones de administración */}
           {/* <li className="admin-menu-item">
-            <Link to="/administracion/gestionar-productos" className="admin-menu-link">
-              Gestionar Productos
-            </Link>
-          </li>
-          <li className="admin-menu-item">
             <Link to="/administracion/ver-reservas" className="admin-menu-link">
+              <i className="fas fa-calendar-check"></i>
               Ver Reservas
             </Link>
           </li> */}
         </ul>
       </nav>
       <main className="admin-content-area">
-        {/* Aquí se podría renderizar contenido específico de la sub-ruta de admin si se implementara un layout más complejo */}
-        <p>Bienvenido al panel de administración. Seleccione una opción del menú.</p>
+        <div className="admin-welcome">
+          <h2>Bienvenido al Panel de Administración</h2>
+          <p>Desde aquí puedes gestionar todos los aspectos de tu aplicación de alquiler de vehículos.</p>
+          
+          <div className="admin-stats">
+            <div className="stat-card">
+              <i className="fas fa-car"></i>
+              <div className="stat-info">
+                <span className="stat-number">15</span>
+                <span className="stat-label">Productos Activos</span>
+              </div>
+            </div>
+            <div className="stat-card">
+              <i className="fas fa-tags"></i>
+              <div className="stat-info">
+                <span className="stat-number">15</span>
+                <span className="stat-label">Categorías</span>
+              </div>
+            </div>
+            <div className="stat-card">
+              <i className="fas fa-users"></i>
+              <div className="stat-info">
+                <span className="stat-number">--</span>
+                <span className="stat-label">Usuarios Registrados</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="quick-actions">
+            <h3>Acciones Rápidas</h3>
+            <div className="quick-actions-grid">
+              <Link to="/admin/add-product" className="quick-action-btn primary">
+                <i className="fas fa-plus-circle"></i>
+                <span>Nuevo Producto</span>
+              </Link>
+              <Link to="/admin/categories" className="quick-action-btn secondary">
+                <i className="fas fa-tags"></i>
+                <span>Gestionar Categorías</span>
+              </Link>
+              <Link to="/administracion/productos" className="quick-action-btn secondary">
+                <i className="fas fa-list"></i>
+                <span>Ver Productos</span>
+              </Link>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

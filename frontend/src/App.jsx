@@ -17,6 +17,7 @@ import LoginPage from './components/LoginPage'; // Importar LoginPage
 import AdminUserManagement from './components/AdminUserManagement'; // Importar AdminUserManagement
 import AdminCharacteristics from './components/AdminCharacteristics'; // Importar AdminCharacteristics
 import AddCategoryPage from './components/AddCategoryPage'; // Importar AddCategoryPage
+import AdminCategoryManagement from './components/AdminCategoryManagement'; // Importar AdminCategoryManagement
 import FavoritesPage from './components/FavoritesPage'; // Importar FavoritesPage
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
@@ -130,6 +131,7 @@ function App() {
             <Route path="/admin/users" element={<AdminUserManagement />} />
             <Route path="/admin/characteristics" element={<AdminCharacteristics />} />
             <Route path="/admin/add-category" element={<AddCategoryPage />} />
+            <Route path="/admin/categories" element={<AdminCategoryManagement />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/favorites" element={<FavoritesPage products={products} />} />
