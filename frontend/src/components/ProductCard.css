@@ -135,7 +135,13 @@
   font-size: 1rem;
   font-weight: bold;
   color: #f5a623;
-  margin-top: auto; /* Empuja el precio al final de la card */
+  margin-bottom: 0.5rem; /* Reducir margen para dar espacio al rating */
+}
+
+.product-card-rating {
+  margin-top: auto; /* Empuja el rating al final de la card */
+  padding-top: 0.5rem;
+  border-top: 1px solid #e9ecef;
 }
 
 .product-card-link {

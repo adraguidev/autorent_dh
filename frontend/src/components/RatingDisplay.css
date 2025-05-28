@@ -1,0 +1,128 @@
+/* === Rating Display === */
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-display.compact {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.stars-container {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.stars-container i {
+  transition: color 0.2s ease;
+}
+
+.star-filled {
+  color: #f5a623;
+}
+
+.star-half {
+  color: #f5a623;
+}
+
+.star-empty {
+  color: #d1d5db;
+}
+
+/* === Tamaños === */
+.rating-display.small .stars-container i {
+  font-size: 0.8rem;
+}
+
+.rating-display.medium .stars-container i {
+  font-size: 1rem;
+}
+
+.rating-display.large .stars-container i {
+  font-size: 1.2rem;
+}
+
+/* === Información de Rating === */
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #0d2235;
+}
+
+.review-count {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.rating-compact {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* === Sin Rating === */
+.rating-display.no-rating .star-empty {
+  color: #e5e5e5;
+}
+
+.rating-display.no-rating .review-count {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* === Variaciones por Tamaño === */
+.rating-display.small .rating-info {
+  font-size: 0.75rem;
+}
+
+.rating-display.small .review-count {
+  font-size: 0.7rem;
+}
+
+.rating-display.medium .rating-info {
+  font-size: 0.85rem;
+}
+
+.rating-display.medium .review-count {
+  font-size: 0.8rem;
+}
+
+.rating-display.large .rating-info {
+  font-size: 0.95rem;
+}
+
+.rating-display.large .review-count {
+  font-size: 0.85rem;
+}
+
+/* === Responsive === */
+@media (max-width: 480px) {
+  .rating-display.small .stars-container i {
+    font-size: 0.7rem;
+  }
+  
+  .rating-display.medium .stars-container i {
+    font-size: 0.85rem;
+  }
+  
+  .rating-display.large .stars-container i {
+    font-size: 1rem;
+  }
+  
+  .rating-display .rating-info {
+    font-size: 0.7rem;
+  }
+  
+  .rating-display .review-count {
+    font-size: 0.65rem;
+  }
+} 

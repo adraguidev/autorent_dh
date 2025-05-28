@@ -5,6 +5,8 @@ import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
 import AvailabilityCalendar from './AvailabilityCalendar';
 import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
 import ShareButton from './ShareButton'; // Importar ShareButton
+import ProductReviews from './ProductReviews'; // Importar ProductReviews
+import RatingDisplay from './RatingDisplay'; // Importar RatingDisplay
 import './ProductDetailPage.css';
 
 const ProductDetailPage = ({ products }) => { // Recibir products como prop
@@ -74,7 +76,17 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
     <div className="product-detail-page">
       <div className="product-detail-header">
         <div className="product-detail-header-content">
-          <h1 className="product-detail-title">{product.name}</h1>
+          <div className="product-detail-title-section">
+            <h1 className="product-detail-title">{product.name}</h1>
+            <div className="product-detail-rating-header">
+              <RatingDisplay 
+                rating={product.rating || 0} 
+                totalReviews={product.totalReviews || 0}
+                size="medium"
+                compact={false}
+              />
+            </div>
+          </div>
           <div className="product-detail-actions">
             <Link to="/" className="back-arrow">← Volver</Link>
             <ShareButton product={product} />
@@ -204,6 +216,9 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
             </div>
           </div>
         </div>
+
+        {/* Sección de Reseñas y Valoraciones */}
+        <ProductReviews productId={product.id} />
       </div>
 
       {/* Modal de galería de imágenes */}

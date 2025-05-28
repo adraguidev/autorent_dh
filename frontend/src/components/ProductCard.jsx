@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Importar Link
 import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
 import ShareButton from './ShareButton'; // Importar ShareButton
+import RatingDisplay from './RatingDisplay'; // Importar RatingDisplay
 import './ProductCard.css';
 import placeholderImage from '../assets/placeholder_image.webp'; // Importar la imagen local
 
@@ -25,7 +26,14 @@ const ProductCard = ({ product }) => {
             <h3 className="product-card-name">{product.name}</h3>
             <p className="product-card-description">{product.description}</p>
             <p className="product-card-price">{product.price}</p>
-            {/* Podríamos añadir un botón de 'Ver más' o 'Alquilar' aquí */}
+            <div className="product-card-rating">
+              <RatingDisplay 
+                rating={product.rating || 0} 
+                totalReviews={product.totalReviews || 0}
+                size="small"
+                compact={true}
+              />
+            </div>
           </div>
         </div>
       </Link>

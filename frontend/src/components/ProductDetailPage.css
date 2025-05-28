@@ -26,11 +26,35 @@
   position: relative; /* Para posicionar el botón de favoritos */
 }
 
+.product-detail-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
 .product-detail-title {
   font-size: 1.8rem;
   font-weight: 600;
-  margin: 0; /* Alineado a la izquierda por defecto */
-  flex-grow: 1; /* Para que ocupe el espacio disponible y empuje la flecha */
+  margin: 0;
+  color: #fff;
+}
+
+.product-detail-rating-header {
+  display: flex;
+  align-items: center;
+}
+
+.product-detail-rating-header .rating-display {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.product-detail-rating-header .rating-value {
+  color: #fff;
+}
+
+.product-detail-rating-header .review-count {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .product-detail-actions {
