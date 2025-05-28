@@ -183,7 +183,7 @@
   border: 2px solid #f5a623;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 1000; /* Z-index muy alto */
   max-height: 200px;
   overflow-y: auto;
   animation: slideDown 0.3s ease-out;
@@ -271,7 +271,7 @@
   color: #f5a623;
 }
 
-/* Sugerencias de autocompletado mejoradas */
+/* Sugerencias de autocompletado mejoradas - Z-INDEX ARREGLADO */
 .suggestions-dropdown {
   position: absolute;
   top: 100%;
@@ -281,7 +281,7 @@
   border: 2px solid #f5a623;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 9999; /* Z-index muy alto */
   max-height: 200px;
   overflow-y: auto;
   animation: slideDown 0.3s ease-out;
@@ -315,393 +315,562 @@
   font-size: 0.9rem;
 }
 
-/* Fechas */
-.search-dates {
-  grid-column: span 3;
+/* Fechas mejoradas con DatePicker */
+.date-field {
+  flex: 1.5;
+  position: relative;
 }
 
-.date-inputs {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 1rem;
-  align-items: center;
-}
-
-.date-input-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.date-input-group label {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
+.date-display {
+  color: #0d2235;
+  font-size: 0.95rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-top: 2px;
+  cursor: pointer;
+  padding: 2px 0;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
-.date-separator {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
-  font-weight: 500;
+.date-display:hover {
+  background: rgba(245, 166, 35, 0.1);
+}
+
+.date-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -20px;
+  right: -20px;
+  background: white;
+  border: 2px solid #f5a623;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  animation: fadeInDown 0.3s ease;
+  overflow: hidden;
+  min-width: 650px;
+}
+
+.date-picker-header {
+  background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
+  padding: 20px 24px;
   text-align: center;
-  padding-top: 1.5rem;
+  color: white;
+}
+
+.date-picker-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.date-picker-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Estilos del calendario mejorados */
+.react-datepicker {
+  border: none !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  width: 100% !important;
+  display: flex !important;
+}
+
+.react-datepicker__month-container {
+  border-radius: 0 !important;
+  overflow: visible !important;
+  float: none !important;
+  flex: 1 !important;
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+.react-datepicker__header {
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #e9ecef !important;
+  border-radius: 0 !important;
+  padding: 16px 0 !important;
+  position: relative !important;
+}
+
+.react-datepicker__current-month {
+  color: #0d2235 !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 12px !important;
+}
+
+.react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-bottom: 8px !important;
+}
+
+.react-datepicker__day-name {
+  color: #6c757d !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  width: 40px !important;
+  line-height: 40px !important;
+  text-align: center !important;
+}
+
+.react-datepicker__month {
+  background: white !important;
+  padding: 16px !important;
+  margin: 0 !important;
+}
+
+.react-datepicker__week {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-bottom: 4px !important;
+}
+
+.react-datepicker__day {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  color: #0d2235 !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 0.9rem !important;
+}
+
+.react-datepicker__day:hover {
+  background: rgba(245, 166, 35, 0.1) !important;
+  color: #f5a623 !important;
+  transform: scale(1.05) !important;
+}
+
+.react-datepicker__day--selected {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background: rgba(245, 166, 35, 0.15) !important;
+  color: #f5a623 !important;
+  font-weight: 500 !important;
+}
+
+.react-datepicker__day--range-start {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--range-end {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #ccc !important;
+  cursor: not-allowed !important;
+  background: transparent !important;
+}
+
+.react-datepicker__day--disabled:hover {
+  background: transparent !important;
+  transform: none !important;
+  color: #ccc !important;
+}
+
+.react-datepicker__navigation {
+  top: 20px !important;
+  border: none !important;
+  outline: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(245, 166, 35, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.react-datepicker__navigation:hover {
+  background: rgba(245, 166, 35, 0.2) !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #f5a623 !important;
+  border-width: 2px 2px 0 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* Footer del DatePicker */
+.date-picker-footer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
 }
 
-.date-separator::before {
-  content: '';
-  width: 20px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 1px;
+.date-info {
+  flex: 1;
 }
 
-/* Botones de acción mejorados */
-.search-actions {
-  grid-column: span 3;
+.nights-count {
+  color: #0d2235;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.date-actions {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: 12px;
 }
 
-.search-btn,
-.clear-btn {
-  padding: 1rem 2.5rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+.date-clear-btn, .date-apply-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 160px;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 80px;
 }
 
-.search-btn {
-  background: linear-gradient(135deg, #f5a623 0%, #e59400 100%);
+.date-clear-btn {
+  background: transparent;
+  color: #6c757d;
+  border: 1px solid #e9ecef;
+}
+
+.date-clear-btn:hover {
+  background: #f8f9fa;
   color: #0d2235;
-  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+  border-color: #dee2e6;
 }
 
-.search-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+.date-apply-btn {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%);
+  color: white;
 }
 
-.search-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
+.date-apply-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e8941a 0%, #d4841a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
 }
 
-.search-btn:hover:not(:disabled)::before {
-  left: 100%;
-}
-
-.search-btn:disabled {
-  opacity: 0.6;
+.date-apply-btn:disabled {
+  background: #ccc;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.clear-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.clear-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-1px);
-}
-
-.clear-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Animaciones */
-@keyframes slideDown {
+@keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-15px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.search-block {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-/* Estados de carga */
-.fa-spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-  .search-block {
-    padding: 1.5rem 1rem;
+  .search-block-airbnb {
+    min-height: 280px;
+    padding: 20px 15px;
   }
 
-  .search-block-header h2 {
-    font-size: 1.5rem;
+  .search-header h1 {
+    font-size: 1.8rem;
   }
 
-  .search-block-header p {
+  .search-header p {
     font-size: 0.9rem;
   }
 
-  .search-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .search-bar {
+    border-radius: 20px;
+    padding: 12px;
   }
 
-  .search-dates {
-    grid-column: span 1;
+  .search-bar-inner {
+    flex-direction: column;
+    gap: 4px;
+    min-height: auto;
   }
 
-  .date-inputs {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .search-field-airbnb {
+    width: 100%;
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-height: 50px;
+    margin-bottom: 4px;
   }
 
-  .date-separator {
+  .search-field-airbnb:hover,
+  .search-field-airbnb.active {
+    background: rgba(245, 166, 35, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(245, 166, 35, 0.3);
+  }
+
+  .field-separator {
     display: none;
   }
 
-  .search-actions {
-    grid-column: span 1;
-    flex-direction: column;
-    margin-top: 1rem;
+  .search-button-airbnb {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
   }
 
-  .search-btn,
-  .clear-btn {
-    width: 100%;
+  .date-picker-dropdown {
+    left: -10px;
+    right: -10px;
     min-width: auto;
+    border-radius: 16px;
   }
 
-  .custom-input,
-  .custom-date-input {
-    padding: 0.8rem 1rem;
-    font-size: 0.9rem;
+  .react-datepicker {
+    display: block !important;
   }
 
-  .custom-select-display {
-    padding: 0.8rem 1rem;
-    font-size: 0.9rem;
+  .react-datepicker__month-container {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .date-picker-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .date-actions {
+    width: 100%;
+  }
+
+  .date-clear-btn, .date-apply-btn {
+    flex: 1;
+  }
+
+  .airbnb-dropdown {
+    border-radius: 12px;
+    min-width: 200px;
   }
 }
 
 @media (max-width: 480px) {
-  .search-block {
-    padding: 1rem;
+  .search-header h1 {
+    font-size: 1.8rem;
   }
 
-  .search-block-header h2 {
-    font-size: 1.3rem;
+  .search-field-airbnb {
+    padding: 10px 14px;
+    min-height: 45px;
   }
 
-  .custom-input,
-  .custom-date-input {
-    padding: 0.7rem 0.8rem;
+  .date-picker-dropdown {
+    left: -5px;
+    right: -5px;
+    min-width: 280px;
+    padding: 12px;
+  }
+
+  .custom-calendar .react-datepicker__day {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0.1rem;
     font-size: 0.85rem;
   }
 
-  .custom-select-display {
-    padding: 0.7rem 0.8rem;
-    font-size: 0.85rem;
+  .custom-calendar .react-datepicker__day-name {
+    width: 2rem;
+    font-size: 0.7rem;
   }
 
-  .suggestions-dropdown {
-    max-height: 150px;
+  .date-picker-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .date-clear-btn, .date-apply-btn {
+    width: 100%;
+    padding: 10px;
   }
 }
 
-/* Mejoras de accesibilidad */
-.custom-input:focus,
-.custom-date-input:focus {
-  box-shadow: none;
+/* Eliminar estilos antiguos de fechas - COMENTADO PARA QUE NO INTERFIERA */
+/*
+.date-inputs-airbnb,
+.date-input-container,
+.date-input-airbnb,
+.date-label,
+.date-separator-airbnb {
+  display: none;
 }
+*/
 
-.search-btn:focus,
-.clear-btn:focus {
-  outline: 2px solid rgba(245, 166, 35, 0.5);
-  outline-offset: 2px;
-}
-
-/* Efectos hover mejorados */
-.search-field:hover .custom-input-container,
-.search-field:hover .custom-select-container,
-.search-field:hover .custom-date-container {
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Scrollbar personalizado para dropdowns */
-.suggestions-dropdown::-webkit-scrollbar,
-.custom-select-dropdown::-webkit-scrollbar {
-  width: 6px;
-}
-
-.suggestions-dropdown::-webkit-scrollbar-track,
-.custom-select-dropdown::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.suggestions-dropdown::-webkit-scrollbar-thumb,
-.custom-select-dropdown::-webkit-scrollbar-thumb {
-  background: #f5a623;
-  border-radius: 3px;
-}
-
-.suggestions-dropdown::-webkit-scrollbar-thumb:hover,
-.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #e59400;
-}
-
-/* Estilo inspirado en Airbnb */
+/* Contenedor principal - DROPDOWNS VISIBLES DEFINITIVO */
 .search-block-airbnb {
   background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
-  padding: 4rem 2rem 3rem;
-  width: 100%;
+  min-height: 320px; /* Volver a la altura original */
+  display: flex;
+  align-items: center; /* Volver al centrado original */
+  justify-content: center;
+  padding: 40px 0 80px 0; /* Agregar padding inferior para dropdowns */
   position: relative;
-  min-height: 400px;
+  overflow: visible; /* VISIBLE PARA QUE SE VEAN LOS DROPDOWNS */
+  width: 100%;
+  color: white;
+}
+
+.search-block-airbnb::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #f5a623 0%, #e59400 100%);
 }
 
 .search-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1200px; /* Hacer más ancho */
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: visible; /* Permitir que los dropdowns se vean */
+  padding: 0 20px; /* Agregar padding lateral para evitar que toque los bordes */
+  box-sizing: border-box;
 }
 
+/* Header */
 .search-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 30px;
 }
 
 .search-header h1 {
-  color: #fff;
-  font-size: 3rem;
+  color: white;
+  font-size: 2.2rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   letter-spacing: -0.02em;
-  line-height: 1.1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .search-header p {
-  color: #e9ecef;
-  font-size: 1.125rem;
-  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
   font-weight: 400;
+  margin: 0;
   opacity: 0.9;
 }
 
-/* Barra de búsqueda principal */
+/* Barra de búsqueda - MÁS ANCHA */
 .search-bar {
+  background: white;
+  border-radius: 50px;
+  padding: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  overflow: visible; /* Permitir que los dropdowns se muestren */
+  max-width: 1100px; /* Hacer más ancha */
+  width: 100%;
+  box-sizing: border-box; /* Incluir padding y border en el ancho */
+}
+
+.search-bar:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.15);
+  border-color: #f5a623;
 }
 
 .search-bar-inner {
   display: flex;
   align-items: center;
-  background: #fff;
-  border: 2px solid #e9ecef;
-  border-radius: 50px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  overflow: hidden;
   position: relative;
-  min-height: 70px;
+  min-height: 60px;
+  overflow: visible; /* Permitir que los dropdowns se muestren */
 }
 
-.search-bar-inner:hover {
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.15);
-  border-color: #f5a623;
-}
-
-/* Campos de búsqueda */
+/* Campos de búsqueda - SIN OVERFLOW */
 .search-field-airbnb {
   flex: 1;
-  padding: 16px 28px;
+  padding: 14px 24px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  min-height: 70px;
+  min-height: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 50px;
+  /* Evitar que el efecto active cause scroll horizontal */
+  box-sizing: border-box;
+  /* Asegurar que los dropdowns se vean */
+  overflow: visible;
+  z-index: 1;
+  max-width: 100%; /* Limitar el ancho máximo */
 }
 
 .search-field-airbnb:hover {
-  background-color: #f8f9fa;
+  background: rgba(245, 166, 35, 0.05);
+  border-radius: 30px;
 }
 
 .search-field-airbnb.active {
-  background-color: #fff;
-  box-shadow: inset 0 0 0 2px #f5a623;
-  transform: scale(1.02);
-  z-index: 10;
+  background: rgba(245, 166, 35, 0.1);
+  /* Usar outline en lugar de box-shadow para evitar cambios de layout */
+  outline: 2px solid rgba(245, 166, 35, 0.3);
+  outline-offset: -2px; /* Mantener el outline dentro del elemento */
+  border-radius: 30px;
+  /* Asegurar que no cambie el tamaño */
+  transform: none;
+  /* Aumentar z-index cuando está activo */
+  z-index: 10000;
 }
 
 .field-label {
+  color: #0d2235;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #0d2235;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
 }
 
 .field-input {
-  font-size: 1rem;
   color: #0d2235;
+  font-size: 0.95rem;
+  font-weight: 500;
   border: none;
   outline: none;
   background: transparent;
   width: 100%;
-  font-weight: 500;
-  padding: 0;
-  line-height: 1.4;
+  cursor: pointer;
 }
 
 .field-input::placeholder {
@@ -709,59 +878,63 @@
   font-weight: 400;
 }
 
-.field-placeholder {
-  font-size: 1rem;
+/* Campo de fechas específico */
+.date-field .date-display {
   color: #6c757d;
+  font-size: 0.95rem;
   font-weight: 400;
+  margin-top: 2px;
+  cursor: pointer;
 }
 
 /* Separadores */
 .field-separator {
-  width: 2px;
+  width: 1px;
   height: 40px;
-  background: linear-gradient(to bottom, transparent, #e9ecef 20%, #e9ecef 80%, transparent);
-  margin: 0;
-  opacity: 0.7;
+  background: linear-gradient(to bottom, transparent, #e9ecef, transparent);
+  flex-shrink: 0;
 }
 
-/* Campo de fechas específico */
-.date-field {
-  flex: 1.3;
-}
-
-.date-inputs-airbnb {
+/* Contenedor de botones de búsqueda - REDISEÑADO */
+.search-buttons-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  margin: 7px;
 }
 
-.date-input-airbnb {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 1rem;
-  color: #0d2235;
-  font-weight: 500;
-  width: 110px;
+/* Botón de limpiar rediseñado como X - MÁS DISCRETO */
+.clear-search-btn {
+  background: rgba(245, 166, 35, 0.1);
+  border: 1px solid rgba(245, 166, 35, 0.2);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5a623;
+  font-size: 0.9rem;
   cursor: pointer;
-  padding: 4px 0;
-}
-
-.date-input-airbnb::-webkit-calendar-picker-indicator {
+  transition: all 0.3s ease;
   opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(245, 166, 35, 0.2);
 }
 
-.date-separator-airbnb {
-  color: #6c757d;
-  font-weight: 500;
-  margin: 0 8px;
-  font-size: 1.1rem;
+.clear-search-btn.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.clear-search-btn:hover {
+  background: rgba(245, 166, 35, 0.2);
+  border-color: #f5a623;
+  color: #e8941a;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
 }
 
 /* Botón de búsqueda */
@@ -778,47 +951,42 @@
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin: 7px;
   box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.search-button-airbnb:hover {
+.search-button-airbnb:hover:not(:disabled) {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(245, 166, 35, 0.5), 0 3px 12px rgba(0, 0, 0, 0.15);
   background: linear-gradient(135deg, #e8941a 0%, #d4841a 50%, #c0751a 100%);
 }
 
-.search-button-airbnb:active {
-  transform: scale(0.98);
-}
-
 .search-button-airbnb:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* Dropdowns */
+/* Dropdowns - POSICIONAMIENTO RESTAURADO DEFINITIVO */
 .airbnb-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  left: -10px;
-  right: -10px;
+  left: -10px; /* Restaurar para que se vea mejor */
+  right: -10px; /* Restaurar para que se vea mejor */
   background: white;
   border: 2px solid #f5a623;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 99999; /* Z-index máximo */
   max-height: 350px;
   overflow-y: auto;
   animation: fadeInDown 0.3s ease;
   min-width: 250px;
+  box-sizing: border-box;
 }
 
 .dropdown-item {
   padding: 16px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease; /* Solo transición de colores */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -826,6 +994,8 @@
   color: #0d2235;
   border-bottom: 1px solid #f0f2f5;
   font-weight: 500;
+  box-sizing: border-box; /* Asegurar que el padding esté incluido */
+  width: 100%; /* Asegurar que no exceda el contenedor */
 }
 
 .dropdown-item:last-child {
@@ -835,7 +1005,7 @@
 .dropdown-item:hover {
   background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%);
   color: white;
-  transform: translateX(4px);
+  transform: none;
 }
 
 .dropdown-item.selected {
@@ -855,36 +1025,250 @@
   font-size: 1rem;
 }
 
-/* Botón de limpiar filtros */
-.clear-filters-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 30px;
-  padding: 12px 24px;
-  font-size: 1rem;
+/* DatePicker - COMPLETAMENTE REDISEÑADO */
+.date-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -20px;
+  right: -20px;
+  background: white;
+  border: 2px solid #f5a623;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  animation: fadeInDown 0.3s ease;
+  overflow: hidden;
+  min-width: 650px;
+}
+
+.date-picker-header {
+  background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
+  padding: 20px 24px;
+  text-align: center;
   color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+}
+
+.date-picker-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
   font-weight: 600;
-  backdrop-filter: blur(10px);
 }
 
-.clear-filters-btn:hover {
-  background: rgba(245, 166, 35, 0.2);
-  border-color: #f5a623;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+.date-picker-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-.clear-filters-btn:disabled {
-  opacity: 0.5;
+/* Estilos del calendario mejorados */
+.react-datepicker {
+  border: none !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+  width: 100% !important;
+  display: flex !important;
+}
+
+.react-datepicker__month-container {
+  border-radius: 0 !important;
+  overflow: visible !important;
+  float: none !important;
+  flex: 1 !important;
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+.react-datepicker__header {
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #e9ecef !important;
+  border-radius: 0 !important;
+  padding: 16px 0 !important;
+  position: relative !important;
+}
+
+.react-datepicker__current-month {
+  color: #0d2235 !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 12px !important;
+}
+
+.react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-bottom: 8px !important;
+}
+
+.react-datepicker__day-name {
+  color: #6c757d !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  width: 40px !important;
+  line-height: 40px !important;
+  text-align: center !important;
+}
+
+.react-datepicker__month {
+  background: white !important;
+  padding: 16px !important;
+  margin: 0 !important;
+}
+
+.react-datepicker__week {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-bottom: 4px !important;
+}
+
+.react-datepicker__day {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  color: #0d2235 !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 0.9rem !important;
+}
+
+.react-datepicker__day:hover {
+  background: rgba(245, 166, 35, 0.1) !important;
+  color: #f5a623 !important;
+  transform: scale(1.05) !important;
+}
+
+.react-datepicker__day--selected {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background: rgba(245, 166, 35, 0.15) !important;
+  color: #f5a623 !important;
+  font-weight: 500 !important;
+}
+
+.react-datepicker__day--range-start {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--range-end {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #ccc !important;
+  cursor: not-allowed !important;
+  background: transparent !important;
+}
+
+.react-datepicker__day--disabled:hover {
+  background: transparent !important;
+  transform: none !important;
+  color: #ccc !important;
+}
+
+.react-datepicker__navigation {
+  top: 20px !important;
+  border: none !important;
+  outline: none !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(245, 166, 35, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.react-datepicker__navigation:hover {
+  background: rgba(245, 166, 35, 0.2) !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #f5a623 !important;
+  border-width: 2px 2px 0 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* Footer del DatePicker */
+.date-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.date-info {
+  flex: 1;
+}
+
+.nights-count {
+  color: #0d2235;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.date-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.date-clear-btn, .date-apply-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 80px;
+}
+
+.date-clear-btn {
+  background: transparent;
+  color: #6c757d;
+  border: 1px solid #e9ecef;
+}
+
+.date-clear-btn:hover {
+  background: #f8f9fa;
+  color: #0d2235;
+  border-color: #dee2e6;
+}
+
+.date-apply-btn {
+  background: linear-gradient(135deg, #f5a623 0%, #e8941a 100%);
+  color: white;
+}
+
+.date-apply-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e8941a 0%, #d4841a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+.date-apply-btn:disabled {
+  background: #ccc;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 /* Animaciones */
@@ -899,95 +1283,89 @@
   }
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
   .search-block-airbnb {
-    padding: 3rem 1rem 2rem;
-    min-height: 300px;
-  }
-
-  .search-container {
-    max-width: 100%;
+    min-height: 280px;
+    padding: 20px 15px;
   }
 
   .search-header h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
   }
 
   .search-header p {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .search-bar {
+    border-radius: 20px;
+    padding: 12px;
   }
 
   .search-bar-inner {
     flex-direction: column;
-    border-radius: 20px;
-    padding: 12px;
+    gap: 4px;
     min-height: auto;
   }
 
   .search-field-airbnb {
     width: 100%;
-    padding: 18px 24px;
-    border-radius: 16px;
-    border: 2px solid #e9ecef;
-    margin-bottom: 12px;
-    background: white;
-    min-height: 60px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-height: 50px;
+    margin-bottom: 4px;
   }
 
   .search-field-airbnb:hover,
   .search-field-airbnb.active {
-    border-radius: 16px;
-    border-color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(245, 166, 35, 0.3);
   }
 
   .field-separator {
     display: none;
   }
 
-  .date-field {
+  .search-button-airbnb {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .date-picker-dropdown {
+    left: -10px;
+    right: -10px;
+    min-width: auto;
+    border-radius: 16px;
+  }
+
+  .react-datepicker {
+    display: block !important;
+  }
+
+  .react-datepicker__month-container {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .date-picker-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .date-actions {
+    width: 100%;
+  }
+
+  .date-clear-btn, .date-apply-btn {
     flex: 1;
   }
 
-  .date-inputs-airbnb {
-    flex-direction: row;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .date-input-airbnb {
-    width: 120px;
-    padding: 8px 12px;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    background: #f8f9fa;
-  }
-
-  .date-separator-airbnb {
-    display: block;
-    color: #f5a623;
-    font-weight: 600;
-  }
-
-  .search-button-airbnb {
-    width: 100%;
-    height: 56px;
-    border-radius: 16px;
-    margin: 8px 0 0 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    position: relative;
-  }
-
-  .search-button-airbnb::before {
-    content: 'Buscar vehículos';
-    margin-left: 8px;
-  }
-
   .airbnb-dropdown {
-    left: 0;
-    right: 0;
-    min-width: auto;
+    border-radius: 12px;
+    min-width: 200px;
   }
 }
 
@@ -997,21 +1375,68 @@
   }
 
   .search-field-airbnb {
-    padding: 16px 20px;
-    min-height: 55px;
+    padding: 10px 14px;
+    min-height: 45px;
   }
 
-  .date-inputs-airbnb {
+  .date-picker-dropdown {
+    left: -5px;
+    right: -5px;
+    min-width: 280px;
+    padding: 12px;
+  }
+
+  .custom-calendar .react-datepicker__day {
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0.1rem;
+    font-size: 0.85rem;
+  }
+
+  .custom-calendar .react-datepicker__day-name {
+    width: 2rem;
+    font-size: 0.7rem;
+  }
+
+  .date-picker-footer {
     flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
+    gap: 8px;
   }
 
-  .date-input-airbnb {
+  .date-clear-btn, .date-apply-btn {
     width: 100%;
+    padding: 10px;
   }
+}
 
-  .date-separator-airbnb {
-    display: none;
-  }
+.search-button-airbnb {
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+}
+
+.search-buttons-container {
+  margin: 4px;
+}
+
+.clear-search-btn {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8rem;
+}
+
+.date-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -10px;
+  right: -10px;
+  background: white;
+  border: 2px solid #f5a623;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  animation: fadeInDown 0.3s ease;
+  overflow: hidden;
+  min-width: 650px;
 } 

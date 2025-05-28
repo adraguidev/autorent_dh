@@ -52,6 +52,16 @@ const MainContent = ({ products }) => {
       setCategories(categoriesData);
     } catch (error) {
       console.error('Error loading categories:', error);
+      // Fallback con categorías mock si falla la API
+      const mockCategories = [
+        { id: 1, name: 'Compacto' },
+        { id: 2, name: 'Sedán' },
+        { id: 3, name: 'SUV' },
+        { id: 4, name: 'Deportivo' },
+        { id: 5, name: 'Furgoneta' },
+        { id: 6, name: 'Lujo' }
+      ];
+      setCategories(mockCategories);
     } finally {
       setLoading(false);
     }
@@ -221,28 +231,6 @@ const MainContent = ({ products }) => {
               ))}
             </div>
           )}
-
-          {selectedCategories.length > 0 && (
-            <div className="active-filters">
-              <span className="active-filters-label">Filtros activos:</span>
-              <div className="active-filters-list">
-                {selectedCategories.map(categoryId => {
-                  const category = categories.find(cat => cat.id === categoryId);
-                  return category ? (
-                    <span key={categoryId} className="active-filter-tag">
-                      {category.name}
-                      <button
-                        onClick={() => handleCategoryToggle(categoryId)}
-                        className="remove-filter-btn"
-                      >
-                        <i className="fas fa-times"></i>
-                      </button>
-                    </span>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
         </section>
 
         <section className="recommendations-section">
@@ -267,9 +255,6 @@ const MainContent = ({ products }) => {
               </div>
               <h3>No se encontraron productos</h3>
               <p>No hay productos que coincidan con los filtros seleccionados.</p>
-              <button onClick={clearAllFilters} className="clear-filters-btn-alt">
-                Ver todos los productos
-              </button>
             </div>
           ) : (
             <>
