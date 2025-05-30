@@ -191,6 +191,20 @@ export const api = {
     }
   },
 
+  // Obtener perfil actualizado del usuario
+  async getUserProfile(userId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/profile/${userId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      throw error;
+    }
+  },
+
   // === FUNCIONES DE ADMINISTRACIÓN ===
 
   // Obtener todos los usuarios

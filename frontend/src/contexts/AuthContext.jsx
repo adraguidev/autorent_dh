@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -39,6 +40,24 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const refreshUserProfile = async () => {
+    if (!user?.id) return;
+    
+    try {
+      const updatedProfile = await api.getUserProfile(user.id);
+      updateUser(updatedProfile);
+      return updatedProfile;
+    } catch (error) {
+      console.error('Error al actualizar perfil:', error);
+      throw error;
+    }
+  };
+
   const isAuthenticated = () => {
     return user !== null;
   };
@@ -54,6 +73,8 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
+    updateUser,
+    refreshUserProfile,
     isAuthenticated,
     getUserInitials,
     loading

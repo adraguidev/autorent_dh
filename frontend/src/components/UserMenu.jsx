@@ -60,6 +60,9 @@ const UserMenu = () => {
             <div className="user-menu-info">
               <div className="user-menu-name">{user.firstName} {user.lastName}</div>
               <div className="user-menu-email">{user.email}</div>
+              <div className="user-menu-role">
+                {user.isAdmin ? 'Administrador' : 'Usuario'}
+              </div>
             </div>
           </div>
           <hr className="user-menu-divider" />

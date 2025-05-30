@@ -10,11 +10,13 @@ import com.autorent.backend.model.Product;
 import com.autorent.backend.repository.CategoryRepository;
 import com.autorent.backend.repository.CharacteristicRepository;
 import com.autorent.backend.repository.ProductRepository;
+import com.autorent.backend.repository.ReservationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,12 +29,17 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final CharacteristicRepository characteristicRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, CharacteristicRepository characteristicRepository) {
+    public ProductService(ProductRepository productRepository, 
+                         CategoryRepository categoryRepository, 
+                         CharacteristicRepository characteristicRepository,
+                         ReservationRepository reservationRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.characteristicRepository = characteristicRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     private ProductResponseDto convertToDto(Product product) {
@@ -185,5 +192,38 @@ public class ProductService {
             .distinct()
             .limit(5)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> searchProductsByDateRange(LocalDate startDate, LocalDate endDate, 
+                                                             String query, Long categoryId, String priceRange) {
+        // Primero obtener todos los productos que coinciden con los filtros básicos
+        List<Product> allProducts = searchProductsBasic(query, categoryId, priceRange);
+        
+        // Filtrar solo los productos que están disponibles en el rango de fechas
+        List<Product> availableProducts = allProducts.stream()
+            .filter(product -> isProductAvailableInDateRange(product.getId(), startDate, endDate))
+            .collect(Collectors.toList());
+        
+        return availableProducts.stream()
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
+    }
+
+    private List<Product> searchProductsBasic(String query, Long categoryId, String priceRange) {
+        if (query != null && !query.trim().isEmpty() && categoryId != null) {
+            return productRepository.findByNameContainingIgnoreCaseAndCategoryId(query.trim(), categoryId);
+        } else if (query != null && !query.trim().isEmpty()) {
+            return productRepository.findByNameContainingIgnoreCase(query.trim());
+        } else if (categoryId != null) {
+            return productRepository.findByCategoryId(categoryId);
+        } else {
+            return productRepository.findAll();
+        }
+    }
+
+    private boolean isProductAvailableInDateRange(Long productId, LocalDate startDate, LocalDate endDate) {
+        // Verificar si hay conflictos de reservas para este producto en el rango de fechas
+        return reservationRepository.findConflictingReservations(productId, startDate, endDate).isEmpty();
     }
 }
