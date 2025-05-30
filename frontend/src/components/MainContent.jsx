@@ -105,7 +105,13 @@ const MainContent = ({ products }) => {
         setIsSearchActive(false);
       } else {
         // Realizar búsqueda
-        const results = await api.searchProducts(params.query, params.categoryId, params.priceRange);
+        const results = await api.searchProducts(
+          params.query, 
+          params.categoryId, 
+          params.priceRange,
+          params.startDate,
+          params.endDate
+        );
         setSearchResults(results);
       }
     } catch (error) {

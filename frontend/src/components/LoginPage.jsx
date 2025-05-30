@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import ErrorMessage from './ErrorMessage';
@@ -13,7 +13,13 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [showResendModal, setShowResendModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+
+  // Obtener parámetros de consulta para verificar si viene de una reserva
+  const searchParams = new URLSearchParams(location.search);
+  const redirectPath = searchParams.get('redirect');
+  const isFromReservation = redirectPath && redirectPath.includes('/reservation/');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +50,13 @@ const LoginPage = () => {
       
       // Mostrar mensaje de bienvenida y redirigir
       alert(`¡Bienvenido ${response.firstName}!`);
-      navigate('/'); // Redirigir a la página principal
+      
+      // Redirigir según el parámetro redirect o a la página principal
+      if (redirectPath) {
+        navigate(redirectPath);
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Error en el login:', error);
       setError(error.message || 'Error al iniciar sesión. Por favor, intenta de nuevo.');
@@ -56,6 +68,19 @@ const LoginPage = () => {
   return (
     <div className="login-page-container">
       <div className="login-form-wrapper">
+        {isFromReservation && (
+          <div className="reservation-message">
+            <h3>
+              <i className="fas fa-info-circle"></i>
+              Inicio de sesión requerido
+            </h3>
+            <p>
+              Para realizar una reserva, necesitas iniciar sesión en tu cuenta. 
+              Si no tienes una cuenta, puedes registrarte gratuitamente.
+            </p>
+          </div>
+        )}
+        
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
         <ErrorMessage message={error} type="error" />

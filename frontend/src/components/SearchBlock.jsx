@@ -253,7 +253,7 @@ const SearchBlock = ({ onSearch, onClear, isLoading }) => {
 
   const formatDisplayDates = () => {
     if (!startDate && !endDate) return 'Agregar fechas';
-    if (startDate && !endDate) return `${formatDate(startDate)} - Selecciona fecha de salida`;
+    if (startDate && !endDate) return `${formatDate(startDate)} - Selecciona fecha de entrega`;
     if (startDate && endDate) {
       return `${formatDate(startDate)} - ${formatDate(endDate)}`;
     }
@@ -385,13 +385,13 @@ const SearchBlock = ({ onSearch, onClear, isLoading }) => {
                 >
                   <div className="date-picker-header">
                     <h3>
-                      {!startDate ? 'Selecciona las fechas de tu viaje' : 
-                       !endDate ? 'Ahora selecciona la fecha de salida' : 
+                      {!startDate ? 'Selecciona las fechas de tu alquiler' : 
+                       !endDate ? 'Ahora selecciona la fecha de entrega' : 
                        'Fechas seleccionadas'}
                     </h3>
                     <p>
-                      {!startDate ? 'Elige la fecha de inicio y fin de tu alquiler' :
-                       !endDate ? 'Haz click en la fecha de fin de tu alquiler' :
+                      {!startDate ? 'Elige la fecha de recogida y entrega de tu vehículo' :
+                       !endDate ? 'Haz click en la fecha de entrega de tu vehículo' :
                        'Puedes cambiar las fechas si lo deseas'}
                     </p>
                   </div>

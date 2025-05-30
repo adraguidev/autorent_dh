@@ -19,6 +19,7 @@ import AdminCharacteristics from './components/AdminCharacteristics'; // Importa
 import AddCategoryPage from './components/AddCategoryPage'; // Importar AddCategoryPage
 import AdminCategoryManagement from './components/AdminCategoryManagement'; // Importar AdminCategoryManagement
 import FavoritesPage from './components/FavoritesPage'; // Importar FavoritesPage
+import ReservationPage from './components/ReservationPage'; // Importar ReservationPage
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
 import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
@@ -135,6 +136,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/favorites" element={<FavoritesPage products={products} />} />
+            <Route path="/reservation/:productId" element={<ReservationPage products={products} />} />
             {/* Aquí se pueden añadir más rutas en el futuro */}        
           </Routes>
         </div>

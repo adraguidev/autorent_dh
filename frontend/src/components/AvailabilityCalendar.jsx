@@ -100,7 +100,7 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
     setEndDate(end);
   };
 
-  const calculateNights = () => {
+  const calculateDays = () => {
     if (!startDate || !endDate) return 0;
     const diffTime = Math.abs(endDate - startDate);
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -111,7 +111,7 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
       onReservationRequest({
         startDate: startDate.toISOString().split('T')[0],
         endDate: endDate.toISOString().split('T')[0],
-        nights: calculateNights()
+        days: calculateDays()
       });
     }
   };
@@ -202,13 +202,13 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
         <div className="selection-summary">
           <div className="selected-dates">
             <div className="date-info">
-              <strong>Entrada:</strong> {startDate.toLocaleDateString('es-ES')}
+              <strong>Recogida:</strong> {startDate.toLocaleDateString('es-ES')}
             </div>
             <div className="date-info">
-              <strong>Salida:</strong> {endDate.toLocaleDateString('es-ES')}
+              <strong>Entrega:</strong> {endDate.toLocaleDateString('es-ES')}
             </div>
-            <div className="nights-info">
-              <strong>{calculateNights()} noche{calculateNights() !== 1 ? 's' : ''}</strong>
+            <div className="days-info">
+              <strong>{calculateDays()} día{calculateDays() !== 1 ? 's' : ''}</strong>
             </div>
           </div>
 

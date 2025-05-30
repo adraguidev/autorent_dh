@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import placeholderImage from '../assets/placeholder_image.webp'; // Usaremos la misma imagen para todas por ahora
 import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
 import AvailabilityCalendar from './AvailabilityCalendar';
@@ -14,6 +15,8 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
   const product = products.find(p => p.id === parseInt(productId));
   const [selectedDates, setSelectedDates] = useState(null);
   const [showReservationModal, setShowReservationModal] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   if (!product) {
     return (
@@ -65,8 +68,18 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
     });
     
     // Mostrar mensaje de éxito o redirigir
-    alert(`¡Reserva confirmada para ${product.name}!\nFechas: ${selectedDates.startDate} - ${selectedDates.endDate}\nNoches: ${selectedDates.nights}`);
+    alert(`¡Reserva confirmada para ${product.name}!\nFechas: ${selectedDates.startDate} - ${selectedDates.endDate}\nDías: ${selectedDates.days}`);
     setShowReservationModal(false);
+  };
+
+  const handleReservationClick = () => {
+    if (isAuthenticated()) {
+      // Si está logueado, ir a la página de reserva
+      navigate(`/reservation/${product.id}`);
+    } else {
+      // Si no está logueado, ir al login con redirect
+      navigate(`/login?redirect=/reservation/${product.id}`);
+    }
   };
 
   // Si no hay imágenes, podríamos mostrar un placeholder genérico o un mensaje
@@ -130,6 +143,23 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
           <h2>Descripción</h2>
           <p className="product-detail-description">{product.description}</p>
           <p className="product-detail-price">Precio: {product.price}</p>
+          
+          {/* Botón de Reserva */}
+          <div className="reservation-action">
+            <button 
+              className="reserve-now-btn"
+              onClick={handleReservationClick}
+            >
+              <i className="fas fa-calendar-check"></i>
+              Reservar Ahora
+            </button>
+            <p className="reservation-info">
+              {isAuthenticated() 
+                ? "Selecciona las fechas para tu reserva" 
+                : "Inicia sesión para realizar una reserva"
+              }
+            </p>
+          </div>
         </div>
 
         {/* Calendario de Disponibilidad */}
@@ -246,16 +276,16 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
                 <h4>{product.name}</h4>
                 <div className="reservation-details">
                   <div className="detail-row">
-                    <span className="detail-label">Fecha de entrada:</span>
+                    <span className="detail-label">Fecha de recogida:</span>
                     <span className="detail-value">{new Date(selectedDates.startDate).toLocaleDateString('es-ES')}</span>
                   </div>
                   <div className="detail-row">
-                    <span className="detail-label">Fecha de salida:</span>
+                    <span className="detail-label">Fecha de entrega:</span>
                     <span className="detail-value">{new Date(selectedDates.endDate).toLocaleDateString('es-ES')}</span>
                   </div>
                   <div className="detail-row">
-                    <span className="detail-label">Número de noches:</span>
-                    <span className="detail-value">{selectedDates.nights}</span>
+                    <span className="detail-label">Número de días:</span>
+                    <span className="detail-value">{selectedDates.days}</span>
                   </div>
                   <div className="detail-row total-row">
                     <span className="detail-label">Precio total:</span>

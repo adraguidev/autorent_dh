@@ -16,6 +16,7 @@ const Header = () => {
           <span className="slogan">Renta de autos fácil y rápida</span>
         </a>
       </div>
+      
       <div className="header-right">
         {loading ? (
           <div className="header-loading">Cargando...</div>
