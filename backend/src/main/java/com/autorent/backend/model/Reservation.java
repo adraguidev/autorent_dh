@@ -53,7 +53,8 @@ public class Reservation {
     // Calculamos automáticamente la duración en días
     public int getDurationDays() {
         if (startDate != null && endDate != null) {
-            return (int) java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate);
+            // +1 para incluir ambos días (inicio y fin)
+            return (int) java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
         }
         return 0;
     }

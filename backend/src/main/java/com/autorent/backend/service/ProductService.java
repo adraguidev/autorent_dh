@@ -11,6 +11,7 @@ import com.autorent.backend.repository.CategoryRepository;
 import com.autorent.backend.repository.CharacteristicRepository;
 import com.autorent.backend.repository.ProductRepository;
 import com.autorent.backend.repository.ReservationRepository;
+import com.autorent.backend.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,16 +31,19 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final CharacteristicRepository characteristicRepository;
     private final ReservationRepository reservationRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository, 
                          CategoryRepository categoryRepository, 
                          CharacteristicRepository characteristicRepository,
-                         ReservationRepository reservationRepository) {
+                         ReservationRepository reservationRepository,
+                         ReviewRepository reviewRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.characteristicRepository = characteristicRepository;
         this.reservationRepository = reservationRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     private ProductResponseDto convertToDto(Product product) {
@@ -56,6 +60,10 @@ public class ProductService {
                 .collect(Collectors.toList()) : 
             List.of();
         
+        // 📊 Calcular rating y total de reseñas
+        Double averageRating = reviewRepository.getAverageRatingByProductId(product.getId());
+        Long totalReviews = reviewRepository.countByProductId(product.getId());
+        
         ProductResponseDto dto = new ProductResponseDto();
         dto.setId(product.getId());
         dto.setName(product.getName());
@@ -64,6 +72,8 @@ public class ProductService {
         dto.setCategory(categoryDto);
         dto.setImageUrls(product.getImageUrls() != null ? product.getImageUrls() : List.of());
         dto.setCharacteristics(characteristicDtos);
+        dto.setAverageRating(averageRating != null ? averageRating : 0.0);
+        dto.setTotalReviews(totalReviews != null ? totalReviews : 0L);
         
         return dto;
     }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './UserMenu.css';
 
@@ -7,6 +7,7 @@ const UserMenu = () => {
   const { user, logout, getUserInitials } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -29,6 +30,24 @@ const UserMenu = () => {
 
   const closeMenu = () => {
     setIsOpen(false);
+  };
+
+  const handleHistorialClick = () => {
+    console.log('🔍 UserMenu: Historial clicked!');
+    closeMenu();
+    setTimeout(() => {
+      console.log('🚀 UserMenu: Forcing navigation to /reservations');
+      window.location.href = '/reservations';
+    }, 50);
+  };
+
+  const handleAdminNavigation = (path, name) => {
+    console.log(`🔍 UserMenu: ${name} clicked!`);
+    closeMenu();
+    setTimeout(() => {
+      console.log(`🚀 UserMenu: Forcing navigation to ${path}`);
+      window.location.href = path;
+    }, 50);
   };
 
   if (!user) return null;
@@ -64,79 +83,82 @@ const UserMenu = () => {
 
           <hr className="user-menu-divider" />
 
-          <Link 
-            to="/reservations" 
+          <button 
             className="user-menu-item"
-            onClick={closeMenu}
+            data-testid="historial-link"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('🔍 Button click event:', e);
+              handleHistorialClick();
+            }}
+            style={{
+              pointerEvents: 'auto',
+              position: 'relative',
+              zIndex: 99999
+            }}
           >
             <i className="fas fa-history"></i>
             <span>Mi Historial</span>
-          </Link>
+          </button>
 
           {user.isAdmin && (
             <>
-              <Link 
-                to="/administracion" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/administracion', 'Panel de Admin')}
               >
                 <i className="fas fa-cog"></i>
                 <span>Panel de Admin</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/admin/users" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/admin/users', 'Gestionar Usuarios')}
               >
                 <i className="fas fa-users"></i>
                 <span>Gestionar Usuarios</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/admin/categories" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/admin/categories', 'Gestionar Categorías')}
               >
                 <i className="fas fa-tags"></i>
                 <span>Gestionar Categorías</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/admin/add-category" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/admin/add-category', 'Agregar Categoría')}
               >
                 <i className="fas fa-plus-circle"></i>
                 <span>Agregar Categoría</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/administracion/productos" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/administracion/productos', 'Gestionar Productos')}
               >
                 <i className="fas fa-box"></i>
                 <span>Gestionar Productos</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/admin/add-product" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/admin/add-product', 'Agregar Producto')}
               >
                 <i className="fas fa-plus"></i>
                 <span>Agregar Producto</span>
-              </Link>
+              </button>
               
-              <Link 
-                to="/admin/characteristics" 
+              <button 
                 className="user-menu-item"
-                onClick={closeMenu}
+                onClick={() => handleAdminNavigation('/admin/characteristics', 'Gestionar Características')}
               >
                 <i className="fas fa-list"></i>
                 <span>Gestionar Características</span>
-              </Link>
+              </button>
             </>
           )}
 

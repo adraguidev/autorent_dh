@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
             <p className="product-card-price">{product.price}</p>
             <div className="product-card-rating">
               <RatingDisplay 
-                rating={product.rating || 0} 
+                rating={product.averageRating || 0} 
                 totalReviews={product.totalReviews || 0}
                 size="small"
                 compact={true}

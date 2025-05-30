@@ -1,41 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import placeholderImage from '../assets/placeholder_image.webp'; // Usaremos la misma imagen para todas por ahora
-import ImageGalleryModal from './ImageGalleryModal'; // Importar el nuevo modal
+import { api } from '../services/api';
+import { calculateDaysBetween, parseDateLocal } from '../utils/dateUtils';
+import placeholderImage from '../assets/placeholder_image.webp';
+import ImageGalleryModal from './ImageGalleryModal';
 import AvailabilityCalendar from './AvailabilityCalendar';
-import FavoriteButton from './FavoriteButton'; // Importar FavoriteButton
-import ShareButton from './ShareButton'; // Importar ShareButton
-import ProductReviews from './ProductReviews'; // Importar ProductReviews
-import RatingDisplay from './RatingDisplay'; // Importar RatingDisplay
+import FavoriteButton from './FavoriteButton';
+import ShareButton from './ShareButton';
+import ProductReviews from './ProductReviews';
+import RatingDisplay from './RatingDisplay';
 import './ProductDetailPage.css';
 
-const ProductDetailPage = ({ products }) => { // Recibir products como prop
-  const { productId } = useParams(); // Obtiene el ID del producto de la URL
-  const product = products.find(p => p.id === parseInt(productId));
+const ProductDetailPage = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedDates, setSelectedDates] = useState(null);
   const [showReservationModal, setShowReservationModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  if (!product) {
-    return (
-      <div className="product-detail-container product-not-found">
-        <h2>Producto no encontrado</h2>
-        <p>El producto que buscas ya no está disponible o ha sido eliminado.</p>
-        <Link to="/" className="back-to-home-link">Volver al inicio</Link>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        console.log('ProductDetailPage: Fetching product with ID:', productId);
+        setLoading(true);
+        const productData = await api.getProductById(productId);
+        console.log('ProductDetailPage: Product data received:', productData);
+        setProduct(productData);
+        setError(null);
+      } catch (err) {
+        console.error('ProductDetailPage: Error fetching product:', err);
+        setError('Error al cargar el producto');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Asegurarse de que product.images exista y tenga elementos
-  const images = product.images && product.images.length > 0 ? product.images : [];
-  const mainProductImage = images.length > 0 ? images[0] : { url: '', alt: 'Imagen principal no disponible' };
-  const thumbnailImages = images.slice(1, 5); // Las siguientes 4 imágenes para la cuadrícula
+    if (productId) {
+      console.log('ProductDetailPage: Component mounted with productId:', productId);
+      fetchProduct();
+    } else {
+      console.error('ProductDetailPage: No productId found');
+      setError('ID de producto no válido');
+      setLoading(false);
+    }
+  }, [productId]);
 
-  // Estado para el modal de la galería completa
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Para el modal
+  // 🔍 DEBUG: Detectar elementos que interfieren con UserMenu
+  useEffect(() => {
+    const checkInterference = () => {
+      console.log('🔍 ProductDetailPage: Checking for interference with UserMenu');
+      
+      // Buscar elementos con z-index alto
+      const highZIndexElements = Array.from(document.querySelectorAll('*')).filter(el => {
+        const style = window.getComputedStyle(el);
+        const zIndex = parseInt(style.zIndex);
+        return !isNaN(zIndex) && zIndex > 10000;
+      });
+      
+      console.log('🔍 High z-index elements:', highZIndexElements.map(el => ({
+        element: el.tagName + (el.className ? '.' + el.className.split(' ').join('.') : ''),
+        zIndex: window.getComputedStyle(el).zIndex,
+        position: window.getComputedStyle(el).position
+      })));
+      
+      // Buscar overlays o modales
+      const overlays = document.querySelectorAll('[class*="overlay"], [class*="modal"], [style*="position: fixed"], [style*="position: absolute"]');
+      console.log('🔍 Potential overlays:', Array.from(overlays).map(el => ({
+        element: el.tagName + (el.className ? '.' + el.className.split(' ').join('.') : ''),
+        display: window.getComputedStyle(el).display,
+        visibility: window.getComputedStyle(el).visibility,
+        pointerEvents: window.getComputedStyle(el).pointerEvents
+      })));
+    };
+    
+    // Ejecutar después de que el componente se monte completamente
+    const timer = setTimeout(checkInterference, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const openModal = (index = 0) => {
     setSelectedImageIndex(index);
@@ -51,212 +98,396 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
   };
 
   const handleReservationRequest = (reservationData) => {
+    console.log('ProductDetailPage: Reservation data received:', reservationData);
+    console.log('ProductDetailPage: Days in reservation data:', reservationData.days);
+    console.log('ProductDetailPage: Type of days:', typeof reservationData.days);
     setSelectedDates(reservationData);
     setShowReservationModal(true);
+  };
+
+  const calculateTotalPrice = (days, pricePerDay) => {
+    console.log('calculateTotalPrice called with:', { days, pricePerDay });
+    
+    // Convertir días a número si es string
+    const daysNumber = typeof days === 'string' ? parseInt(days) : days;
+    
+    if (!daysNumber || !pricePerDay || isNaN(daysNumber)) {
+      console.log('Missing or invalid days/pricePerDay:', { days, daysNumber, pricePerDay });
+      return '$0';
+    }
+    
+    // Extraer el número del precio (ej: "$70/día" -> 70)
+    const price = pricePerDay.replace(/[^\d]/g, '');
+    const priceNumber = parseInt(price);
+    
+    console.log('Extracted price:', { price, priceNumber });
+    
+    if (isNaN(priceNumber)) {
+      console.log('Price is NaN, returning original:', pricePerDay);
+      return pricePerDay;
+    }
+    
+    const total = priceNumber * daysNumber;
+    const result = `$${total}`;
+    
+    console.log('Calculated total:', { daysNumber, priceNumber, total, result });
+    return result;
+  };
+
+  // Función para calcular días desde las fechas del modal
+  const calculateDaysFromDates = (startDateStr, endDateStr) => {
+    return calculateDaysBetween(startDateStr, endDateStr);
+  };
+
+  // Función para calcular precio total como número (para backend)
+  const calculateTotalPriceNumber = (days, pricePerDay) => {
+    if (!days || !pricePerDay) return 0;
+    
+    // Extraer el número del precio (ej: "$70/día" -> 70)
+    const price = pricePerDay.replace(/[^\d]/g, '');
+    const priceNumber = parseInt(price);
+    
+    if (isNaN(priceNumber)) return 0;
+    
+    return priceNumber * days;
   };
 
   const closeReservationModal = () => {
     setShowReservationModal(false);
   };
 
-  const confirmReservation = () => {
-    // Aquí se implementaría la lógica de reserva
-    console.log('Reserva confirmada:', {
-      productId: product.id,
-      productName: product.name,
-      ...selectedDates
-    });
-    
-    // Mostrar mensaje de éxito o redirigir
-    alert(`¡Reserva confirmada para ${product.name}!\nFechas: ${selectedDates.startDate} - ${selectedDates.endDate}\nDías: ${selectedDates.days}`);
-    setShowReservationModal(false);
+  const confirmReservation = async () => {
+    try {
+      // Calcular días si no están disponibles
+      const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
+      
+      console.log('🚀 confirmReservation: Starting reservation process', {
+        selectedDates,
+        calculatedDays,
+        product: {
+          id: product.id,
+          name: product.name,
+          price: product.price
+        }
+      });
+
+      // Verificar que el usuario esté autenticado
+      if (!isAuthenticated()) {
+        alert('Debes iniciar sesión para hacer una reserva.');
+        navigate('/login');
+        return;
+      }
+
+      // Verificar disponibilidad antes de crear la reserva
+      const isAvailable = await api.checkAvailability(
+        product.id,
+        selectedDates.startDate,
+        selectedDates.endDate
+      );
+
+      console.log('🔍 Availability check result:', isAvailable);
+
+      if (!isAvailable.available) {
+        alert('Las fechas seleccionadas ya no están disponibles. Por favor, selecciona otras fechas.');
+        setShowReservationModal(false);
+        setSelectedDates(null); // Limpiar fechas para actualizar el calendario
+        return;
+      }
+
+      // Crear la reserva en el backend
+      const reservationData = {
+        productId: product.id,
+        userId: 1, // Por ahora uso un userId fijo, luego se puede obtener del contexto de auth
+        startDate: selectedDates.startDate,
+        endDate: selectedDates.endDate,
+        days: calculatedDays,
+        totalPrice: calculateTotalPriceNumber(calculatedDays, product.price)
+      };
+
+      console.log('📝 Sending reservation data to backend:', reservationData);
+
+      const createdReservation = await api.createReservation(reservationData);
+      console.log('✅ Reservation created successfully:', createdReservation);
+      
+      alert(`¡Reserva confirmada para ${product.name}!\nFechas: ${selectedDates.startDate} - ${selectedDates.endDate}\nDías: ${calculatedDays}`);
+      setShowReservationModal(false);
+      
+      // Limpiar las fechas seleccionadas para forzar actualización del calendario
+      setSelectedDates(null);
+      
+    } catch (error) {
+      console.error('❌ Error al crear reserva:', error);
+      alert('Error al confirmar la reserva. Por favor, intenta de nuevo.');
+    }
   };
 
   const handleReservationClick = () => {
     if (isAuthenticated()) {
-      // Si está logueado, ir a la página de reserva
       navigate(`/reservation/${product.id}`);
     } else {
-      // Si no está logueado, ir al login con redirect
       navigate(`/login?redirect=/reservation/${product.id}`);
     }
   };
 
-  // Si no hay imágenes, podríamos mostrar un placeholder genérico o un mensaje
-  // Por ahora, se asume que placeholderImage está disponible para todas.
+  if (loading) {
+    return (
+      <div className="product-detail-page">
+        <div className="product-detail-loading">
+          <div className="loading-spinner"></div>
+          <p>Cargando producto...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="product-detail-page">
+        <div className="product-detail-error">
+          <div className="error-content">
+            <i className="fas fa-exclamation-circle"></i>
+            <h2>Producto no encontrado</h2>
+            <p>El producto que buscas no está disponible o ha sido eliminado.</p>
+            <Link to="/" className="back-to-home-btn">
+              <i className="fas fa-home"></i>
+              Volver al inicio
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const images = product.imageUrls && product.imageUrls.length > 0 ? 
+    product.imageUrls.map((url, index) => {
+      // Corregir las URLs que vienen con /src/assets/ para que funcionen en producción
+      let correctedUrl = placeholderImage; // default fallback
+      
+      if (url && url !== '' && !url.includes('undefined')) {
+        correctedUrl = url.replace('/src/assets/', '/assets/');
+        // Si la URL corregida no funciona, usar placeholder
+        // El navegador intentará cargar la imagen y si falla, mostrará el placeholder
+      }
+      
+      return { 
+        id: index, 
+        url: correctedUrl, 
+        alt: `${product.name} ${index + 1}`,
+        fallback: placeholderImage
+      };
+    }) : 
+    [{ id: 0, url: placeholderImage, alt: product.name, fallback: placeholderImage }];
+
+  console.log('ProductDetailPage: Images array:', images);
 
   return (
     <div className="product-detail-page">
-      <div className="product-detail-header">
-        <div className="product-detail-header-content">
-          <div className="product-detail-title-section">
-            <h1 className="product-detail-title">{product.name}</h1>
-            <div className="product-detail-rating-header">
-              <RatingDisplay 
-                rating={product.rating || 0} 
+      {/* Breadcrumb y navegación */}
+      <div className="breadcrumb-section">
+        <div className="breadcrumb-container">
+          <Link to="/" className="breadcrumb-link">
+            <i className="fas fa-home"></i>
+            Inicio
+          </Link>
+          <span className="breadcrumb-separator">/</span>
+          <Link to={`/categoria/${product.category?.id}`} className="breadcrumb-link">
+            {product.category?.name || 'Categoría'}
+          </Link>
+          <span className="breadcrumb-separator">/</span>
+          <span className="breadcrumb-current">{product.name}</span>
+        </div>
+      </div>
+
+      {/* Contenido principal */}
+      <div className="product-detail-container">
+        {/* Sección superior - Imagen y información básica */}
+        <div className="product-main-section">
+          {/* Galería de imágenes */}
+          <div className="product-gallery">
+            <div className="main-image-container">
+              <img
+                src={images[0]?.url || placeholderImage}
+                alt={images[0]?.alt || product.name}
+                className="main-image"
+                onClick={() => openModal(0)}
+                onError={(e) => {
+                  console.log('Image failed to load:', e.target.src);
+                  e.target.src = placeholderImage;
+                }}
+              />
+              {images.length > 1 && (
+                <button className="gallery-expand-btn" onClick={() => openModal(0)}>
+                  <i className="fas fa-expand"></i>
+                  Ver galería
+                </button>
+              )}
+            </div>
+            
+            {images.length > 1 && (
+              <div className="thumbnail-gallery">
+                {images.slice(1, 5).map((image, index) => (
+                  <div 
+                    key={image.id} 
+                    className="thumbnail-item"
+                    style={{
+                      backgroundImage: `url(${image.url || placeholderImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
+                    onClick={() => openModal(index + 1)}
+                    title={image.alt}
+                  >
+                  </div>
+                ))}
+                {images.length > 5 && (
+                  <div className="thumbnail-item more-images" onClick={() => openModal(5)}>
+                    <span className="more-count">+{images.length - 5}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Información del producto */}
+          <div className="product-info">
+            <div className="product-header">
+              <div className="product-title-section">
+                <h1 className="product-title">{product.name}</h1>
+                <div className="product-category">
+                  <i className={`fas fa-tag`}></i>
+                  {product.category?.name}
+                </div>
+              </div>
+              
+              <div className="product-actions">
+                <ShareButton product={product} />
+                <FavoriteButton productId={product.id} inline={true} />
+              </div>
+            </div>
+
+            <div className="product-rating-section">
+              <RatingDisplay
+                rating={product.averageRating || 0}
                 totalReviews={product.totalReviews || 0}
-                size="medium"
+                size="large"
                 compact={false}
               />
             </div>
-          </div>
-          <div className="product-detail-actions">
-            <Link to="/" className="back-arrow">← Volver</Link>
-            <ShareButton product={product} />
-            <FavoriteButton productId={product.id} />
-          </div>
-        </div>
-      </div>
 
-      {/* Sección de Galería de Imágenes */}
-      <div className="product-gallery-block">
-        <div className="gallery-main-image-container">
-          <img 
-            src={placeholderImage} // Usar la imagen importada
-            alt={mainProductImage.alt}
-            className="gallery-main-image" 
-          />
-        </div>
-        <div className="gallery-thumbnail-grid">
-          {thumbnailImages.map((img) => (
-            <div key={img.id} className="gallery-thumbnail-item">
-              <img 
-                src={placeholderImage} // Usar la imagen importada
-                alt={img.alt} 
-                className="gallery-thumbnail-image" 
-              />
+            <div className="product-description">
+              <h3>Descripción</h3>
+              <p>{product.description}</p>
             </div>
-          ))}
-        </div>
-        {images.length > 0 && (
-          <div className="gallery-see-more">
-            <button onClick={() => openModal(0)} className="see-more-link">
-              Ver más
-            </button>
-          </div>
-        )}
-      </div>
 
-      {/* Información del producto y calendario de disponibilidad */}
-      <div className="product-detail-body">        
-        <div className="product-detail-info">
-          <h2>Descripción</h2>
-          <p className="product-detail-description">{product.description}</p>
-          <p className="product-detail-price">Precio: {product.price}</p>
-          
-          {/* Botón de Reserva */}
-          <div className="reservation-action">
-            <button 
-              className="reserve-now-btn"
-              onClick={handleReservationClick}
-            >
-              <i className="fas fa-calendar-check"></i>
-              Reservar Ahora
-            </button>
-            <p className="reservation-info">
-              {isAuthenticated() 
-                ? "Selecciona las fechas para tu reserva" 
-                : "Inicia sesión para realizar una reserva"
-              }
-            </p>
+            <div className="product-price">
+              <span className="price-label">Precio por día:</span>
+              <span className="price-value">{product.price}</span>
+            </div>
+
+            {/* Características */}
+            {product.characteristics && product.characteristics.length > 0 && (
+              <div className="product-features">
+                <h3>Características incluidas</h3>
+                <div className="features-grid">
+                  {product.characteristics.map((characteristic) => (
+                    <div key={characteristic.id} className="feature-item">
+                      <div className="feature-icon">
+                        <i className={characteristic.icon}></i>
+                      </div>
+                      <span className="feature-name">{characteristic.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Calendario de Disponibilidad */}
-        <div className="product-availability-section">
+        {/* Sección de disponibilidad */}
+        <div className="availability-section">
+          <div className="section-header">
+            <h2>Disponibilidad</h2>
+            <p>Selecciona las fechas para verificar la disponibilidad del producto</p>
+          </div>
           <AvailabilityCalendar
+            key={selectedDates ? 'with-dates' : 'no-dates'}
             productId={product.id}
             onDateSelect={handleDateSelect}
             onReservationRequest={handleReservationRequest}
           />
         </div>
 
-        {/* Bloque de Características */}
-        {product.characteristics && product.characteristics.length > 0 && (
-          <div className="product-characteristics-block">
-            <h2>Características</h2>
-            <div className="characteristics-grid">
-              {product.characteristics.map((characteristic) => (
-                <div key={characteristic.id} className="characteristic-item">
-                  <div className="characteristic-icon">
-                    <i className={characteristic.icon}></i>
-                  </div>
-                  <span className="characteristic-name">{characteristic.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Sección de reseñas */}
+        <div className="reviews-section">
+          <ProductReviews productId={product.id} />
+        </div>
 
-        {/* Bloque de Políticas del Producto */}
-        <div className="product-policies-block">
-          <h2 className="policies-title">Políticas del Producto</h2>
+        {/* Sección de políticas */}
+        <div className="policies-section">
+          <div className="section-header">
+            <h2>Políticas y términos</h2>
+            <p>Información importante sobre el uso y cuidado del producto</p>
+          </div>
+          
           <div className="policies-grid">
-            <div className="policy-item">
-              <h3 className="policy-title">Política de Uso</h3>
-              <p className="policy-description">
-                El producto debe ser utilizado únicamente para los fines especificados. 
-                Se requiere un manejo cuidadoso y responsable durante todo el período de alquiler. 
-                Cualquier uso inadecuado puede resultar en cargos adicionales.
-              </p>
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-shield-alt"></i>
+              </div>
+              <h3>Política de Uso</h3>
+              <p>Uso responsable y cuidadoso durante todo el período de alquiler. Seguir las instrucciones proporcionadas.</p>
             </div>
-            
-            <div className="policy-item">
-              <h3 className="policy-title">Cuidados y Mantenimiento</h3>
-              <p className="policy-description">
-                Mantener el producto en condiciones óptimas durante el alquiler. 
-                Evitar exposición a condiciones extremas de temperatura o humedad. 
-                Reportar inmediatamente cualquier daño o mal funcionamiento.
-              </p>
+
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-tools"></i>
+              </div>
+              <h3>Mantenimiento</h3>
+              <p>Mantener el producto en óptimas condiciones. Reportar cualquier daño inmediatamente.</p>
             </div>
-            
-            <div className="policy-item">
-              <h3 className="policy-title">Política de Devolución</h3>
-              <p className="policy-description">
-                El producto debe ser devuelto en las mismas condiciones en que fue entregado. 
-                La devolución debe realizarse en la fecha y hora acordadas. 
-                Retrasos en la devolución pueden generar cargos adicionales.
-              </p>
+
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-undo"></i>
+              </div>
+              <h3>Devolución</h3>
+              <p>Devolver en las mismas condiciones y en la fecha acordada. Retrasos pueden generar cargos extra.</p>
             </div>
-            
-            <div className="policy-item">
-              <h3 className="policy-title">Responsabilidades del Usuario</h3>
-              <p className="policy-description">
-                El usuario es responsable de cualquier daño, pérdida o robo del producto durante el período de alquiler. 
-                Se requiere proporcionar identificación válida y depósito de seguridad cuando sea aplicable.
-              </p>
+
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-user-shield"></i>
+              </div>
+              <h3>Responsabilidad</h3>
+              <p>El usuario es responsable de daños, pérdidas o robos durante el período de alquiler.</p>
             </div>
-            
-            <div className="policy-item">
-              <h3 className="policy-title">Cancelaciones</h3>
-              <p className="policy-description">
-                Las cancelaciones deben realizarse con al menos 24 horas de anticipación. 
-                Cancelaciones tardías pueden estar sujetas a penalizaciones. 
-                Consulte nuestros términos y condiciones para más detalles.
-              </p>
+
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-calendar-times"></i>
+              </div>
+              <h3>Cancelaciones</h3>
+              <p>Cancelaciones con 24h de anticipación. Cancelaciones tardías sujetas a penalizaciones.</p>
             </div>
-            
-            <div className="policy-item">
-              <h3 className="policy-title">Soporte y Asistencia</h3>
-              <p className="policy-description">
-                Ofrecemos soporte técnico durante el período de alquiler. 
-                Contacte nuestro servicio al cliente para cualquier consulta o problema. 
-                Disponible de lunes a viernes de 9:00 AM a 6:00 PM.
-              </p>
+
+            <div className="policy-card">
+              <div className="policy-icon">
+                <i className="fas fa-headset"></i>
+              </div>
+              <h3>Soporte</h3>
+              <p>Soporte técnico disponible durante el alquiler. Lunes a viernes de 9:00 AM a 6:00 PM.</p>
             </div>
           </div>
         </div>
-
-        {/* Sección de Reseñas y Valoraciones */}
-        <ProductReviews productId={product.id} />
       </div>
 
       {/* Modal de galería de imágenes */}
       {isModalOpen && (
-        <ImageGalleryModal 
-          images={images} // Pasar todas las imágenes del producto
+        <ImageGalleryModal
+          images={images}
           initialImageIndex={selectedImageIndex}
-          onClose={closeModal} 
+          onClose={closeModal}
         />
       )}
 
@@ -270,31 +501,48 @@ const ProductDetailPage = ({ products }) => { // Recibir products como prop
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            
+
             <div className="reservation-modal-content">
               <div className="reservation-summary">
                 <h4>{product.name}</h4>
                 <div className="reservation-details">
                   <div className="detail-row">
                     <span className="detail-label">Fecha de recogida:</span>
-                    <span className="detail-value">{new Date(selectedDates.startDate).toLocaleDateString('es-ES')}</span>
+                    <span className="detail-value">{parseDateLocal(selectedDates.startDate).toLocaleDateString('es-ES')}</span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">Fecha de entrega:</span>
-                    <span className="detail-value">{new Date(selectedDates.endDate).toLocaleDateString('es-ES')}</span>
+                    <span className="detail-value">{parseDateLocal(selectedDates.endDate).toLocaleDateString('es-ES')}</span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">Número de días:</span>
-                    <span className="detail-value">{selectedDates.days}</span>
+                    <span className="detail-value">
+                      {(() => {
+                        const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
+                        console.log('🔢 Modal días calculation:', {
+                          selectedDates,
+                          daysFromCalendar: selectedDates.days,
+                          calculatedDays,
+                          startDate: selectedDates.startDate,
+                          endDate: selectedDates.endDate
+                        });
+                        return calculatedDays ? `${calculatedDays} día${calculatedDays !== 1 ? 's' : ''}` : 'No calculado';
+                      })()}
+                    </span>
                   </div>
                   <div className="detail-row total-row">
                     <span className="detail-label">Precio total:</span>
-                    <span className="detail-value">{product.price}</span>
+                    <span className="detail-value">
+                      {(() => {
+                        const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
+                        return calculatedDays ? calculateTotalPrice(calculatedDays, product.price) : product.price;
+                      })()}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="reservation-modal-actions">
               <button onClick={closeReservationModal} className="cancel-reservation-btn">
                 Cancelar

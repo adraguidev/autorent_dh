@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
 import { api } from '../services/api';
+import { formatDateLocal, calculateDaysBetween, parseDateLocal } from '../utils/dateUtils';
 import './AvailabilityCalendar.css';
 
 // Registrar localización en español
@@ -33,8 +34,13 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
     try {
       setLoading(true);
       setError(null);
+      console.log('🔍 AvailabilityCalendar: Loading booked dates for product:', productId);
       const dates = await api.getProductBookedDates(productId);
-      setBookedDates(dates.map(date => new Date(date)));
+      console.log('📅 AvailabilityCalendar: Raw booked dates from API:', dates);
+      
+      const processedDates = dates.map(dateString => parseDateLocal(dateString));
+      console.log('📅 AvailabilityCalendar: Processed booked dates:', processedDates.map(d => d.toDateString()));
+      setBookedDates(processedDates);
     } catch (error) {
       console.error('Error loading booked dates:', error);
       setError('No se pudieron cargar las fechas ocupadas. Por favor, inténtalo de nuevo más tarde.');
@@ -48,10 +54,20 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
 
     try {
       setCheckingAvailability(true);
+      
+      // Formatear fechas localmente para evitar zona horaria
+      const startDateFormatted = formatDateLocal(startDate);
+      const endDateFormatted = formatDateLocal(endDate);
+      
+      console.log('AvailabilityCalendar checkAvailability:', {
+        originalDates: { startDate: startDate.toDateString(), endDate: endDate.toDateString() },
+        formattedDates: { startDate: startDateFormatted, endDate: endDateFormatted }
+      });
+
       const result = await api.checkAvailability(
         productId,
-        startDate.toISOString().split('T')[0],
-        endDate.toISOString().split('T')[0]
+        startDateFormatted,
+        endDateFormatted
       );
       setAvailabilityResult(result);
     } catch (error) {
@@ -102,16 +118,29 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
 
   const calculateDays = () => {
     if (!startDate || !endDate) return 0;
-    const diffTime = Math.abs(endDate - startDate);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return calculateDaysBetween(startDate, endDate);
   };
 
   const handleReservationRequest = () => {
-    if (onReservationRequest && startDate && endDate && availabilityResult?.available) {
+    if (onReservationRequest && startDate && endDate) {
+      const days = calculateDays();
+      
+      // Formatear fechas usando getDate, getMonth, getFullYear para evitar zona horaria
+      const startDateFormatted = formatDateLocal(startDate);
+      const endDateFormatted = formatDateLocal(endDate);
+      
+      console.log('AvailabilityCalendar: Sending reservation data:', {
+        startDate: startDateFormatted,
+        endDate: endDateFormatted,
+        days: days,
+        originalStartDate: startDate.toDateString(),
+        originalEndDate: endDate.toDateString()
+      });
+      
       onReservationRequest({
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
-        days: calculateDays()
+        startDate: startDateFormatted,
+        endDate: endDateFormatted,
+        days: days
       });
     }
   };
@@ -129,10 +158,6 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
   if (loading) {
     return (
       <div className="availability-calendar">
-        <div className="calendar-header">
-          <h3>Disponibilidad</h3>
-          <p>Selecciona las fechas de tu reserva</p>
-        </div>
         <div className="calendar-loading">
           <i className="fas fa-spinner fa-spin"></i>
           <span>Cargando disponibilidad...</span>
@@ -144,10 +169,6 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
   if (error) {
     return (
       <div className="availability-calendar">
-        <div className="calendar-header">
-          <h3>Disponibilidad</h3>
-          <p>Selecciona las fechas de tu reserva</p>
-        </div>
         <div className="calendar-error">
           <div className="error-icon">
             <i className="fas fa-exclamation-triangle"></i>
@@ -165,11 +186,6 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
 
   return (
     <div className="availability-calendar">
-      <div className="calendar-header">
-        <h3>Disponibilidad</h3>
-        <p>Selecciona las fechas de tu reserva</p>
-      </div>
-
       <div className="calendar-legend">
         <div className="legend-item">
           <div className="legend-color available"></div>
@@ -239,7 +255,7 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
               <i className="fas fa-times"></i>
               Limpiar fechas
             </button>
-            {availabilityResult?.available && (
+            {startDate && endDate && (
               <button onClick={handleReservationRequest} className="reserve-btn">
                 <i className="fas fa-calendar-check"></i>
                 Reservar ahora

@@ -1,0 +1,221 @@
+-- ================================================================
+-- ARCHIVO DE DATOS COMPLETO PARA AUTORENT
+-- ================================================================
+-- Este archivo incluye TODOS los datos necesarios en el orden correcto:
+-- 1. Categorías
+-- 2. Características  
+-- 3. Productos
+-- 4. Usuarios
+-- 5. Reservas
+
+-- ================================================================
+-- 1. CATEGORÍAS
+-- ================================================================
+
+INSERT INTO categories (id, name, description, image) VALUES 
+(1, 'Compacto', 'Vehículos pequeños y eficientes, perfectos para la ciudad y viajes cortos.', '/src/assets/categories/compacto.webp'),
+(2, 'Sedán', 'Automóviles cómodos y espaciosos, ideales para familias y viajes largos.', '/src/assets/categories/sedan.webp'),
+(3, 'SUV', 'Vehículos utilitarios deportivos con mayor altura y capacidad todoterreno.', '/src/assets/categories/suv.webp'),
+(4, 'Lujo', 'Vehículos premium con las mejores comodidades y tecnología avanzada.', '/src/assets/categories/lujo.webp'),
+(5, 'Van/Minivan', 'Vehículos espaciosos para grupos grandes y transporte de carga.', '/src/assets/categories/van.webp'),
+(6, 'Deportivo', 'Vehículos de alto rendimiento diseñados para la velocidad y la emoción.', '/src/assets/categories/deportivo.webp');
+
+-- ================================================================
+-- 2. CARACTERÍSTICAS
+-- ================================================================
+
+INSERT INTO characteristics (id, name, icon) VALUES 
+(1, 'Aire Acondicionado', 'fa-snowflake'),
+(2, 'Bluetooth', 'fa-bluetooth'),
+(3, 'GPS', 'fa-map-marked-alt'),
+(4, 'Asientos de Cuero', 'fa-chair'),
+(5, 'Transmisión Automática', 'fa-cogs'),
+(6, 'WiFi', 'fa-wifi'),
+(7, 'Techo Solar', 'fa-sun'),
+(8, 'Cámara de Reversa', 'fa-video'),
+(9, 'Sistema de Sonido Premium', 'fa-music'),
+(10, 'Control de Crucero', 'fa-tachometer-alt');
+
+-- ================================================================
+-- 3. PRODUCTOS
+-- ================================================================
+
+INSERT INTO products (id, name, description, price, category_id) VALUES 
+(1, 'Vehículo Compacto Económico', 'Ideal para la ciudad, bajo consumo y fácil de estacionar.', '$25/día', 1),
+(2, 'Sedán Familiar Confortable', 'Espacioso y seguro, perfecto para viajes largos en familia.', '$40/día', 2),
+(3, 'SUV Todoterreno Aventurero', 'Robusto y versátil para cualquier tipo de terreno y aventura.', '$60/día', 3),
+(4, 'Auto de Lujo Premium', 'Experiencia de conducción superior con máximo confort y tecnología.', '$100/día', 4),
+(5, 'Van Espaciosa para Grupos', 'Ideal para grupos grandes o familias numerosas, con mucho espacio.', '$70/día', 5),
+(6, 'Deportivo Alta Gama', 'Velocidad y diseño se unen en este increíble deportivo.', '$150/día', 6),
+(7, 'Sedán de Lujo Ejecutivo', 'Perfecto para viajes de negocios, combina elegancia y rendimiento.', '$85/día', 4),
+(8, 'Compacto Deportivo Ágil', 'Diversión y agilidad en un paquete compacto y deportivo.', '$35/día', 1);
+
+-- ================================================================
+-- 4. IMÁGENES DE PRODUCTOS
+-- ================================================================
+
+INSERT INTO product_images (product_id, image_url) VALUES 
+(1, '/src/assets/products/compacto_economico_1.webp'),
+(1, '/src/assets/products/compacto_economico_2.webp'),
+(2, '/src/assets/products/sedan_familiar_1.webp'),
+(2, '/src/assets/products/sedan_familiar_2.webp'),
+(3, '/src/assets/products/suv_todoterreno_1.webp'),
+(3, '/src/assets/products/suv_todoterreno_2.webp'),
+(4, '/src/assets/products/lujo_premium_1.webp'),
+(4, '/src/assets/products/lujo_premium_2.webp'),
+(5, '/src/assets/products/van_grupos_1.webp'),
+(5, '/src/assets/products/van_grupos_2.webp'),
+(6, '/src/assets/products/deportivo_gama_alta_1.webp'),
+(6, '/src/assets/products/deportivo_gama_alta_2.webp'),
+(7, '/src/assets/products/sedan_lujo_ejecutivo_1.webp'),
+(8, '/src/assets/products/compacto_deportivo_1.webp');
+
+-- ================================================================
+-- 5. CARACTERÍSTICAS DE PRODUCTOS (algunos ejemplos)
+-- ================================================================
+
+INSERT INTO product_characteristics (product_id, characteristic_id) VALUES 
+(1, 1), (1, 2), (1, 5),  -- Compacto: AC, Bluetooth, Automático
+(2, 1), (2, 2), (2, 3), (2, 5), (2, 8),  -- Sedán: AC, Bluetooth, GPS, Automático, Cámara
+(3, 1), (3, 2), (3, 3), (3, 5), (3, 8), (3, 10),  -- SUV: AC, Bluetooth, GPS, Automático, Cámara, Crucero
+(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9), (4, 10),  -- Lujo: todo
+(5, 1), (5, 2), (5, 3), (5, 5), (5, 6), (5, 8),  -- Van: AC, Bluetooth, GPS, Automático, WiFi, Cámara
+(6, 1), (6, 2), (6, 5), (6, 7), (6, 9), (6, 10),  -- Deportivo: AC, Bluetooth, Automático, Techo, Sonido, Crucero
+(7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 8), (7, 9), (7, 10),  -- Sedán Lujo: casi todo
+(8, 1), (8, 2), (8, 5), (8, 9);  -- Compacto Deportivo: AC, Bluetooth, Automático, Sonido
+
+-- ================================================================
+-- 6. USUARIOS DE PRUEBA (Contraseña para todos: "password")
+-- ================================================================
+
+-- Usuarios administradores (Contraseña: "password")
+INSERT INTO users (email, first_name, last_name, password, is_admin) VALUES 
+('admin@autorent.com', 'Admin', 'Principal', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', true),
+('gerente@autorent.com', 'María', 'Gerente', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', true);
+
+-- Usuarios regulares (Contraseña: "password")
+INSERT INTO users (email, first_name, last_name, password, is_admin) VALUES 
+('juan.perez@email.com', 'Juan', 'Pérez', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('maria.garcia@email.com', 'María', 'García', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('carlos.rodriguez@email.com', 'Carlos', 'Rodríguez', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('ana.martinez@email.com', 'Ana', 'Martínez', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('luis.lopez@email.com', 'Luis', 'López', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('sofia.fernandez@email.com', 'Sofía', 'Fernández', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('diego.sanchez@email.com', 'Diego', 'Sánchez', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('elena.torres@email.com', 'Elena', 'Torres', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('miguel.ruiz@email.com', 'Miguel', 'Ruiz', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false),
+('laura.moreno@email.com', 'Laura', 'Moreno', '$2a$10$NYFZ/8WaQ3Qb6FCs.00jce4nxX9w7Q/pTnTv.JMlkGjlw5.CbWo.q', false);
+
+-- ================================================================
+-- 7. RESERVAS DE PRUEBA - FEBRERO 2025
+-- ================================================================
+
+-- Reservas confirmadas para Juan Pérez (user_id = 3)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(3, 1, '2025-02-01', '2025-02-05', 100.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Viaje de negocios a Barcelona'),
+(3, 4, '2025-02-15', '2025-02-18', 300.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Fin de semana romántico');
+
+-- Reservas para María García (user_id = 4)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(4, 2, '2025-02-08', '2025-02-12', 160.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Viaje familiar a la playa'),
+(4, 3, '2025-02-22', '2025-02-25', 180.00, 'ACTIVE', CURRENT_TIMESTAMP, 'Aventura en la montaña');
+
+-- Reservas para Carlos Rodríguez (user_id = 5)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(5, 6, '2025-02-05', '2025-02-07', 300.00, 'COMPLETED', CURRENT_TIMESTAMP, 'Escapada deportiva - Ya finalizada'),
+(5, 5, '2025-02-20', '2025-02-23', 210.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Mudanza con la familia');
+
+-- ================================================================
+-- 8. RESERVAS DE PRUEBA - MARZO 2025
+-- ================================================================
+
+-- Reservas para Ana Martínez (user_id = 6)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(6, 1, '2025-03-01', '2025-03-05', 100.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Reuniones de trabajo en Madrid'),
+(6, 7, '2025-03-15', '2025-03-20', 425.00, 'PENDING', CURRENT_TIMESTAMP, 'Conferencia empresarial');
+
+-- Reservas para Luis López (user_id = 7)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(7, 2, '2025-03-08', '2025-03-12', 160.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Vacaciones con los niños'),
+(7, 3, '2025-03-22', '2025-03-28', 360.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Road trip por Andalucía');
+
+-- Reservas para Sofía Fernández (user_id = 8)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(8, 4, '2025-03-10', '2025-03-14', 400.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Aniversario de bodas'),
+(8, 6, '2025-03-25', '2025-03-27', 300.00, 'PENDING', CURRENT_TIMESTAMP, 'Evento especial');
+
+-- ================================================================
+-- 9. RESERVAS DE PRUEBA - ABRIL 2025
+-- ================================================================
+
+-- Reservas para Diego Sánchez (user_id = 9)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(9, 1, '2025-04-02', '2025-04-06', 100.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Visita a clientes en Valencia'),
+(9, 5, '2025-04-15', '2025-04-20', 350.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Viaje grupal de estudios');
+
+-- Reservas para Elena Torres (user_id = 10)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(10, 2, '2025-04-08', '2025-04-12', 160.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Semana Santa en familia'),
+(10, 7, '2025-04-22', '2025-04-25', 255.00, 'PENDING', CURRENT_TIMESTAMP, 'Reunión de directivos');
+
+-- Reservas para Miguel Ruiz (user_id = 11)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(11, 3, '2025-04-05', '2025-04-10', 300.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Excursión a los Picos de Europa'),
+(11, 8, '2025-04-18', '2025-04-21', 105.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Getaway urbano');
+
+-- ================================================================
+-- 10. RESERVAS DE PRUEBA - MAYO 2025
+-- ================================================================
+
+-- Reservas para Laura Moreno (user_id = 12)
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(12, 4, '2025-05-01', '2025-05-05', 400.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Puente de mayo de lujo'),
+(12, 6, '2025-05-15', '2025-05-18', 450.00, 'PENDING', CURRENT_TIMESTAMP, 'Evento corporativo especial');
+
+-- Reservas adicionales para generar conflictos y datos realistas
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(3, 2, '2025-05-08', '2025-05-12', 160.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Repetir cliente - Juan'),
+(4, 1, '2025-05-20', '2025-05-24', 100.00, 'CONFIRMED', CURRENT_TIMESTAMP, 'Repetir cliente - María');
+
+-- ================================================================
+-- 11. RESERVAS CANCELADAS (para mostrar diferentes estados)
+-- ================================================================
+
+INSERT INTO reservations (user_id, product_id, start_date, end_date, total_price, status, created_at, notes) VALUES 
+(5, 1, '2025-02-10', '2025-02-13', 75.00, 'CANCELLED', CURRENT_TIMESTAMP, 'Cancelado por el cliente'),
+(7, 4, '2025-03-05', '2025-03-08', 300.00, 'CANCELLED', CURRENT_TIMESTAMP, 'Cambio de planes'); -- ================================================================
+-- 12. RESEÑAS Y PUNTUACIONES
+-- ================================================================
+
+INSERT INTO reviews (user_id, product_id, rating, comment, created_at, verified) VALUES 
+-- Reseñas para Vehículo Compacto Económico (product_id = 1)
+(2, 1, 4, 'Muy buen vehículo para la ciudad. Consumo excelente y muy fácil de manejar.', CURRENT_TIMESTAMP, true),
+(3, 1, 5, 'Perfecto para mis necesidades diarias. Lo recomiendo completamente.', CURRENT_TIMESTAMP, true),
+(10, 1, 4, 'Económico y eficiente, justo lo que necesitaba.', CURRENT_TIMESTAMP, true),
+
+-- Reseñas para Sedán Familiar Confortable (product_id = 2)
+(3, 2, 5, 'Excelente para viajes familiares. Muy cómodo y espacioso.', CURRENT_TIMESTAMP, true),
+(5, 2, 4, 'Muy buen sedán, aunque el consumo podría ser mejor.', CURRENT_TIMESTAMP, true),
+(9, 2, 5, 'Perfecto para viajes largos. La familia viajó muy cómoda.', CURRENT_TIMESTAMP, true),
+(11, 2, 4, 'Sedán confiable y seguro. Buena experiencia general.', CURRENT_TIMESTAMP, true),
+
+-- Reseñas para SUV Todoterreno Aventurero (product_id = 3)
+(2, 3, 5, 'Increíble SUV, perfecto para aventuras off-road. Muy potente.', CURRENT_TIMESTAMP, true),
+(5, 3, 5, 'Excelente para viajes familiares de aventura. Robusto y confiable.', CURRENT_TIMESTAMP, true),
+(8, 3, 5, 'SUV increíble, superó todas mis expectativas.', CURRENT_TIMESTAMP, true),
+
+-- Reseñas para Auto de Lujo Premium (product_id = 4)
+(4, 4, 5, 'Un sueño hecho realidad. Excelente experiencia de conducción.', CURRENT_TIMESTAMP, true),
+(6, 4, 5, 'Lujo y tecnología de primera. Vale cada euro pagado.', CURRENT_TIMESTAMP, true),
+(9, 4, 5, 'Perfecto para una ocasión especial. Calidad premium.', CURRENT_TIMESTAMP, true),
+(12, 4, 5, 'Experiencia de lujo incomparable. Altamente recomendado.', CURRENT_TIMESTAMP, true),
+
+-- Reseñas para Van Espaciosa para Grupos (product_id = 5)
+(7, 5, 4, 'Perfecta para el grupo grande. Muy espaciosa y cómoda.', CURRENT_TIMESTAMP, true),
+(5, 5, 5, 'Ideal para mudanzas y viajes familiares numerosos.', CURRENT_TIMESTAMP, true),
+
+-- Reseñas para Deportivo Alta Gama (product_id = 6)
+(4, 6, 5, 'Velocidad y elegancia perfectamente combinadas. Increíble.', CURRENT_TIMESTAMP, true),
+(6, 6, 5, 'Deportivo espectacular. Una experiencia única de conducción.', CURRENT_TIMESTAMP, true),
+(8, 6, 4, 'Excelente deportivo, aunque el consumo es alto como era de esperarse.', CURRENT_TIMESTAMP, true),
+(12, 6, 5, 'Perfecto para eventos corporativos especiales. Impresionante.', CURRENT_TIMESTAMP, true); 

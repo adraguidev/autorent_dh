@@ -35,6 +35,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/categories/**").permitAll() // Permitir endpoints de categorías (temporalmente todos los métodos)
                 .requestMatchers("/api/characteristics/**").permitAll() // Permitir endpoints de características (temporalmente para pruebas)
                 .requestMatchers("/api/admin/**").permitAll() // Permitir endpoints de administración (temporalmente para pruebas)
+                .requestMatchers("/api/reviews/**").permitAll() // Permitir endpoints de reseñas (temporalmente para pruebas)
+                .requestMatchers("/api/reservations/**").permitAll() // Permitir endpoints de reservas (temporalmente para pruebas)
+                .requestMatchers("/api/users/**").permitAll() // Permitir endpoints de usuarios/favoritos (temporalmente para pruebas)
                 .anyRequest().authenticated() // Todas las demás rutas requieren autenticación (se configurará JWT más adelante)
             );
         return http.build();

@@ -161,7 +161,8 @@ export const api = {
         body: JSON.stringify(userData),
       });
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
       }
       return await response.text(); // El backend devuelve un mensaje de texto
     } catch (error) {
@@ -577,14 +578,35 @@ export const api = {
   // Verificar disponibilidad para fechas específicas
   async checkAvailability(productId, startDate, endDate) {
     try {
+      // Formatear fechas sin zona horaria para evitar desfase
+      const formatDateLocal = (date) => {
+        if (typeof date === 'string') {
+          // Si ya es string, asumir que está en formato correcto
+          return date;
+        }
+        // Si es Date object, formatear localmente
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
+      const startDateFormatted = formatDateLocal(startDate);
+      const endDateFormatted = formatDateLocal(endDate);
+
+      console.log('API checkAvailability:', {
+        original: { startDate, endDate },
+        formatted: { startDate: startDateFormatted, endDate: endDateFormatted }
+      });
+
       const response = await fetch(`${API_BASE_URL}/products/${productId}/check-availability`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0]
+          startDate: startDateFormatted,
+          endDate: endDateFormatted
         }),
       });
       if (!response.ok) {
@@ -706,6 +728,128 @@ export const api = {
       return await response.json();
     } catch (error) {
       console.error('Error searching products by date range:', error);
+      throw error;
+    }
+  },
+
+  // ================================================================
+  // RESEÑAS Y PUNTUACIONES - NUEVAS FUNCIONES
+  // ================================================================
+
+  // Crear una nueva reseña
+  async createReview(reviewData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating review:', error);
+      throw error;
+    }
+  },
+
+  // Obtener todas las reseñas de un producto
+  async getProductReviews(productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/product/${productId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting product reviews:', error);
+      throw error;
+    }
+  },
+
+  // Obtener todas las reseñas de un usuario
+  async getUserReviews(userId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/user/${userId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting user reviews:', error);
+      throw error;
+    }
+  },
+
+  // Obtener la reseña específica de un usuario para un producto
+  async getUserReview(userId, productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/user/${userId}/product/${productId}`);
+      if (response.status === 404) {
+        return null; // No existe reseña
+      }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting user review:', error);
+      throw error;
+    }
+  },
+
+  // Obtener estadísticas de puntuación de un producto
+  async getProductRatingStats(productId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/product/${productId}/stats`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error getting product rating stats:', error);
+      throw error;
+    }
+  },
+
+  // Actualizar una reseña existente
+  async updateReview(reviewId, reviewData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating review:', error);
+      throw error;
+    }
+  },
+
+  // Eliminar una reseña
+  async deleteReview(reviewId, userId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}?userId=${userId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error deleting review:', error);
       throw error;
     }
   }

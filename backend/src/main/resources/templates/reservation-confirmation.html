@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Reserva - AutoRent</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header .logo {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .success-message {
+            font-size: 18px;
+            color: #28a745;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .reservation-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        .reservation-info h3 {
+            margin: 0 0 15px 0;
+            color: #0d2235;
+            font-size: 18px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .detail-value {
+            color: #0d2235;
+        }
+        .price-highlight {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .price-highlight h3 {
+            margin: 0;
+            color: #856404;
+            font-size: 20px;
+        }
+        .contact-info {
+            background-color: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        .contact-info h4 {
+            margin: 0 0 15px 0;
+            color: #0056b3;
+            font-size: 16px;
+        }
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25d366;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .whatsapp-button:hover {
+            background-color: #1ebe57;
+            text-decoration: none;
+            color: white;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #f5a623 0%, #f39c12 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #e67e22 0%, #d68910 100%);
+            text-decoration: none;
+            color: white;
+        }
+        .divider {
+            border: none;
+            border-top: 2px solid #e9ecef;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px 30px;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .footer a {
+            color: #f5a623;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .next-steps {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        .next-steps h4 {
+            margin: 0 0 15px 0;
+            color: #0c5460;
+            font-size: 16px;
+        }
+        .next-steps ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .next-steps li {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #0c5460;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .content {
+                padding: 25px 20px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .detail-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .cta-button {
+                display: block;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">✅</div>
+            <h1>¡Reserva Confirmada!</h1>
+            <p th:text="${appName}">AutoRent</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="success-message">
+                ¡Hola <span th:text="${firstName}">Usuario</span>! Tu reserva ha sido confirmada exitosamente.
+            </div>
+
+            <p>Nos complace confirmar que tu reserva en <strong th:text="${appName}">AutoRent</strong> ha sido procesada correctamente. A continuación encontrarás todos los detalles de tu reserva:</p>
+
+            <!-- Reservation Details -->
+            <div class="reservation-info">
+                <h3>🚗 Detalles de tu Reserva</h3>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📋 Número de Reserva:</span>
+                    <span class="detail-value">#<span th:text="${reservationId}">12345</span></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">🚙 Producto Reservado:</span>
+                    <span class="detail-value" th:text="${productName}">Nombre del Producto</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📝 Descripción:</span>
+                    <span class="detail-value" th:text="${productDescription}">Descripción del producto</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📅 Fecha de Inicio:</span>
+                    <span class="detail-value" th:text="${#temporals.format(startDate, 'dd/MM/yyyy')}">01/02/2025</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📅 Fecha de Fin:</span>
+                    <span class="detail-value" th:text="${#temporals.format(endDate, 'dd/MM/yyyy')}">05/02/2025</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">⏰ Duración:</span>
+                    <span class="detail-value" th:text="${durationDays + ' día' + (durationDays != 1 ? 's' : '')}">4 días</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">📍 Estado:</span>
+                    <span class="detail-value" style="color: #28a745; font-weight: 600;" th:text="${status}">CONFIRMADA</span>
+                </div>
+                
+                <div class="detail-row" th:if="${notes}">
+                    <span class="detail-label">📝 Notas:</span>
+                    <span class="detail-value" th:text="${notes}">Notas de la reserva</span>
+                </div>
+            </div>
+
+            <!-- Price Information -->
+            <div class="price-highlight">
+                <h3>💰 Total: <span th:text="${totalPrice}">$100.00</span></h3>
+                <p style="margin: 5px 0; font-size: 14px; color: #856404;">Precio por día: <span th:text="${productPrice}">$25.00</span></p>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h4>📞 Información de Contacto del Proveedor</h4>
+                <p><strong>AutoRent</strong> - Tu plataforma de confianza</p>
+                <p>📧 Email: <a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}">support@autorent.com</a></p>
+                <p>🌐 Sitio web: <a th:href="${baseUrl}" th:text="${baseUrl}">www.autorent.com</a></p>
+                
+                <!-- WhatsApp Contact -->
+                <div style="text-align: center; margin-top: 15px;">
+                    <p style="margin: 5px 0; font-size: 14px;">¿Tienes preguntas? ¡Contáctanos por WhatsApp!</p>
+                    <a href="https://wa.me/51994762399?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20reserva%20#" 
+                       th:href="'https://wa.me/51994762399?text=Hola,%20tengo%20una%20consulta%20sobre%20mi%20reserva%20%23' + ${reservationId}"
+                       class="whatsapp-button">
+                        📱 Contactar por WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h4>📋 Próximos Pasos:</h4>
+                <ul>
+                    <li>Guarda este email como comprobante de tu reserva</li>
+                    <li>Revisa tu historial de reservas en tu cuenta</li>
+                    <li>Si necesitas hacer cambios, contáctanos lo antes posible</li>
+                    <li>Prepárate para disfrutar de tu experiencia con AutoRent</li>
+                </ul>
+            </div>
+
+            <hr class="divider">
+
+            <div style="text-align: center;">
+                <p>¿Quieres ver más detalles de tu reserva o gestionar tus reservas?</p>
+                <a th:href="${baseUrl + '/reservations'}" class="cta-button">📋 Ver Mis Reservas</a>
+                <a th:href="${baseUrl}" class="cta-button">🏠 Ir al Sitio Web</a>
+            </div>
+
+            <div style="background-color: #d4edda; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin-top: 30px;">
+                <h4 style="margin: 0 0 10px 0; color: #155724;">🎉 ¡Gracias por elegir AutoRent!</h4>
+                <p style="margin: 0; font-size: 14px; color: #155724;">
+                    Estamos comprometidos a brindarte el mejor servicio. Si tienes alguna pregunta o necesitas asistencia, 
+                    no dudes en contactarnos. ¡Esperamos que tengas una excelente experiencia!
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong th:text="${appName}">AutoRent</strong> - Tu compañero de viaje confiable</p>
+            <p>
+                ¿Necesitas ayuda? Contáctanos en 
+                <a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}">support@autorent.com</a>
+            </p>
+            <p>
+                <a th:href="${baseUrl}">Visitar sitio web</a> | 
+                <a th:href="${baseUrl + '/terms'}">Términos de servicio</a> | 
+                <a th:href="${baseUrl + '/privacy'}">Política de privacidad</a>
+            </p>
+            <p style="font-size: 12px; color: #999;">
+                Este es un correo automático, por favor no respondas a esta dirección.
+            </p>
+            <p style="font-size: 12px; color: #999;">
+                Fecha de envío: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">Fecha actual</span>
+            </p>
+        </div>
+    </div>
+</body>
+</html> 

@@ -19,4 +19,6 @@ public class ProductResponseDto {
     private CategoryDto category;
     private List<String> imageUrls;
     private List<CharacteristicDto> characteristics;
+    private Double averageRating;
+    private Long totalReviews;
 }

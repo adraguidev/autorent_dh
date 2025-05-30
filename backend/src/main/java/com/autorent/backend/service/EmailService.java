@@ -96,4 +96,60 @@ public class EmailService {
             throw new RuntimeException("Error inesperado al enviar email: " + e.getMessage(), e);
         }
     }
+
+    public void sendReservationConfirmationEmail(
+            String toEmail, 
+            String firstName, 
+            String lastName,
+            Long reservationId,
+            String productName,
+            String productDescription,
+            String productPrice,
+            String startDate,
+            String endDate,
+            int durationDays,
+            String totalPrice,
+            String status,
+            String notes) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            // Configurar destinatario y remitente
+            helper.setTo(toEmail);
+            helper.setFrom(fromEmail, appName);
+            helper.setSubject("✅ Confirmación de Reserva #" + reservationId + " - " + appName);
+
+            // Crear contexto para la plantilla
+            Context context = new Context();
+            context.setVariable("firstName", firstName);
+            context.setVariable("lastName", lastName);
+            context.setVariable("email", toEmail);
+            context.setVariable("appName", appName);
+            context.setVariable("reservationId", reservationId);
+            context.setVariable("productName", productName);
+            context.setVariable("productDescription", productDescription);
+            context.setVariable("productPrice", productPrice);
+            context.setVariable("startDate", java.time.LocalDate.parse(startDate));
+            context.setVariable("endDate", java.time.LocalDate.parse(endDate));
+            context.setVariable("durationDays", durationDays);
+            context.setVariable("totalPrice", totalPrice);
+            context.setVariable("status", status);
+            context.setVariable("notes", notes);
+            context.setVariable("supportEmail", supportEmail);
+            context.setVariable("baseUrl", baseUrl);
+
+            // Procesar la plantilla HTML
+            String htmlContent = templateEngine.process("reservation-confirmation", context);
+            helper.setText(htmlContent, true);
+
+            // Enviar el email
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException("Error al enviar email de confirmación de reserva: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error inesperado al enviar email de confirmación: " + e.getMessage(), e);
+        }
+    }
 } 

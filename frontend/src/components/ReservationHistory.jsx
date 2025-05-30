@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { parseDateLocal } from '../utils/dateUtils';
 import './ReservationHistory.css';
 
 const ReservationHistory = () => {
@@ -12,6 +13,7 @@ const ReservationHistory = () => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all'); // all, pending, confirmed, active, completed, cancelled
   const [sortBy, setSortBy] = useState('newest'); // newest, oldest, startDate
+  const [sortOrder, setSortOrder] = useState('asc'); // asc, desc
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -26,7 +28,15 @@ const ReservationHistory = () => {
     try {
       setLoading(true);
       setError('');
+      console.log('ReservationHistory: Loading reservations for user:', user);
+      console.log('ReservationHistory: User ID:', user?.id);
+      
+      if (!user || !user.id) {
+        throw new Error('Usuario no válido o sin ID');
+      }
+      
       const userReservations = await api.getUserReservations(user.id);
+      console.log('ReservationHistory: Reservations loaded:', userReservations);
       setReservations(userReservations);
     } catch (error) {
       console.error('Error loading reservations:', error);
@@ -62,7 +72,7 @@ const ReservationHistory = () => {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
+    return parseDateLocal(date).toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -71,7 +81,7 @@ const ReservationHistory = () => {
   };
 
   const formatShortDate = (date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
+    return parseDateLocal(date).toLocaleDateString('es-ES', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -103,14 +113,14 @@ const ReservationHistory = () => {
 
     // Ordenar
     filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'oldest':
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        case 'startDate':
-          return new Date(a.startDate) - new Date(b.startDate);
-        case 'newest':
-        default:
-          return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === 'created') {
+        return sortOrder === 'asc' ? 
+          parseDateLocal(a.createdAt.split('T')[0]).getTime() - parseDateLocal(b.createdAt.split('T')[0]).getTime() :
+          parseDateLocal(b.createdAt.split('T')[0]).getTime() - parseDateLocal(a.createdAt.split('T')[0]).getTime();
+      } else if (sortBy === 'date') {
+        return parseDateLocal(a.startDate).getTime() - parseDateLocal(b.startDate).getTime();
+      } else {
+        return parseDateLocal(b.createdAt.split('T')[0]).getTime() - parseDateLocal(a.createdAt.split('T')[0]).getTime();
       }
     });
 
@@ -138,6 +148,18 @@ const ReservationHistory = () => {
     const daysDiff = Math.ceil((startDate - now) / (1000 * 60 * 60 * 24));
     
     return reservation.status === 'CONFIRMED' && daysDiff > 0;
+  };
+
+  const isReservationActive = (reservation) => {
+    if (reservation.status !== 'CONFIRMED' && reservation.status !== 'ACTIVE') {
+      return false;
+    }
+    
+    const startDate = parseDateLocal(reservation.startDate);
+    const now = new Date();
+    
+    // Una reserva está activa si ya comenzó pero aún no terminó
+    return startDate <= now;
   };
 
   if (loading) {
@@ -224,6 +246,18 @@ const ReservationHistory = () => {
             <option value="newest">Más recientes</option>
             <option value="oldest">Más antiguas</option>
             <option value="startDate">Fecha de inicio</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Ordenar:</label>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="filter-select"
+          >
+            <option value="asc">Ascendente</option>
+            <option value="desc">Descendente</option>
           </select>
         </div>
       </div>

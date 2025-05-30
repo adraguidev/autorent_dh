@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { reviewsService } from '../services/reviewsService';
+import { api } from '../services/api';
 import './ProductReviews.css';
 
 const ProductReviews = ({ productId }) => {
@@ -28,17 +28,17 @@ const ProductReviews = ({ productId }) => {
       
       // Cargar reseñas y estadísticas
       const [productReviews, ratingStats] = await Promise.all([
-        reviewsService.getProductReviews(productId),
-        reviewsService.getProductRatingStats(productId)
+        api.getProductReviews(productId),
+        api.getProductRatingStats(productId)
       ]);
       
       setReviews(productReviews);
-      setAverageRating(ratingStats.averageRating);
-      setTotalReviews(ratingStats.totalReviews);
+      setAverageRating(ratingStats.averageRating || 0);
+      setTotalReviews(ratingStats.totalReviews || 0);
       
       // Verificar si el usuario ya ha reseñado
       if (isAuthenticated() && user) {
-        const existingUserReview = await reviewsService.getUserReview(user.id, productId);
+        const existingUserReview = await api.getUserReview(user.id, productId);
         setUserReview(existingUserReview);
       }
     } catch (error) {
@@ -66,52 +66,48 @@ const ProductReviews = ({ productId }) => {
       
       const reviewData = {
         userId: user.id,
-        userName: user.name || user.email,
+        productId: parseInt(productId),
         rating: rating,
         comment: comment.trim()
       };
 
-      await reviewsService.addReview(productId, reviewData);
+      await api.createReview(reviewData);
       
       // Recargar reseñas
       await loadReviews();
       
       // Limpiar formulario
       setRating(0);
-      setHoverRating(0);
       setComment('');
       setShowReviewForm(false);
       
       alert('¡Reseña enviada exitosamente!');
     } catch (error) {
       console.error('Error submitting review:', error);
-      alert(error.message || 'Error al enviar la reseña. Por favor, intenta de nuevo.');
+      alert('Error al enviar la reseña. Por favor, inténtalo de nuevo.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const renderStars = (rating, interactive = false, size = 'medium') => {
+  const renderStars = (rating, interactive = false, onStarClick = null, onStarHover = null, onStarLeave = null) => {
     const stars = [];
-    const currentRating = interactive ? (hoverRating || rating) : rating;
+    const displayRating = interactive ? (hoverRating || rating) : rating;
     
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <button
+        <span
           key={i}
-          type="button"
-          className={`star ${i <= currentRating ? 'filled' : 'empty'} ${size} ${interactive ? 'interactive' : ''}`}
-          onClick={interactive ? () => setRating(i) : undefined}
-          onMouseEnter={interactive ? () => setHoverRating(i) : undefined}
-          onMouseLeave={interactive ? () => setHoverRating(0) : undefined}
-          disabled={!interactive}
+          className={`star ${i <= displayRating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`}
+          onClick={interactive ? () => onStarClick(i) : undefined}
+          onMouseEnter={interactive ? () => onStarHover(i) : undefined}
+          onMouseLeave={interactive ? onStarLeave : undefined}
         >
-          <i className="fas fa-star"></i>
-        </button>
+          ★
+        </span>
       );
     }
-    
-    return <div className="stars-container">{stars}</div>;
+    return stars;
   };
 
   const formatDate = (dateString) => {
@@ -125,33 +121,34 @@ const ProductReviews = ({ productId }) => {
 
   if (loading) {
     return (
-      <div className="product-reviews-loading">
-        <i className="fas fa-spinner fa-spin"></i>
-        <span>Cargando reseñas...</span>
+      <div className="reviews-section">
+        <div className="reviews-loading">
+          <i className="fas fa-spinner fa-spin"></i>
+          <span>Cargando reseñas...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="product-reviews-section">
+    <div className="reviews-section">
       <div className="reviews-header">
-        <h2>Valoraciones y Reseñas</h2>
-        <div className="reviews-summary">
-          <div className="average-rating">
-            <div className="rating-display">
+        <h3>Reseñas y Puntuaciones</h3>
+        
+        {totalReviews > 0 && (
+          <div className="rating-summary">
+            <div className="average-rating">
               <span className="rating-number">{averageRating.toFixed(1)}</span>
-              {renderStars(averageRating, false, 'large')}
-            </div>
-            <div className="rating-info">
-              <span className="total-reviews">
-                {totalReviews} {totalReviews === 1 ? 'valoración' : 'valoraciones'}
-              </span>
+              <div className="rating-stars">
+                {renderStars(Math.round(averageRating))}
+              </div>
+              <span className="total-reviews">({totalReviews} reseña{totalReviews !== 1 ? 's' : ''})</span>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Formulario de reseña para usuarios autenticados */}
+      {/* Formulario para escribir reseña */}
       {isAuthenticated() && !userReview && (
         <div className="review-form-section">
           {!showReviewForm ? (
@@ -160,49 +157,55 @@ const ProductReviews = ({ productId }) => {
               onClick={() => setShowReviewForm(true)}
             >
               <i className="fas fa-edit"></i>
-              Escribir reseña
+              Escribir una reseña
             </button>
           ) : (
             <form onSubmit={handleSubmitReview} className="review-form">
-              <h3>Escribe tu reseña</h3>
+              <h4>Escribe tu reseña</h4>
               
               <div className="rating-input">
-                <label>Tu puntuación:</label>
-                {renderStars(rating, true, 'large')}
+                <label>Puntuación:</label>
+                <div className="stars-input">
+                  {renderStars(
+                    rating,
+                    true,
+                    setRating,
+                    setHoverRating,
+                    () => setHoverRating(0)
+                  )}
+                </div>
               </div>
-              
+
               <div className="comment-input">
-                <label htmlFor="review-comment">
-                  Comentario (opcional):
-                </label>
+                <label htmlFor="comment">Comentario (opcional):</label>
                 <textarea
-                  id="review-comment"
+                  id="comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="Comparte tu experiencia con este producto..."
+                  placeholder="Comparte tu experiencia con este vehículo..."
                   rows="4"
-                  maxLength="500"
+                  maxLength="1000"
                 />
-                <small>{comment.length}/500 caracteres</small>
+                <small>{comment.length}/1000 caracteres</small>
               </div>
-              
+
               <div className="form-actions">
                 <button 
                   type="button" 
-                  className="cancel-review-btn"
                   onClick={() => {
                     setShowReviewForm(false);
                     setRating(0);
-                    setHoverRating(0);
                     setComment('');
+                    setHoverRating(0);
                   }}
+                  className="cancel-btn"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit" 
-                  className="submit-review-btn"
                   disabled={submitting || rating === 0}
+                  className="submit-btn"
                 >
                   {submitting ? (
                     <>
@@ -210,10 +213,7 @@ const ProductReviews = ({ productId }) => {
                       Enviando...
                     </>
                   ) : (
-                    <>
-                      <i className="fas fa-paper-plane"></i>
-                      Enviar reseña
-                    </>
+                    'Enviar Reseña'
                   )}
                 </button>
               </div>
@@ -222,13 +222,24 @@ const ProductReviews = ({ productId }) => {
         </div>
       )}
 
-      {/* Mensaje para usuarios no autenticados */}
-      {!isAuthenticated() && (
-        <div className="auth-prompt">
-          <p>
-            <i className="fas fa-info-circle"></i>
-            Inicia sesión para escribir una reseña
-          </p>
+      {/* Mostrar reseña del usuario si ya existe */}
+      {userReview && (
+        <div className="user-review-section">
+          <h4>Tu reseña</h4>
+          <div className="review-item user-review">
+            <div className="review-header">
+              <div className="reviewer-info">
+                <span className="reviewer-name">Tú</span>
+                <div className="review-rating">
+                  {renderStars(userReview.rating)}
+                </div>
+              </div>
+              <span className="review-date">{formatDate(userReview.createdAt)}</span>
+            </div>
+            {userReview.comment && (
+              <p className="review-comment">{userReview.comment}</p>
+            )}
+          </div>
         </div>
       )}
 
@@ -236,42 +247,39 @@ const ProductReviews = ({ productId }) => {
       <div className="reviews-list">
         {reviews.length === 0 ? (
           <div className="no-reviews">
-            <i className="fas fa-comments"></i>
+            <i className="far fa-comment"></i>
             <p>Aún no hay reseñas para este producto.</p>
-            <p>¡Sé el primero en compartir tu experiencia!</p>
+            {isAuthenticated() && !userReview && (
+              <p>¡Sé el primero en escribir una reseña!</p>
+            )}
           </div>
         ) : (
           <>
-            <h3>Todas las reseñas ({totalReviews})</h3>
-            {reviews.map((review) => (
-              <div key={review.id} className="review-item">
-                <div className="review-header">
-                  <div className="reviewer-info">
-                    <div className="reviewer-avatar">
-                      <i className="fas fa-user-circle"></i>
+            <h4>Todas las reseñas ({reviews.length})</h4>
+            {reviews
+              .filter(review => !userReview || review.id !== userReview.id)
+              .map((review) => (
+                <div key={review.id} className="review-item">
+                  <div className="review-header">
+                    <div className="reviewer-info">
+                      <span className="reviewer-name">{review.userName}</span>
+                      <div className="review-rating">
+                        {renderStars(review.rating)}
+                      </div>
+                      {review.verified && (
+                        <span className="verified-badge">
+                          <i className="fas fa-check-circle"></i>
+                          Verificado
+                        </span>
+                      )}
                     </div>
-                    <div className="reviewer-details">
-                      <span className="reviewer-name">
-                        {review.userName}
-                        {review.verified && (
-                          <i className="fas fa-check-circle verified" title="Compra verificada"></i>
-                        )}
-                      </span>
-                      <span className="review-date">{formatDate(review.date)}</span>
-                    </div>
+                    <span className="review-date">{formatDate(review.createdAt)}</span>
                   </div>
-                  <div className="review-rating">
-                    {renderStars(review.rating, false, 'small')}
-                  </div>
+                  {review.comment && (
+                    <p className="review-comment">{review.comment}</p>
+                  )}
                 </div>
-                
-                {review.comment && (
-                  <div className="review-comment">
-                    <p>{review.comment}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
           </>
         )}
       </div>

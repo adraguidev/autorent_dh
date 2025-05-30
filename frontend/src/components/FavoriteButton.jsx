@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FavoriteButton.css';
 
-const FavoriteButton = ({ productId }) => {
+const FavoriteButton = ({ productId, inline = false }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const FavoriteButton = ({ productId }) => {
   };
 
   return (
-    <div className="favorite-button-container">
+    <div className={`favorite-button-container ${inline ? 'inline' : ''}`}>
       <button
         className={`favorite-button ${isProductFavorite ? 'favorite-active' : ''}`}
         onClick={handleClick}

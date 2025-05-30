@@ -11,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,17 +27,25 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final EmailService emailService;
+    private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
     @Autowired
     public ReservationService(ReservationRepository reservationRepository,
                              UserRepository userRepository,
-                             ProductRepository productRepository) {
+                             ProductRepository productRepository,
+                             EmailService emailService) {
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.emailService = emailService;
     }
 
     public ReservationResponseDto createReservation(ReservationRequestDto requestDto) {
+        logger.info("Creating reservation: productId={}, userId={}, startDate={}, endDate={}", 
+                   requestDto.getProductId(), requestDto.getUserId(), 
+                   requestDto.getStartDate(), requestDto.getEndDate());
+
         // Validar que el usuario existe
         User user = userRepository.findById(requestDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
@@ -61,6 +71,7 @@ public class ReservationService {
         );
 
         if (!conflicts.isEmpty()) {
+            logger.warn("Conflicts found for reservation: conflicts={}", conflicts);
             throw new IllegalArgumentException("El producto no está disponible en las fechas seleccionadas");
         }
 
@@ -75,6 +86,33 @@ public class ReservationService {
         reservation.setStatus(Reservation.ReservationStatus.CONFIRMED);
 
         Reservation savedReservation = reservationRepository.save(reservation);
+        
+        logger.info("Reservation created successfully: id={}, startDate={}, endDate={}, durationDays={}", 
+                   savedReservation.getId(), savedReservation.getStartDate(), 
+                   savedReservation.getEndDate(), savedReservation.getDurationDays());
+        
+        // Enviar email de confirmación de reserva
+        try {
+            emailService.sendReservationConfirmationEmail(
+                savedReservation.getUser().getEmail(),
+                savedReservation.getUser().getFirstName(),
+                savedReservation.getUser().getLastName(),
+                savedReservation.getId(),
+                savedReservation.getProduct().getName(),
+                savedReservation.getProduct().getDescription(),
+                savedReservation.getProduct().getPrice(),
+                savedReservation.getStartDate().toString(),
+                savedReservation.getEndDate().toString(),
+                savedReservation.getDurationDays(),
+                savedReservation.getTotalPrice().toString(),
+                savedReservation.getStatus().toString(),
+                savedReservation.getNotes()
+            );
+        } catch (Exception e) {
+            // Log el error pero no fallar la reserva
+            logger.error("Error al enviar email de confirmación: " + e.getMessage());
+        }
+        
         return mapToResponseDto(savedReservation);
     }
 
@@ -163,13 +201,19 @@ public class ReservationService {
             LocalDate start = (LocalDate) range[0];
             LocalDate end = (LocalDate) range[1];
             
-            // Generar todas las fechas en el rango
+            // Generar todas las fechas en el rango (incluyendo el día final)
             LocalDate current = start;
             while (!current.isAfter(end)) {
                 bookedDates.add(current);
                 current = current.plusDays(1);
             }
         }
+
+        logger.info("Generated booked dates for product {}: start={}, end={}, dates={}", 
+                   productId, 
+                   bookedDateRanges.isEmpty() ? "none" : bookedDateRanges.get(0)[0],
+                   bookedDateRanges.isEmpty() ? "none" : bookedDateRanges.get(0)[1], 
+                   bookedDates);
 
         return bookedDates;
     }

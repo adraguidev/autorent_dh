@@ -3,6 +3,12 @@
   display: inline-block;
 }
 
+/* Versión inline para ProductDetailPage */
+.favorite-button-container.inline {
+  position: static;
+  display: inline-flex;
+}
+
 .favorite-button {
   position: absolute;
   top: 0.75rem;
@@ -22,6 +28,16 @@
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 10;
+}
+
+/* Versión inline del botón */
+.favorite-button-container.inline .favorite-button {
+  position: static;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
 }
 
 .favorite-button:hover {
