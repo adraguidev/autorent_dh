@@ -7,6 +7,7 @@ import MainContent from './components/MainContent';
 // Footer ya está importado, solo reestructuramos su posición en el return.
 // Si no está, lo siguiente lo importa correctamente:
 import Footer from './components/Footer';
+import WhatsAppButton from './components/WhatsAppButton'; // Importar WhatsAppButton
 import AddProductPage from './components/AddProductPage'; // Importar AddProductPage
 import ProductDetailPage from './components/ProductDetailPage'; // Importar ProductDetailPage
 import AdminPage from './components/AdminPage'; // Importar AdminPage
@@ -143,6 +144,7 @@ function App() {
           </Routes>
         </div>
         <Footer /> {/* Footer fuera de Routes, pero dentro del fragmento principal */}
+        <WhatsAppButton /> {/* Botón flotante de WhatsApp global */}
       </FavoritesProvider>
     </AuthProvider>
   );

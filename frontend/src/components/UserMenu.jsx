@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import './UserMenu.css';
 
 const UserMenu = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, getUserInitials } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -41,7 +41,7 @@ const UserMenu = () => {
         aria-label="Menú de usuario"
       >
         <div className="user-avatar">
-          <i className="fas fa-user-circle"></i>
+          {getUserInitials()}
         </div>
         <span className="user-name">{user.firstName}</span>
         <i className={`fas fa-chevron-down ${isOpen ? 'rotated' : ''}`}></i>
@@ -51,7 +51,7 @@ const UserMenu = () => {
         <div className="user-menu-dropdown">
           <div className="user-menu-header">
             <div className="user-avatar-large">
-              <i className="fas fa-user-circle"></i>
+              {getUserInitials()}
             </div>
             <div className="user-info">
               <div className="user-menu-name">{user.firstName} {user.lastName}</div>
@@ -76,12 +76,21 @@ const UserMenu = () => {
           {user.isAdmin && (
             <>
               <Link 
-                to="/admin" 
+                to="/administracion" 
                 className="user-menu-item"
                 onClick={closeMenu}
               >
                 <i className="fas fa-cog"></i>
                 <span>Panel de Admin</span>
+              </Link>
+              
+              <Link 
+                to="/admin/users" 
+                className="user-menu-item"
+                onClick={closeMenu}
+              >
+                <i className="fas fa-users"></i>
+                <span>Gestionar Usuarios</span>
               </Link>
               
               <Link 
@@ -94,12 +103,39 @@ const UserMenu = () => {
               </Link>
               
               <Link 
-                to="/admin/products" 
+                to="/admin/add-category" 
+                className="user-menu-item"
+                onClick={closeMenu}
+              >
+                <i className="fas fa-plus-circle"></i>
+                <span>Agregar Categoría</span>
+              </Link>
+              
+              <Link 
+                to="/administracion/productos" 
                 className="user-menu-item"
                 onClick={closeMenu}
               >
                 <i className="fas fa-box"></i>
                 <span>Gestionar Productos</span>
+              </Link>
+              
+              <Link 
+                to="/admin/add-product" 
+                className="user-menu-item"
+                onClick={closeMenu}
+              >
+                <i className="fas fa-plus"></i>
+                <span>Agregar Producto</span>
+              </Link>
+              
+              <Link 
+                to="/admin/characteristics" 
+                className="user-menu-item"
+                onClick={closeMenu}
+              >
+                <i className="fas fa-list"></i>
+                <span>Gestionar Características</span>
               </Link>
             </>
           )}
