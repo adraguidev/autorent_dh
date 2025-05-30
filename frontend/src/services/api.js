@@ -486,7 +486,9 @@ export const api = {
     }
   },
 
-  // Crear una reserva
+  // === FUNCIONES DE RESERVAS ===
+
+  // Crear una nueva reserva
   async createReservation(reservationData) {
     try {
       const response = await fetch(`${API_BASE_URL}/reservations`, {
@@ -497,12 +499,77 @@ export const api = {
         body: JSON.stringify(reservationData),
       });
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
       }
       return await response.json();
     } catch (error) {
       console.error('Error creating reservation:', error);
+      throw error;
+    }
+  },
+
+  // Obtener todas las reservas de un usuario
+  async getUserReservations(userId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reservations/user/${userId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user reservations:', error);
+      throw error;
+    }
+  },
+
+  // Obtener una reserva específica por ID
+  async getReservationById(reservationId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reservations/${reservationId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching reservation:', error);
+      throw error;
+    }
+  },
+
+  // Cancelar una reserva
+  async cancelReservation(reservationId) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reservations/${reservationId}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return response.status === 204; // No Content significa éxito
+    } catch (error) {
+      console.error('Error canceling reservation:', error);
+      throw error;
+    }
+  },
+
+  // Actualizar el estado de una reserva
+  async updateReservationStatus(reservationId, status) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/reservations/${reservationId}/status?status=${status}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating reservation status:', error);
       throw error;
     }
   },
