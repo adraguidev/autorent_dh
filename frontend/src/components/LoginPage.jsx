@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import ErrorMessage from './ErrorMessage';
+import NotificationService from '../services/notificationService';
 import ResendConfirmationModal from './ResendConfirmationModal';
 import './LoginPage.css';
 
@@ -49,7 +50,7 @@ const LoginPage = () => {
       setPassword('');
       
       // Mostrar mensaje de bienvenida y redirigir
-      alert(`¡Bienvenido ${response.firstName}!`);
+      NotificationService.toast.success(`¡Bienvenido ${response.firstName}!`);
       
       // Redirigir según el parámetro redirect o a la página principal
       if (redirectPath) {

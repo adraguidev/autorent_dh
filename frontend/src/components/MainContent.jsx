@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import SearchBlock from './SearchBlock';
 import SearchResults from './SearchResults';
@@ -313,12 +313,7 @@ const MainContent = ({ products }) => {
           )}
         </section>
 
-        <section className="admin-panel-section">
-          <h2>Panel de Administración</h2>
-          <Link to="/admin/add-product" className="admin-add-product-btn-link">
-            <button className="admin-add-product-btn">Agregar Producto</button>
-          </Link>
-        </section>
+
       </main>
     </>
   );

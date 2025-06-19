@@ -10,7 +10,6 @@
 
 .categories-section,
 .recommendations-section,
-.admin-panel-section,
 .search-results-section {
   background-color: #fff;
   border-radius: 0;
@@ -36,8 +35,7 @@
 }
 
 .categories-section h2,
-.recommendations-section h2,
-.admin-panel-section h2 {
+.recommendations-section h2 {
   color: #0d2235;
   margin-bottom: 2rem;
   font-size: 1.8rem;
@@ -49,43 +47,7 @@
   margin-bottom: 2rem;
 }
 
-.admin-panel-section {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  background: linear-gradient(135deg, #0d2235 0%, #1a3a52 100%);
-  color: white;
-}
 
-.admin-panel-section h2 {
-  color: white;
-}
-
-.admin-add-product-btn {
-  background-color: #f5a623;
-  color: #0d2235;
-  border: none;
-  padding: 1.2rem 2.5rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
-}
-
-.admin-add-product-btn:hover {
-  background-color: #e59400;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
-}
-
-.admin-add-product-btn-link {
-  text-decoration: none;
-}
 
 /* === ESTILOS PARA FILTRADO POR CATEGORÍAS === */
 
@@ -95,24 +57,27 @@
 
 .categories-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   flex-wrap: wrap;
   gap: 1rem;
   max-width: 1200px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 2rem;
   position: relative;
   padding: 0 2rem;
+  min-height: 60px;
 }
 
 .categories-header h2 {
   margin-bottom: 0;
   text-align: center;
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .clear-filters-btn {
@@ -129,7 +94,10 @@
   gap: 0.4rem;
   transition: all 0.3s ease;
   opacity: 0.8;
-  position: static;
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
   flex-shrink: 0;
 }
 
@@ -158,8 +126,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
+  align-items: stretch;
+  gap: 1rem;
+  margin-top: 3rem;
   margin-bottom: 2rem;
   max-width: 1200px;
   width: 100%;
@@ -172,20 +141,20 @@
   background-color: #fff;
   border: 2px solid #e9ecef;
   border-radius: 8px;
-  padding: 0.6rem;
+  padding: 0.8rem 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  min-height: 60px;
-  width: 100px;
+  min-height: 70px;
+  min-width: 130px;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
 }
 
 .category-filter-item:hover {
@@ -332,7 +301,6 @@
 
   .categories-section,
   .recommendations-section,
-  .admin-panel-section,
   .search-results-section {
     padding: 2.5rem 1rem;
   }
@@ -348,13 +316,16 @@
   }
 
   .categories-header h2 {
-    flex: none;
+    position: static;
+    transform: none;
     margin-bottom: 0.5rem;
   }
 
   .clear-filters-btn {
     position: static;
     transform: none;
+    right: auto;
+    top: auto;
     margin-top: 0.5rem;
     z-index: auto;
     flex-shrink: 0;
@@ -364,13 +335,14 @@
     justify-content: center;
     gap: 0.6rem;
     padding: 0 1rem;
+    margin-top: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
   .category-filter-item {
     min-height: 60px;
-    padding: 0.6rem;
-    width: 100px;
+    min-width: 110px;
+    padding: 0.6rem 0.8rem;
   }
 
   .category-icon {
@@ -407,9 +379,9 @@
   }
 
   .category-filter-item {
-    min-height: 50px;
-    padding: 0.5rem;
-    width: 80px;
+    min-height: 60px;
+    min-width: 100px;
+    padding: 0.6rem 0.8rem;
   }
 
   .category-icon {

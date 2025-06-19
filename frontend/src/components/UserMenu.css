@@ -38,10 +38,20 @@
   color: #495057;
 }
 
+/* Color blanco para el nombre cuando está en el header */
+.header .user-name {
+  color: #ffffff !important;
+}
+
 .fa-chevron-down {
   font-size: 0.8rem;
   transition: transform 0.3s ease;
   color: #6c757d;
+}
+
+/* Color blanco para el ícono cuando está en el header */
+.header .fa-chevron-down {
+  color: #ffffff !important;
 }
 
 .fa-chevron-down.rotated {
@@ -197,14 +207,14 @@
 }
 
 /* ✅ DEBUGGING: Estilo específico para el enlace de historial */
-.user-menu-item[data-testid="historial-link"] {
+/* .user-menu-item[data-testid="historial-link"] {
   background-color: rgba(245, 166, 35, 0.1) !important;
   border: 1px solid #f5a623 !important;
   font-weight: 600 !important;
   z-index: 999999 !important;
   position: relative !important;
   pointer-events: auto !important;
-}
+} */
 
 /* 🔧 FORZAR estilos para buttons */
 button.user-menu-item {

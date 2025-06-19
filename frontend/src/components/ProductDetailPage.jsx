@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { calculateDaysBetween, parseDateLocal } from '../utils/dateUtils';
+import NotificationService from '../services/notificationService';
 import placeholderImage from '../assets/placeholder_image.webp';
 import ImageGalleryModal from './ImageGalleryModal';
 import AvailabilityCalendar from './AvailabilityCalendar';
@@ -27,10 +28,8 @@ const ProductDetailPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        console.log('ProductDetailPage: Fetching product with ID:', productId);
         setLoading(true);
         const productData = await api.getProductById(productId);
-        console.log('ProductDetailPage: Product data received:', productData);
         setProduct(productData);
         setError(null);
       } catch (err) {
@@ -42,47 +41,12 @@ const ProductDetailPage = () => {
     };
 
     if (productId) {
-      console.log('ProductDetailPage: Component mounted with productId:', productId);
       fetchProduct();
     } else {
-      console.error('ProductDetailPage: No productId found');
       setError('ID de producto no válido');
       setLoading(false);
     }
   }, [productId]);
-
-  // 🔍 DEBUG: Detectar elementos que interfieren con UserMenu
-  useEffect(() => {
-    const checkInterference = () => {
-      console.log('🔍 ProductDetailPage: Checking for interference with UserMenu');
-      
-      // Buscar elementos con z-index alto
-      const highZIndexElements = Array.from(document.querySelectorAll('*')).filter(el => {
-        const style = window.getComputedStyle(el);
-        const zIndex = parseInt(style.zIndex);
-        return !isNaN(zIndex) && zIndex > 10000;
-      });
-      
-      console.log('🔍 High z-index elements:', highZIndexElements.map(el => ({
-        element: el.tagName + (el.className ? '.' + el.className.split(' ').join('.') : ''),
-        zIndex: window.getComputedStyle(el).zIndex,
-        position: window.getComputedStyle(el).position
-      })));
-      
-      // Buscar overlays o modales
-      const overlays = document.querySelectorAll('[class*="overlay"], [class*="modal"], [style*="position: fixed"], [style*="position: absolute"]');
-      console.log('🔍 Potential overlays:', Array.from(overlays).map(el => ({
-        element: el.tagName + (el.className ? '.' + el.className.split(' ').join('.') : ''),
-        display: window.getComputedStyle(el).display,
-        visibility: window.getComputedStyle(el).visibility,
-        pointerEvents: window.getComputedStyle(el).pointerEvents
-      })));
-    };
-    
-    // Ejecutar después de que el componente se monte completamente
-    const timer = setTimeout(checkInterference, 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const openModal = (index = 0) => {
     setSelectedImageIndex(index);
@@ -93,26 +57,20 @@ const ProductDetailPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleDateSelect = (dates) => {
+  const handleDateSelect = useCallback((dates) => {
     setSelectedDates(dates);
-  };
+  }, []);
 
-  const handleReservationRequest = (reservationData) => {
-    console.log('ProductDetailPage: Reservation data received:', reservationData);
-    console.log('ProductDetailPage: Days in reservation data:', reservationData.days);
-    console.log('ProductDetailPage: Type of days:', typeof reservationData.days);
+  const handleReservationRequest = useCallback((reservationData) => {
     setSelectedDates(reservationData);
     setShowReservationModal(true);
-  };
+  }, []);
 
   const calculateTotalPrice = (days, pricePerDay) => {
-    console.log('calculateTotalPrice called with:', { days, pricePerDay });
-    
     // Convertir días a número si es string
     const daysNumber = typeof days === 'string' ? parseInt(days) : days;
     
     if (!daysNumber || !pricePerDay || isNaN(daysNumber)) {
-      console.log('Missing or invalid days/pricePerDay:', { days, daysNumber, pricePerDay });
       return '$0';
     }
     
@@ -120,18 +78,12 @@ const ProductDetailPage = () => {
     const price = pricePerDay.replace(/[^\d]/g, '');
     const priceNumber = parseInt(price);
     
-    console.log('Extracted price:', { price, priceNumber });
-    
     if (isNaN(priceNumber)) {
-      console.log('Price is NaN, returning original:', pricePerDay);
       return pricePerDay;
     }
     
     const total = priceNumber * daysNumber;
-    const result = `$${total}`;
-    
-    console.log('Calculated total:', { daysNumber, priceNumber, total, result });
-    return result;
+    return `$${total}`;
   };
 
   // Función para calcular días desde las fechas del modal
@@ -160,21 +112,13 @@ const ProductDetailPage = () => {
     try {
       // Calcular días si no están disponibles
       const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
-      
-      console.log('🚀 confirmReservation: Starting reservation process', {
-        selectedDates,
-        calculatedDays,
-        product: {
-          id: product.id,
-          name: product.name,
-          price: product.price
-        }
-      });
 
       // Verificar que el usuario esté autenticado
       if (!isAuthenticated()) {
-        alert('Debes iniciar sesión para hacer una reserva.');
-        navigate('/login');
+        const result = await NotificationService.requireLogin();
+        if (result.isConfirmed) {
+          navigate('/login');
+        }
         return;
       }
 
@@ -185,10 +129,8 @@ const ProductDetailPage = () => {
         selectedDates.endDate
       );
 
-      console.log('🔍 Availability check result:', isAvailable);
-
       if (!isAvailable.available) {
-        alert('Las fechas seleccionadas ya no están disponibles. Por favor, selecciona otras fechas.');
+        NotificationService.warning('Fechas no disponibles', 'Las fechas seleccionadas ya no están disponibles. Por favor, selecciona otras fechas.');
         setShowReservationModal(false);
         setSelectedDates(null); // Limpiar fechas para actualizar el calendario
         return;
@@ -204,20 +146,28 @@ const ProductDetailPage = () => {
         totalPrice: calculateTotalPriceNumber(calculatedDays, product.price)
       };
 
-      console.log('📝 Sending reservation data to backend:', reservationData);
-
       const createdReservation = await api.createReservation(reservationData);
-      console.log('✅ Reservation created successfully:', createdReservation);
       
-      alert(`¡Reserva confirmada para ${product.name}!\nFechas: ${selectedDates.startDate} - ${selectedDates.endDate}\nDías: ${calculatedDays}`);
+      const result = await NotificationService.reservationSuccess(
+        product.name, 
+        selectedDates.startDate, 
+        selectedDates.endDate, 
+        calculatedDays
+      );
+      
       setShowReservationModal(false);
       
       // Limpiar las fechas seleccionadas para forzar actualización del calendario
       setSelectedDates(null);
       
+      // Si el usuario quiere ver sus reservas, navegar
+      if (result.isConfirmed) {
+        navigate('/reservations');
+      }
+      
     } catch (error) {
       console.error('❌ Error al crear reserva:', error);
-      alert('Error al confirmar la reserva. Por favor, intenta de nuevo.');
+      NotificationService.error('Error al confirmar la reserva', 'Por favor, intenta de nuevo.');
     }
   };
 
@@ -278,8 +228,6 @@ const ProductDetailPage = () => {
     }) : 
     [{ id: 0, url: placeholderImage, alt: product.name, fallback: placeholderImage }];
 
-  console.log('ProductDetailPage: Images array:', images);
-
   return (
     <div className="product-detail-page">
       {/* Breadcrumb y navegación */}
@@ -311,7 +259,6 @@ const ProductDetailPage = () => {
                 className="main-image"
                 onClick={() => openModal(0)}
                 onError={(e) => {
-                  console.log('Image failed to load:', e.target.src);
                   e.target.src = placeholderImage;
                 }}
               />
@@ -519,13 +466,6 @@ const ProductDetailPage = () => {
                     <span className="detail-value">
                       {(() => {
                         const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
-                        console.log('🔢 Modal días calculation:', {
-                          selectedDates,
-                          daysFromCalendar: selectedDates.days,
-                          calculatedDays,
-                          startDate: selectedDates.startDate,
-                          endDate: selectedDates.endDate
-                        });
                         return calculatedDays ? `${calculatedDays} día${calculatedDays !== 1 ? 's' : ''}` : 'No calculado';
                       })()}
                     </span>

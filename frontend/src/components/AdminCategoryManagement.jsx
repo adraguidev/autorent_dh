@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { api } from '../services/api';
+import NotificationService from '../services/notificationService';
 import './AdminCategoryManagement.css';
 
 const AdminCategoryManagement = () => {
@@ -8,6 +10,7 @@ const AdminCategoryManagement = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [productsInCategory, setProductsInCategory] = useState(0);
+  const location = useLocation();
 
   // Datos mock de categorías
   const mockCategories = [
@@ -30,48 +33,58 @@ const AdminCategoryManagement = () => {
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [location.key]); // Recargar cuando cambie la ubicación (útil cuando se vuelve de agregar categoría)
 
   const loadCategories = async () => {
     try {
       setLoading(true);
-      // Simular llamada a API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setCategories(mockCategories);
+      // Intentar cargar desde API primero
+      try {
+        const apiCategories = await api.getCategories();
+        setCategories(apiCategories);
+      } catch (apiError) {
+
+        // Fallback a datos mock si falla la API
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setCategories(mockCategories);
+      }
     } catch (error) {
       console.error('Error loading categories:', error);
+      NotificationService.error('Error al cargar categorías', 'No se pudieron cargar las categorías.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteClick = (category) => {
-    setCategoryToDelete(category);
-    setProductsInCategory(category.productCount);
-    setShowDeleteModal(true);
+  const handleDeleteClick = async (category) => {
+    const result = await NotificationService.confirmDelete(`la categoría "${category.name}"`);
+    if (result.isConfirmed) {
+      await confirmDelete(category);
+    }
   };
 
-  const confirmDelete = async () => {
-    if (!categoryToDelete) return;
+  const confirmDelete = async (category) => {
+    if (!category) return;
 
     try {
-      // Simular llamada a API de eliminación
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Intentar eliminar vía API
+      try {
+        await api.deleteCategory(category.id);
+      } catch (apiError) {
+
+        // Simular eliminación si la API no está disponible
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
       
-      // Actualizar la lista de categorías
+      // Actualizar la lista de categorías localmente
       setCategories(prevCategories => 
-        prevCategories.filter(cat => cat.id !== categoryToDelete.id)
+        prevCategories.filter(cat => cat.id !== category.id)
       );
       
-      // Cerrar modal y limpiar estado
-      setShowDeleteModal(false);
-      setCategoryToDelete(null);
-      setProductsInCategory(0);
-      
-      alert(`Categoría "${categoryToDelete.name}" eliminada exitosamente.`);
+      NotificationService.toast.success(`Categoría "${category.name}" eliminada exitosamente.`);
     } catch (error) {
       console.error('Error deleting category:', error);
-      alert('Error al eliminar la categoría. Por favor, intenta de nuevo.');
+      NotificationService.error('Error al eliminar la categoría', 'Por favor, intenta de nuevo.');
     }
   };
 

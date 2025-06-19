@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import ErrorMessage from './ErrorMessage';
+import NotificationService from '../services/notificationService';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
@@ -51,7 +52,7 @@ const RegisterPage = () => {
       setPassword('');
       setConfirmPassword('');
       
-      alert('¡Registro exitoso! ' + response);
+      NotificationService.success('¡Registro exitoso!', response);
       navigate('/'); // Redirigir a la página principal
     } catch (error) {
       console.error('Error en el registro:', error);

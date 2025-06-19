@@ -34,12 +34,8 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
     try {
       setLoading(true);
       setError(null);
-      console.log('🔍 AvailabilityCalendar: Loading booked dates for product:', productId);
       const dates = await api.getProductBookedDates(productId);
-      console.log('📅 AvailabilityCalendar: Raw booked dates from API:', dates);
-      
       const processedDates = dates.map(dateString => parseDateLocal(dateString));
-      console.log('📅 AvailabilityCalendar: Processed booked dates:', processedDates.map(d => d.toDateString()));
       setBookedDates(processedDates);
     } catch (error) {
       console.error('Error loading booked dates:', error);
@@ -59,11 +55,6 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
       const startDateFormatted = formatDateLocal(startDate);
       const endDateFormatted = formatDateLocal(endDate);
       
-      console.log('AvailabilityCalendar checkAvailability:', {
-        originalDates: { startDate: startDate.toDateString(), endDate: endDate.toDateString() },
-        formattedDates: { startDate: startDateFormatted, endDate: endDateFormatted }
-      });
-
       const result = await api.checkAvailability(
         productId,
         startDateFormatted,
@@ -128,14 +119,6 @@ const AvailabilityCalendar = ({ productId, onDateSelect, onReservationRequest })
       // Formatear fechas usando getDate, getMonth, getFullYear para evitar zona horaria
       const startDateFormatted = formatDateLocal(startDate);
       const endDateFormatted = formatDateLocal(endDate);
-      
-      console.log('AvailabilityCalendar: Sending reservation data:', {
-        startDate: startDateFormatted,
-        endDate: endDateFormatted,
-        days: days,
-        originalStartDate: startDate.toDateString(),
-        originalEndDate: endDate.toDateString()
-      });
       
       onReservationRequest({
         startDate: startDateFormatted,

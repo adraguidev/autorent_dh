@@ -7,6 +7,13 @@
   border-radius: 12px;
   border: 1px solid #e9ecef;
   box-sizing: border-box;
+  /* Forzar esquema de colores claro para reseñas */
+  color: #213547 !important;
+}
+
+/* Asegurar que todos los elementos de texto dentro de reseñas tengan color apropiado */
+.product-reviews-section * {
+  color: inherit;
 }
 
 .product-reviews-loading {
@@ -71,9 +78,11 @@
 }
 
 /* === Sistema de Estrellas === */
-.stars-container {
+.stars-container,
+.stars-input {
   display: flex;
   gap: 0.2rem;
+  justify-content: center;
 }
 
 .star {
@@ -83,13 +92,23 @@
   cursor: default;
   transition: all 0.2s ease;
   border-radius: 4px;
+  font-size: 1.5rem;
+  user-select: none;
+  /* Color por defecto para estrellas directas (span con ★) */
+  color: #d1d5db;
 }
 
 .star.interactive {
-  cursor: pointer;
+  cursor: pointer !important;
+  pointer-events: auto !important;
 }
 
 .star.interactive:hover {
+  transform: scale(1.2);
+  color: #f5a623 !important;
+}
+
+.star.interactive:active {
   transform: scale(1.1);
 }
 
@@ -98,6 +117,17 @@
   outline-offset: 2px;
 }
 
+/* Asegurar que el contenedor de estrellas permita interacciones */
+.stars-input {
+  pointer-events: auto !important;
+}
+
+/* Estrellas llenas */
+.star.filled {
+  color: #f5a623 !important;
+}
+
+/* Estrellas con icono <i> dentro */
 .star i {
   transition: color 0.2s ease;
 }
@@ -111,14 +141,17 @@
 }
 
 /* Tamaños de estrellas */
+.star.small,
 .star.small i {
   font-size: 0.9rem;
 }
 
+.star.medium,
 .star.medium i {
   font-size: 1.1rem;
 }
 
+.star.large,
 .star.large i {
   font-size: 1.4rem;
 }
@@ -200,6 +233,15 @@
   font-family: inherit;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
+  /* Forzar esquema de colores claro para consistencia entre navegadores */
+  color: #333333 !important;
+  background-color: #ffffff !important;
+}
+
+/* Asegurar que el placeholder también sea visible */
+.comment-input textarea::placeholder {
+  color: #999999 !important;
+  opacity: 1;
 }
 
 .comment-input textarea:focus {
@@ -372,7 +414,7 @@
 
 .reviewer-name {
   font-weight: 600;
-  color: #0d2235;
+  color: #0d2235 !important;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -385,7 +427,7 @@
 }
 
 .review-date {
-  color: #6c757d;
+  color: #6c757d !important;
   font-size: 0.85rem;
 }
 
@@ -399,9 +441,25 @@
 
 .review-comment p {
   margin: 0;
-  color: #333;
+  color: #333 !important;
   line-height: 1.6;
   font-size: 0.95rem;
+}
+
+/* Asegurar que el texto del comentario sea visible */
+.product-reviews-section .review-item .review-comment p {
+  color: #333 !important;
+}
+
+.product-reviews-section .review-item .review-comment {
+  color: #333 !important;
+}
+
+/* Forzar color de texto para elementos específicos en reseñas */
+.product-reviews-section .review-comment,
+.product-reviews-section .review-comment p {
+  color: #333 !important;
+  background-color: transparent !important;
 }
 
 /* === Responsive === */

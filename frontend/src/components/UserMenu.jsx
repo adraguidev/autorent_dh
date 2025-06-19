@@ -33,19 +33,15 @@ const UserMenu = () => {
   };
 
   const handleHistorialClick = () => {
-    console.log('🔍 UserMenu: Historial clicked!');
     closeMenu();
     setTimeout(() => {
-      console.log('🚀 UserMenu: Forcing navigation to /reservations');
       window.location.href = '/reservations';
     }, 50);
   };
 
   const handleAdminNavigation = (path, name) => {
-    console.log(`🔍 UserMenu: ${name} clicked!`);
     closeMenu();
     setTimeout(() => {
-      console.log(`🚀 UserMenu: Forcing navigation to ${path}`);
       window.location.href = path;
     }, 50);
   };
@@ -89,7 +85,6 @@ const UserMenu = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log('🔍 Button click event:', e);
               handleHistorialClick();
             }}
             style={{

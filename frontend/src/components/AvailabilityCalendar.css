@@ -5,6 +5,13 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid #e9ecef;
   margin-bottom: 2rem;
+  /* Forzar esquema de colores apropiado para el calendario */
+  color: #495057 !important;
+}
+
+/* Asegurar que todos los elementos de texto dentro tengan color apropiado */
+.availability-calendar * {
+  color: inherit;
 }
 
 .calendar-header {
@@ -95,7 +102,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #495057;
+  color: #495057 !important;
 }
 
 .legend-color {
@@ -263,6 +270,11 @@
   border-radius: 6px;
   border: 1px solid #dee2e6;
   font-size: 0.9rem;
+  color: #495057 !important;
+}
+
+.date-info strong {
+  color: #0d2235 !important;
 }
 
 .days-info {

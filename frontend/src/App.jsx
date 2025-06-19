@@ -22,8 +22,10 @@ import AdminCategoryManagement from './components/AdminCategoryManagement'; // I
 import FavoritesPage from './components/FavoritesPage'; // Importar FavoritesPage
 import ReservationPage from './components/ReservationPage'; // Importar ReservationPage
 import ReservationHistory from './components/ReservationHistory'; // Importar ReservationHistory
+import ErrorBoundary from './components/ErrorBoundary'; // Importar ErrorBoundary
 import { mockProducts as initialProducts } from './mockProducts'; // Importar mockProducts como initialProducts
 import { api } from './services/api'; // Importar el servicio API
+import NotificationService from './services/notificationService'; // Importar NotificationService
 import React, { useState, useEffect } from 'react'; // Importar useState y useEffect
 
 function App() {
@@ -77,19 +79,20 @@ function App() {
         p.id === productId ? { ...p, ...updatedData } : p
       )
     );
-    alert('Producto actualizado con éxito.');
+    NotificationService.toast.success('Producto actualizado con éxito.');
     // La navegación ya la hace EditProductPage
   };
 
   const handleDeleteProduct = async (productId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+    const result = await NotificationService.confirmDelete("este producto");
+    if (result.isConfirmed) {
       try {
         await api.deleteProduct(productId);
         setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
-        alert("Producto eliminado con éxito.");
+        NotificationService.toast.success("Producto eliminado con éxito.");
       } catch (error) {
         console.error('Error deleting product:', error);
-        alert("Error al eliminar el producto. Por favor, intenta de nuevo.");
+        NotificationService.error("Error al eliminar el producto", "Por favor, intenta de nuevo.");
       }
     }
   };
@@ -130,7 +133,11 @@ function App() {
             <Route path="/product/:productId" element={<ProductDetailPage />} />
             <Route path="/administracion" element={<AdminPage />} /> 
             <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
-            <Route path="/admin/edit-product/:productId" element={<EditProductPage products={products} handleEditProduct={handleEditProduct} />} />
+            <Route path="/admin/edit-product/:productId" element={
+              <ErrorBoundary>
+                <EditProductPage products={products} handleEditProduct={handleEditProduct} />
+              </ErrorBoundary>
+            } />
             <Route path="/admin/users" element={<AdminUserManagement />} />
             <Route path="/admin/characteristics" element={<AdminCharacteristics />} />
             <Route path="/admin/add-category" element={<AddCategoryPage />} />

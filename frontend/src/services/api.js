@@ -492,11 +492,19 @@ export const api = {
   // Crear una nueva reserva
   async createReservation(reservationData) {
     try {
+      // Obtener token del usuario autenticado si está disponible
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (user.token) {
+        headers['Authorization'] = `Bearer ${user.token}`;
+      }
+
       const response = await fetch(`${API_BASE_URL}/reservations`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(reservationData),
       });
       if (!response.ok) {
@@ -593,11 +601,6 @@ export const api = {
 
       const startDateFormatted = formatDateLocal(startDate);
       const endDateFormatted = formatDateLocal(endDate);
-
-      console.log('API checkAvailability:', {
-        original: { startDate, endDate },
-        formatted: { startDate: startDateFormatted, endDate: endDateFormatted }
-      });
 
       const response = await fetch(`${API_BASE_URL}/products/${productId}/check-availability`, {
         method: 'POST',

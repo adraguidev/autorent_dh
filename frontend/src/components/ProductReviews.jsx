@@ -98,7 +98,7 @@ const ProductReviews = ({ productId }) => {
       stars.push(
         <span
           key={i}
-          className={`star ${i <= displayRating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`}
+          className={`star ${i <= displayRating ? 'filled' : 'empty'} ${interactive ? 'interactive' : ''}`}
           onClick={interactive ? () => onStarClick(i) : undefined}
           onMouseEnter={interactive ? () => onStarHover(i) : undefined}
           onMouseLeave={interactive ? onStarLeave : undefined}
@@ -121,8 +121,8 @@ const ProductReviews = ({ productId }) => {
 
   if (loading) {
     return (
-      <div className="reviews-section">
-        <div className="reviews-loading">
+      <div className="product-reviews-section">
+        <div className="product-reviews-loading">
           <i className="fas fa-spinner fa-spin"></i>
           <span>Cargando reseñas...</span>
         </div>
@@ -131,7 +131,7 @@ const ProductReviews = ({ productId }) => {
   }
 
   return (
-    <div className="reviews-section">
+    <div className="product-reviews-section">
       <div className="reviews-header">
         <h3>Reseñas y Puntuaciones</h3>
         

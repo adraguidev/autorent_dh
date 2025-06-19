@@ -52,7 +52,7 @@ const AdminProductListPage = ({ products, handleDeleteProduct }) => { // Recibir
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>{mockCategories.find(cat => cat.id === product.categoryId)?.name || 'Sin categoría'}</td>
+                  <td>{product.category?.name || mockCategories.find(cat => cat.id === product.categoryId)?.name || 'Sin categoría'}</td>
                   <td className="actions-cell">
                     <Link to={`/admin/edit-product/${product.id}`} className="action-button edit-button">Editar</Link>
                     <button className="action-button delete-button" onClick={() => handleDeleteProduct(product.id)}>Eliminar</button>

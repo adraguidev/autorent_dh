@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import NotificationService from '../services/notificationService';
 import './AddCategoryPage.css';
 
 const AddCategoryPage = () => {
@@ -62,30 +63,22 @@ const AddCategoryPage = () => {
 
       await api.createCategory(categoryData);
       
-      setSuccess('¡Categoría creada exitosamente!');
+      // Mostrar notificación de éxito
+      await NotificationService.success('¡Categoría creada exitosamente!', `La categoría "${categoryData.name}" ha sido creada correctamente.`);
       
-      // Limpiar formulario
-      setFormData({
-        name: '',
-        description: '',
-        image: ''
-      });
-
-      // Redirigir después de un breve delay
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      // Redirigir a la gestión de categorías
+      navigate('/admin/categories');
 
     } catch (error) {
       console.error('Error creating category:', error);
-      setError(error.message || 'Error al crear la categoría');
+      NotificationService.error('Error al crear la categoría', error.message || 'Por favor, intenta de nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    navigate('/');
+    navigate('/admin/categories');
   };
 
   return (

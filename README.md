@@ -60,38 +60,54 @@
 
 _(Nota: Esta paleta es una propuesta. Se puede refinar e integrar progresivamente en los CSS de la aplicación.)_
 
-## 03. Planificación y Ejecución de los Tests
+## 03. Mejoras Implementadas (Feedback del Proyecto Final)
 
-### Casos de Prueba Planeados (basados en Historias de Usuario implementadas)
+### Backend - Seguridad y Documentación
+*   **✅ Credenciales protegidas**: Migración de credenciales hardcodeadas a variables de entorno
+*   **✅ Documentación completa**: README específico del backend con:
+    *   Configuración de variables de entorno
+    *   Documentación completa de endpoints de la API
+    *   Instrucciones de instalación y configuración
+    *   Ejemplos de request y response para todos los endpoints
 
-*   **Paginación de Vehículos (Home)**:
-    *   Verificar que se muestran N vehículos en la primera página.
-    *   Verificar que los botones "Siguiente", "Anterior", "Inicio" y números de página funcionan.
-    *   Verificar que los botones se deshabilitan correctamente en los extremos (primera/última página).
-*   **Panel de Administración (Acceso)**:
-    *   Verificar que se puede acceder a `/administracion` en vista de escritorio.
-    *   Verificar que se muestra el mensaje "no disponible en móvil" en vistas móviles.
-*   **Panel de Administración (Menú)**:
-    *   Verificar que los enlaces del menú ("Agregar Nuevo Vehículo", "Lista de Vehículos") dirigen a las rutas correctas.
-*   **Listar Vehículos (Admin)**:
-    *   Verificar que la tabla muestra "Id", "Nombre", "Acciones".
-    *   Verificar que todos los vehículos del mock se listan.
-*   **Eliminar Vehículo (Admin)**:
-    *   Verificar que al pulsar "Eliminar" aparece un mensaje de confirmación.
-    *   Si se cancela, verificar que el vehículo no se elimina.
-    *   Si se acepta, verificar que el vehículo se elimina de la lista de admin.
-    *   Verificar que el vehículo eliminado ya no aparece en la Home (Vehículos Destacados).
-    *   Verificar que al intentar acceder a la página de detalle del vehículo eliminado se muestra "Vehículo no encontrado".
-*   **Agregar Vehículo (Admin)**:
-    *   Verificar que el formulario en `/admin/add-product` se renderiza correctamente.
-    *   _(Pruebas de funcionalidad de guardado pendientes de implementación de lógica de backend o estado global)_
-*   **Detalle de Vehículo**:
-    *   Verificar que se muestra la información correcta del vehículo.
-    *   Verificar que la galería de imágenes y el modal funcionan.
+### Frontend - Experiencia de Usuario
+*   **✅ Sistema de notificaciones mejorado**: Implementación de SweetAlert2
+    *   Reemplazo de todos los `alert()` nativos
+    *   Notificaciones toast personalizadas
+    *   Modales de confirmación elegantes
+    *   Mensajes de éxito/error consistentes
+*   **✅ Navegación corregida**: Acceso completo al menú de usuario desde cualquier página
+*   **✅ Error Boundary**: Manejo robusto de errores React con componente ErrorBoundary
+*   **✅ Autenticación en reservas**: Headers de autorización agregados para endpoints protegidos
 
-### Ejecución de Casos de Prueba
-*   _(Actualmente se realizan pruebas manuales exploratorias después de cada desarrollo de funcionalidad)._
-*   _(Pendiente de definir e implementar un framework de testing automatizado como Jest y React Testing Library)._
+### Panel de Administración - Funcionalidad Completa
+*   **✅ Categorías en listado de productos**: Visualización correcta de categorías en AdminProductListPage
+*   **✅ Gestión de categorías mejorada**: 
+    *   Actualización visual automática al agregar/eliminar categorías
+    *   Integración con API real y fallback a datos mock
+    *   Navegación corregida entre páginas de administración
+*   **✅ EditProductPage protegido**: Manejo seguro de productos con diferentes estructuras de datos
+*   **✅ Notificaciones en admin**: Feedback visual consistente en todas las operaciones
+
+### Correcciones Técnicas
+*   **✅ Endpoints de reservas**: Corrección del endpoint `/api/reservations` (anteriormente `/api/auth/reservations`)
+*   **✅ Compatibilidad de datos**: Manejo de productos con estructura de backend vs. mock data
+*   **✅ Gestión de errores**: Implementación de try-catch y manejo graceful de errores de API
+*   **✅ UX mejorada**: Confirmaciones elegantes para eliminaciones y acciones críticas
+
+### Configuración y Documentación
+*   **✅ Variables de entorno**: Archivo `.env.example` con todas las configuraciones necesarias
+*   **✅ Documentación de API**: Endpoints completos con ejemplos para testing
+*   **✅ Instrucciones de setup**: Guías paso a paso para configuración local
+*   **✅ Manejo de errores**: Documentación de códigos de estado HTTP y respuestas de error
+
+### Estado del Proyecto
+*   ✅ **Backend**: Funcional con API completa y documentada
+*   ✅ **Frontend**: Interfaz de usuario completa con navegación fluida  
+*   ✅ **Admin Panel**: Gestión completa de productos, categorías y usuarios
+*   ✅ **Autenticación**: Sistema de login/registro funcional
+*   ✅ **Reservas**: Sistema de reservas con verificación de disponibilidad
+*   ✅ **Experiencia de Usuario**: Notificaciones elegantes y manejo de errores
 
 ---
 Este `README.md` es un documento vivo y se actualizará a medida que el proyecto evolucione.

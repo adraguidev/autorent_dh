@@ -57,7 +57,7 @@ const ReservationPage = ({ products }) => {
       // Llamar a la API para crear la reserva
       try {
         const createdReservation = await api.createReservation(reservationData);
-        console.log('Reserva creada:', createdReservation);
+  
         
         alert('¡Reserva realizada con éxito!');
         navigate('/');
@@ -65,7 +65,7 @@ const ReservationPage = ({ products }) => {
         console.warn('API no disponible, simulando reserva:', apiError);
         
         // Simular éxito si la API no está disponible
-        console.log('Datos de reserva (simulado):', reservationData);
+
         alert('¡Reserva realizada con éxito! (Modo de desarrollo)');
         navigate('/');
       }

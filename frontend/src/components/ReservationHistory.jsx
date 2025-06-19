@@ -28,15 +28,12 @@ const ReservationHistory = () => {
     try {
       setLoading(true);
       setError('');
-      console.log('ReservationHistory: Loading reservations for user:', user);
-      console.log('ReservationHistory: User ID:', user?.id);
       
       if (!user || !user.id) {
         throw new Error('Usuario no válido o sin ID');
       }
       
       const userReservations = await api.getUserReservations(user.id);
-      console.log('ReservationHistory: Reservations loaded:', userReservations);
       setReservations(userReservations);
     } catch (error) {
       console.error('Error loading reservations:', error);
@@ -65,9 +62,10 @@ const ReservationHistory = () => {
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-ES', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'USD',
+      minimumFractionDigits: 2,
     }).format(price);
   };
 
@@ -138,7 +136,7 @@ const ReservationHistory = () => {
       await loadReservations();
     } catch (error) {
       console.error('Error canceling reservation:', error);
-      alert('No se pudo cancelar la reserva. Por favor, inténtalo de nuevo.');
+              NotificationService.error('Error al cancelar la reserva', 'No se pudo cancelar la reserva. Por favor, inténtalo de nuevo.');
     }
   };
 
@@ -292,64 +290,56 @@ const ReservationHistory = () => {
               </div>
 
               <div className="reservation-content">
+                
+                {/* Columna Izquierda: Todos los detalles */}
                 <div className="reservation-details">
-                  <div className="detail-group">
-                    <div className="detail-item">
-                      <i className="fas fa-calendar-alt"></i>
-                      <div className="detail-content">
-                        <span className="detail-label">Fecha de recogida</span>
-                        <span className="detail-value">{formatDate(reservation.startDate)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="detail-item">
-                      <i className="fas fa-calendar-check"></i>
-                      <div className="detail-content">
-                        <span className="detail-label">Fecha de entrega</span>
-                        <span className="detail-value">{formatDate(reservation.endDate)}</span>
-                      </div>
+                  <div className="detail-item">
+                    <i className="fas fa-calendar-alt"></i>
+                    <div className="detail-content">
+                      <span className="detail-label">Fecha de recogida</span>
+                      <span className="detail-value">{formatDate(reservation.startDate)}</span>
                     </div>
                   </div>
-
-                  <div className="detail-group">
-                    <div className="detail-item">
-                      <i className="fas fa-clock"></i>
-                      <div className="detail-content">
-                        <span className="detail-label">Duración</span>
-                        <span className="detail-value">{reservation.durationDays} días</span>
-                      </div>
-                    </div>
-                    
-                    <div className="detail-item">
-                      <i className="fas fa-euro-sign"></i>
-                      <div className="detail-content">
-                        <span className="detail-label">Total pagado</span>
-                        <span className="detail-value price">{formatPrice(reservation.totalPrice)}</span>
-                      </div>
+                  <div className="detail-item">
+                    <i className="fas fa-calendar-check"></i>
+                    <div className="detail-content">
+                      <span className="detail-label">Fecha de entrega</span>
+                      <span className="detail-value">{formatDate(reservation.endDate)}</span>
                     </div>
                   </div>
-
-                  <div className="detail-group">
+                  <div className="detail-item">
+                    <i className="fas fa-clock"></i>
+                    <div className="detail-content">
+                      <span className="detail-label">Duración</span>
+                      <span className="detail-value">{reservation.durationDays} días</span>
+                    </div>
+                  </div>
+                  <div className="detail-item">
+                    <i className="fas fa-euro-sign"></i>
+                    <div className="detail-content">
+                      <span className="detail-label">Total pagado</span>
+                      <span className="detail-value price">{formatPrice(reservation.totalPrice)}</span>
+                    </div>
+                  </div>
+                  <div className="detail-item">
+                    <i className="fas fa-calendar-plus"></i>
+                    <div className="detail-content">
+                      <span className="detail-label">Reservado</span>
+                      <span className="detail-value">{getDaysSinceReservation(reservation.createdAt)}</span>
+                    </div>
+                  </div>
+                  {reservation.notes && (
                     <div className="detail-item">
-                      <i className="fas fa-calendar-plus"></i>
+                      <i className="fas fa-sticky-note"></i>
                       <div className="detail-content">
-                        <span className="detail-label">Reservado</span>
-                        <span className="detail-value">{getDaysSinceReservation(reservation.createdAt)}</span>
+                        <span className="detail-label">Notas</span>
+                        <span className="detail-value">{reservation.notes}</span>
                       </div>
                     </div>
-                    
-                    {reservation.notes && (
-                      <div className="detail-item">
-                        <i className="fas fa-sticky-note"></i>
-                        <div className="detail-content">
-                          <span className="detail-label">Notas</span>
-                          <span className="detail-value">{reservation.notes}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
 
+                {/* Columna Derecha: Acciones */}
                 <div className="reservation-actions">
                   <Link 
                     to={`/product/${reservation.productId}`}
@@ -358,7 +348,6 @@ const ReservationHistory = () => {
                     <i className="fas fa-eye"></i>
                     Ver Producto
                   </Link>
-                  
                   {canCancelReservation(reservation) && (
                     <button
                       onClick={() => handleCancelReservation(reservation.id)}

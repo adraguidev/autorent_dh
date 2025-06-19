@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mockCategories } from '../mockCategories';
+import NotificationService from '../services/notificationService';
 import './AddProductPage.css'; // Reutilizaremos algunos estilos por ahora
 
 const EditProductPage = ({ products, handleEditProduct }) => {
@@ -14,16 +15,34 @@ const EditProductPage = ({ products, handleEditProduct }) => {
   const [originalProduct, setOriginalProduct] = useState(null);
 
   useEffect(() => {
-    const productToEdit = products.find(p => p.id.toString() === productId);
-    if (productToEdit) {
-      setOriginalProduct(productToEdit);
-      setProductName(productToEdit.name);
-      setProductDescription(productToEdit.description);
-      setSelectedCategoryId(productToEdit.categoryId.toString());
-      // setProductImages(productToEdit.images); // El manejo de imágenes existentes es más complejo
-    } else {
-      // Si el producto no se encuentra, redirigir o mostrar error
-      navigate('/administracion/productos'); 
+    try {
+      const productToEdit = products.find(p => p.id.toString() === productId);
+      if (productToEdit) {
+        setOriginalProduct(productToEdit);
+        setProductName(productToEdit.name || '');
+        setProductDescription(productToEdit.description || '');
+        
+        // Manejar la categoría: puede ser un objeto o un ID
+        const categoryId = productToEdit.category?.id || productToEdit.categoryId;
+        setSelectedCategoryId(categoryId ? categoryId.toString() : '');
+        
+        // Manejo seguro de imágenes
+        if (productToEdit.imageUrls && Array.isArray(productToEdit.imageUrls)) {
+          setProductImages(productToEdit.imageUrls.map((url, index) => ({
+            url,
+            alt: `${productToEdit.name} ${index + 1}`
+          })));
+        } else if (productToEdit.images && Array.isArray(productToEdit.images)) {
+          setProductImages(productToEdit.images);
+        }
+      } else {
+        NotificationService.error('Producto no encontrado', 'El producto que intentas editar no existe.');
+        navigate('/administracion/productos'); 
+      }
+    } catch (error) {
+      console.error('Error loading product for edit:', error);
+      NotificationService.error('Error al cargar el producto', 'Hubo un problema al cargar la información del producto.');
+      navigate('/administracion/productos');
     }
   }, [productId, products, navigate]);
 
@@ -42,9 +61,9 @@ const EditProductPage = ({ products, handleEditProduct }) => {
       name: productName,
       description: productDescription,
       categoryId: parseInt(selectedCategoryId),
-      // El manejo de imágenes es complejo: decidir si reemplazar, añadir, etc.
-      // Por ahora, no actualizaremos imágenes aquí para simplificar.
-      images: originalProduct.images // Mantenemos las imágenes originales por ahora
+      // Mantener las imágenes originales por ahora
+      imageUrls: originalProduct.imageUrls || originalProduct.images?.map(img => img.url) || [],
+      images: originalProduct.images || []
     };
 
     handleEditProduct(originalProduct.id, updatedProductData);
@@ -102,14 +121,17 @@ const EditProductPage = ({ products, handleEditProduct }) => {
         <div className="form-group">
           <label>Imágenes Actuales:</label>
           <div className="image-preview-container">
-            {originalProduct.images.map((image, index) => (
+            {productImages.length > 0 ? productImages.map((image, index) => (
               <img 
                 key={index} 
-                src={image.url} // Asumiendo que la URL es directa
-                alt={image.alt} 
+                src={typeof image === 'string' ? image : image.url}
+                alt={typeof image === 'string' ? `Imagen ${index + 1}` : image.alt} 
                 className="image-preview"
+                style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '5px' }}
               />
-            ))}
+            )) : (
+              <p>No hay imágenes cargadas</p>
+            )}
           </div>
           <label htmlFor="productImages">Cargar Nuevas Imágenes (reemplazarán las actuales):</label>
           <input 

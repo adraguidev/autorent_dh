@@ -17,32 +17,37 @@ const WhatsAppButton = () => {
       // Detectar si es un dispositivo móvil
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      // Formatear el número (remover espacios y caracteres especiales excepto +)
-      const formattedNumber = whatsappNumber.replace(/[^\d+]/g, '');
+      // Formatear el número (remover espacios y caracteres especiales, mantener solo dígitos)
+      const formattedNumber = whatsappNumber.replace(/[^\d]/g, '');
       
       // Codificar el mensaje para URL
       const encodedMessage = encodeURIComponent(defaultMessage);
       
-      // Crear URL de WhatsApp
-      let whatsappURL;
+      // Crear URLs de WhatsApp
+      const whatsappAppURL = `whatsapp://send?phone=${formattedNumber}&text=${encodedMessage}`;
+      const whatsappWebURL = `https://web.whatsapp.com/send?phone=${formattedNumber}&text=${encodedMessage}`;
+      
+      console.log('Intentando abrir WhatsApp app:', whatsappAppURL);
+      
       if (isMobile) {
-        // Para dispositivos móviles, usar whatsapp://
-        whatsappURL = `whatsapp://send?phone=${formattedNumber}&text=${encodedMessage}`;
-      } else {
-        // Para escritorio, usar WhatsApp Web
-        whatsappURL = `https://web.whatsapp.com/send?phone=${formattedNumber}&text=${encodedMessage}`;
-      }
-      
-      // Intentar abrir WhatsApp
-      const newWindow = window.open(whatsappURL, '_blank');
-      
-      // Verificar si se pudo abrir la ventana
-      if (newWindow) {
-        // Mostrar mensaje de éxito
+        // Para dispositivos móviles, usar directamente whatsapp://
+        window.open(whatsappAppURL, '_blank');
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
       } else {
-        throw new Error('No se pudo abrir WhatsApp');
+        // Para escritorio, intentar primero la app de escritorio
+        const newWindow = window.open(whatsappAppURL, '_blank');
+        
+        // Si no se pudo abrir la app, intentar con WhatsApp Web después de un breve delay
+        setTimeout(() => {
+          if (!newWindow || newWindow.closed) {
+            console.log('App de WhatsApp no disponible, abriendo WhatsApp Web:', whatsappWebURL);
+            window.open(whatsappWebURL, '_blank');
+          }
+        }, 1000);
+        
+        setShowSuccessMessage(true);
+        setTimeout(() => setShowSuccessMessage(false), 3000);
       }
       
     } catch (error) {
