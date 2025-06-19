@@ -3,6 +3,15 @@ package com.autorent.backend.controller;
 import com.autorent.backend.dto.CharacteristicDto;
 import com.autorent.backend.dto.CharacteristicRequestDto;
 import com.autorent.backend.service.CharacteristicService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/characteristics")
 @CrossOrigin(origins = "http://localhost:5173")
+@Tag(name = "Características", description = "Gestión de características de vehículos (aire acondicionado, GPS, etc.)")
 public class CharacteristicController {
 
     private final CharacteristicService characteristicService;
@@ -22,9 +32,12 @@ public class CharacteristicController {
         this.characteristicService = characteristicService;
     }
 
-    /**
-     * Obtiene todas las características
-     */
+    @Operation(
+        summary = "Obtener todas las características",
+        description = "Recupera la lista completa de características disponibles para vehículos"
+    )
+    @ApiResponse(responseCode = "200", description = "Lista de características obtenida exitosamente",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = CharacteristicDto.class))))
     @GetMapping
     public ResponseEntity<List<CharacteristicDto>> getAllCharacteristics() {
         try {
@@ -53,11 +66,20 @@ public class CharacteristicController {
         }
     }
 
-    /**
-     * Crea una nueva característica
-     */
+    @Operation(
+        summary = "Crear nueva característica",
+        description = "Crea una nueva característica que puede ser asignada a vehículos"
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Característica creada exitosamente",
+                content = @Content(schema = @Schema(implementation = CharacteristicDto.class))),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @PostMapping
-    public ResponseEntity<CharacteristicDto> createCharacteristic(@RequestBody CharacteristicRequestDto requestDto) {
+    public ResponseEntity<CharacteristicDto> createCharacteristic(
+            @Parameter(description = "Datos de la nueva característica") @RequestBody CharacteristicRequestDto requestDto) {
         try {
             CharacteristicDto createdCharacteristic = characteristicService.createCharacteristic(requestDto);
             return ResponseEntity.ok(createdCharacteristic);

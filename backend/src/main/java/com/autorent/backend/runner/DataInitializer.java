@@ -86,7 +86,7 @@ public class DataInitializer implements CommandLineRunner {
                 product1.setDescription("Ideal para la ciudad, bajo consumo y fácil de estacionar.");
                 product1.setPrice("$25/día");
                 product1.setCategory(catCompact);
-                product1.setImageUrls(Arrays.asList("/src/assets/products/compacto_economico_1.webp", "/src/assets/products/compacto_economico_2.webp"));
+                product1.setImageUrls(Arrays.asList("/assets/products/compacto_economico_1.webp", "/assets/products/compacto_economico_2.webp"));
                 product1.setCharacteristics(new HashSet<>());
                 productRepository.save(product1);
 
@@ -95,7 +95,7 @@ public class DataInitializer implements CommandLineRunner {
                 product2.setDescription("Espacioso y seguro, perfecto para viajes largos en familia.");
                 product2.setPrice("$40/día");
                 product2.setCategory(catSedan);
-                product2.setImageUrls(Arrays.asList("/src/assets/products/sedan_familiar_1.webp", "/src/assets/products/sedan_familiar_2.webp"));
+                product2.setImageUrls(Arrays.asList("/assets/products/sedan_familiar_1.webp", "/assets/products/sedan_familiar_2.webp"));
                 product2.setCharacteristics(new HashSet<>());
                 productRepository.save(product2);
 
@@ -104,7 +104,7 @@ public class DataInitializer implements CommandLineRunner {
                 product3.setDescription("Robusto y versátil para cualquier tipo de terreno y aventura.");
                 product3.setPrice("$60/día");
                 product3.setCategory(catSUV);
-                product3.setImageUrls(Arrays.asList("/src/assets/products/suv_todoterreno_1.webp", "/src/assets/products/suv_todoterreno_2.webp"));
+                product3.setImageUrls(Arrays.asList("/assets/products/suv_todoterreno_1.webp", "/assets/products/suv_todoterreno_2.webp"));
                 product3.setCharacteristics(new HashSet<>());
                 productRepository.save(product3);
 
@@ -113,7 +113,7 @@ public class DataInitializer implements CommandLineRunner {
                 product4.setDescription("Experiencia de conducción superior con máximo confort y tecnología.");
                 product4.setPrice("$100/día");
                 product4.setCategory(catLujo);
-                product4.setImageUrls(Arrays.asList("/src/assets/products/lujo_premium_1.webp", "/src/assets/products/lujo_premium_2.webp"));
+                product4.setImageUrls(Arrays.asList("/assets/products/lujo_premium_1.webp", "/assets/products/lujo_premium_2.webp"));
                 product4.setCharacteristics(new HashSet<>());
                 productRepository.save(product4);
 
@@ -122,7 +122,7 @@ public class DataInitializer implements CommandLineRunner {
                 product5.setDescription("Ideal para grupos grandes o familias numerosas, con mucho espacio.");
                 product5.setPrice("$70/día");
                 product5.setCategory(catVan);
-                product5.setImageUrls(Arrays.asList("/src/assets/products/van_grupos_1.webp", "/src/assets/products/van_grupos_2.webp"));
+                product5.setImageUrls(Arrays.asList("/assets/products/van_grupos_1.webp", "/assets/products/van_grupos_2.webp"));
                 product5.setCharacteristics(new HashSet<>());
                 productRepository.save(product5);
 
@@ -131,7 +131,7 @@ public class DataInitializer implements CommandLineRunner {
                 product6.setDescription("Velocidad y diseño se unen en este increíble deportivo.");
                 product6.setPrice("$150/día");
                 product6.setCategory(catDeportivo);
-                product6.setImageUrls(Arrays.asList("/src/assets/products/deportivo_gama_alta_1.webp", "/src/assets/products/deportivo_gama_alta_2.webp"));
+                product6.setImageUrls(Arrays.asList("/assets/products/deportivo_gama_alta_1.webp", "/assets/products/deportivo_gama_alta_2.webp"));
                 product6.setCharacteristics(new HashSet<>());
                 productRepository.save(product6);
 
@@ -140,7 +140,7 @@ public class DataInitializer implements CommandLineRunner {
                 product7.setDescription("Perfecto para viajes de negocios, combina elegancia y rendimiento.");
                 product7.setPrice("$85/día");
                 product7.setCategory(catLujo);
-                product7.setImageUrls(Arrays.asList("/src/assets/products/sedan_lujo_ejecutivo_1.webp"));
+                product7.setImageUrls(Arrays.asList("/assets/products/sedan_lujo_ejecutivo_1.webp"));
                 product7.setCharacteristics(new HashSet<>());
                 productRepository.save(product7);
 
@@ -149,7 +149,7 @@ public class DataInitializer implements CommandLineRunner {
                 product8.setDescription("Diversión y agilidad en un paquete compacto y deportivo.");
                 product8.setPrice("$35/día");
                 product8.setCategory(catCompact);
-                product8.setImageUrls(Arrays.asList("/src/assets/products/compacto_deportivo_1.webp"));
+                product8.setImageUrls(Arrays.asList("/assets/products/compacto_deportivo_1.webp"));
                 product8.setCharacteristics(new HashSet<>());
                 productRepository.save(product8);
             }

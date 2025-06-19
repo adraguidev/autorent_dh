@@ -11,6 +11,7 @@ const AddProductPage = ({ handleAddProduct }) => {
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productImages, setProductImages] = useState([]);
+  const [productImageUrls, setProductImageUrls] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedCharacteristics, setSelectedCharacteristics] = useState([]);
   
@@ -62,6 +63,21 @@ const AddProductPage = ({ handleAddProduct }) => {
     });
   };
 
+  // Funciones para manejar URLs de imágenes
+  const handleImageUrlChange = (index, newUrl) => {
+    setProductImageUrls(prev => 
+      prev.map((url, i) => i === index ? newUrl : url)
+    );
+  };
+
+  const addImageUrl = () => {
+    setProductImageUrls(prev => [...prev, '']);
+  };
+
+  const removeImageUrl = (index) => {
+    setProductImageUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -78,7 +94,9 @@ const AddProductPage = ({ handleAddProduct }) => {
         description: productDescription.trim(),
         price: productPrice.trim(),
         categoryId: parseInt(selectedCategoryId),
-        imageUrls: ['/src/assets/placeholder_image.webp'], // Placeholder por ahora
+        imageUrls: productImageUrls.filter(url => url.trim()).length > 0 
+          ? productImageUrls.filter(url => url.trim())
+          : ['/assets/placeholder_image.webp'], // Placeholder si no hay URLs
         characteristicIds: selectedCharacteristics // Incluir características seleccionadas
       };
 
@@ -91,6 +109,7 @@ const AddProductPage = ({ handleAddProduct }) => {
         setProductDescription('');
         setProductPrice('');
         setProductImages([]);
+        setProductImageUrls([]);
         setSelectedCategoryId('');
         setSelectedCharacteristics([]);
         
@@ -261,30 +280,165 @@ const AddProductPage = ({ handleAddProduct }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="productImages" className="form-label">Imágenes del Producto:</label>
-              <input 
-                type="file" 
-                id="productImages" 
-                className="form-control"
-                multiple 
-                accept="image/*"
-                onChange={handleImageChange} 
-              />
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginTop: 'var(--spacing-xs)' }}>
-                Nota: Por el momento se usará una imagen placeholder. La funcionalidad de subida de imágenes se implementará próximamente.
-              </p>
-              {productImages.length > 0 && (
-                <div className="grid grid-4" style={{ marginTop: 'var(--spacing-sm)' }}>
-                  {productImages.map((image, index) => (
-                    <img 
-                      key={index} 
-                      src={URL.createObjectURL(image)} 
-                      alt={`preview ${index}`} 
-                      style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }}
-                    />
-                  ))}
+              <label className="form-label">Imágenes del Producto:</label>
+              <div style={{ marginBottom: 'var(--spacing-sm)' }}>
+                {productImageUrls.length > 0 ? (
+                  productImageUrls.map((url, index) => (
+                    <div key={index} className="flex" style={{ gap: 'var(--spacing-xs)', marginBottom: 'var(--spacing-xs)', alignItems: 'center' }}>
+                      <input
+                        type="url"
+                        className="form-control"
+                        value={url}
+                        onChange={(e) => handleImageUrlChange(index, e.target.value)}
+                        placeholder={`URL de imagen ${index + 1}`}
+                        style={{ flex: 1 }}
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => removeImageUrl(index)}
+                        className="btn btn-danger btn-sm"
+                        style={{ padding: '0.3rem 0.6rem', minWidth: 'auto' }}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--font-size-sm)', margin: '0 0 var(--spacing-sm) 0' }}>
+                    No hay imágenes configuradas
+                  </p>
+                )}
+                <button 
+                  type="button" 
+                  onClick={addImageUrl}
+                  className="btn btn-outline-primary btn-sm"
+                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
+                >
+                  <i className="fas fa-plus"></i>
+                  Añadir URL de imagen
+                </button>
+              </div>
+              
+              <div className="card" style={{ background: 'var(--bg-secondary)', padding: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+                <h6 style={{ margin: '0 0 var(--spacing-sm) 0', color: 'var(--text-primary)' }}>
+                  <i className="fas fa-lightbulb" style={{ marginRight: 'var(--spacing-xs)', color: 'var(--warning-color)' }}></i>
+                  Consejos para las URLs de imágenes:
+                </h6>
+                <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
+                  <li>Usa URLs directas a imágenes (que terminen en .jpg, .png, .webp, etc.)</li>
+                  <li>Recomendado: imágenes de al menos 800x600 píxeles</li>
+                  <li>Las imágenes deben ser accesibles públicamente</li>
+                  <li>La primera imagen será la imagen principal del producto</li>
+                </ul>
+              </div>
+              
+              {/* Vista previa de imágenes */}
+              {productImageUrls.some(url => url.trim()) ? (
+                <div>
+                  <label className="form-label">Vista previa:</label>
+                  <div className="grid grid-4" style={{ gap: 'var(--spacing-sm)' }}>
+                    {productImageUrls
+                      .filter(url => url.trim())
+                      .slice(0, 4)
+                      .map((url, index) => (
+                        <div key={index} style={{ 
+                          position: 'relative', 
+                          background: 'var(--bg-secondary)',
+                          borderRadius: 'var(--radius-md)',
+                          overflow: 'hidden',
+                          border: '2px solid var(--border-color)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: '80px'
+                        }}>
+                          <img
+                            src={url}
+                            alt={`Preview ${index + 1}`}
+                            style={{
+                              width: '100%',
+                              height: '80px',
+                              objectFit: 'cover',
+                              display: 'block'
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextElementSibling.style.display = 'flex';
+                            }}
+                            onLoad={(e) => {
+                              e.target.style.display = 'block';
+                              if (e.target.nextElementSibling) {
+                                e.target.nextElementSibling.style.display = 'none';
+                              }
+                            }}
+                          />
+                          <div style={{
+                            display: 'none',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '80px',
+                            color: 'var(--text-secondary)',
+                            fontSize: 'var(--font-size-sm)',
+                            textAlign: 'center',
+                            padding: 'var(--spacing-xs)'
+                          }}>
+                            <div>
+                              <i className="fas fa-image" style={{ fontSize: '1.2rem', marginBottom: '4px', display: 'block' }}></i>
+                              Error al cargar
+                            </div>
+                          </div>
+                          {index === 0 && (
+                            <div style={{
+                              position: 'absolute',
+                              top: '4px',
+                              left: '4px',
+                              background: 'var(--primary-color)',
+                              color: 'white',
+                              fontSize: '0.7rem',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontWeight: '600'
+                            }}>
+                              Principal
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    {productImageUrls.filter(url => url.trim()).length > 4 && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '80px',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: 'var(--radius-md)',
+                        color: 'var(--text-secondary)',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: '600'
+                      }}>
+                        +{productImageUrls.filter(url => url.trim()).length - 4} más
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+              ) : productImageUrls.length > 0 ? (
+                <div>
+                  <label className="form-label">Vista previa:</label>
+                  <div style={{
+                    padding: 'var(--spacing-lg)',
+                    textAlign: 'center',
+                    color: 'var(--text-secondary)',
+                    background: 'var(--bg-secondary)',
+                    borderRadius: 'var(--radius-md)',
+                    border: '2px dashed var(--border-color)'
+                  }}>
+                    <i className="fas fa-image" style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)', display: 'block' }}></i>
+                    <p style={{ margin: 0, fontSize: 'var(--font-size-sm)' }}>
+                      Añade URLs válidas para ver las vistas previas
+                    </p>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <div className="flex flex-end">

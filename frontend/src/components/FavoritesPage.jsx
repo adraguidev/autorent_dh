@@ -29,7 +29,7 @@ const FavoritesPage = ({ products }) => {
         subtitle="Acceso requerido"
         icon="fas fa-heart"
         containerSize="medium"
-        headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
+        headerActions={<Link to="/" className="btn" style={{ backgroundColor: 'white', color: '#333', border: '1px solid #ddd' }}>← Volver al inicio</Link>}
       >
         <div className="empty-state">
           <div className="empty-icon">
@@ -53,7 +53,7 @@ const FavoritesPage = ({ products }) => {
         subtitle="Cargando productos favoritos..."
         icon="fas fa-heart"
         containerSize="large"
-        headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
+        headerActions={<Link to="/" className="btn" style={{ backgroundColor: 'white', color: '#333', border: '1px solid #ddd' }}>← Volver al inicio</Link>}
       >
         <div className="loading-state">
           <i className="fas fa-spinner fa-spin"></i>
@@ -63,22 +63,15 @@ const FavoritesPage = ({ products }) => {
     );
   }
 
-  const stats = [
-    { number: favoriteProducts.length, label: 'Productos Favoritos' },
-    { number: favoriteProducts.filter(p => p.price).length, label: 'Con Precio' },
-    { number: favoriteProducts.filter(p => p.available !== false).length, label: 'Disponibles' }
-  ];
-
   return (
-    <MainLayout
-      title="Mis Favoritos"
-      subtitle={`${favoriteProducts.length} producto${favoriteProducts.length !== 1 ? 's' : ''} guardados en tu lista de favoritos`}
-      icon="fas fa-heart"
-      showStats={favoriteProducts.length > 0}
-      stats={stats}
-      containerSize="large"
-      headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
-    >
+    <div data-component="favorites">
+      <MainLayout
+        title="Mis Favoritos"
+        subtitle={`${favoriteProducts.length} producto${favoriteProducts.length !== 1 ? 's' : ''} guardados en tu lista de favoritos`}
+        icon="fas fa-heart"
+        containerSize="large"
+        headerActions={<Link to="/" className="btn" style={{ backgroundColor: 'white', color: '#333', border: '1px solid #ddd' }}>← Volver al inicio</Link>}
+      >
       {favoriteProducts.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">
@@ -89,7 +82,7 @@ const FavoritesPage = ({ products }) => {
           <Link to="/" className="btn btn-primary">Explorar productos</Link>
         </div>
       ) : (
-        <div className="grid grid-3">
+        <div className="grid grid-4 favorites-compact-grid">
           {favoriteProducts.map(product => (
             <div key={product.id} className="animate-slide-up">
               <ProductCard product={product} />
@@ -97,7 +90,8 @@ const FavoritesPage = ({ products }) => {
           ))}
         </div>
       )}
-    </MainLayout>
+      </MainLayout>
+    </div>
   );
 };
 

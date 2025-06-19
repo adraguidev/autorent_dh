@@ -132,7 +132,7 @@ function App() {
             <Route path="/admin/add-product" element={<AddProductPage handleAddProduct={handleAddProduct} />} /> {/* AddProductPage podría necesitar setProducts si añade productos */}
             <Route path="/product/:productId" element={<ProductDetailPage />} />
             <Route path="/administracion" element={<AdminPage />} /> 
-            <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} />} /> 
+            <Route path="/administracion/productos" element={<AdminProductListPage products={products} handleDeleteProduct={handleDeleteProduct} handleEditProduct={handleEditProduct} />} /> 
             <Route path="/admin/edit-product/:productId" element={
               <ErrorBoundary>
                 <EditProductPage products={products} handleEditProduct={handleEditProduct} />

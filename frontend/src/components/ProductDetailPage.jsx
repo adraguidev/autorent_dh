@@ -20,9 +20,10 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
   const [selectedDates, setSelectedDates] = useState(null);
   const [showReservationModal, setShowReservationModal] = useState(false);
+  const [reservationLoading, setReservationLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -105,16 +106,23 @@ const ProductDetailPage = () => {
   };
 
   const closeReservationModal = () => {
+    // No permitir cerrar el modal mientras se está procesando la reserva
+    if (reservationLoading) return;
     setShowReservationModal(false);
   };
 
   const confirmReservation = async () => {
+    // Evitar múltiples clics
+    if (reservationLoading) return;
+    
     try {
+      setReservationLoading(true);
+      
       // Calcular días si no están disponibles
       const calculatedDays = selectedDates.days || calculateDaysBetween(selectedDates.startDate, selectedDates.endDate);
 
       // Verificar que el usuario esté autenticado
-      if (!isAuthenticated()) {
+      if (!isAuthenticated() || !user || !user.id) {
         const result = await NotificationService.requireLogin();
         if (result.isConfirmed) {
           navigate('/login');
@@ -139,7 +147,7 @@ const ProductDetailPage = () => {
       // Crear la reserva en el backend
       const reservationData = {
         productId: product.id,
-        userId: 1, // Por ahora uso un userId fijo, luego se puede obtener del contexto de auth
+        userId: user.id, // Usar el ID del usuario autenticado
         startDate: selectedDates.startDate,
         endDate: selectedDates.endDate,
         days: calculatedDays,
@@ -168,6 +176,8 @@ const ProductDetailPage = () => {
     } catch (error) {
       console.error('❌ Error al crear reserva:', error);
       NotificationService.error('Error al confirmar la reserva', 'Por favor, intenta de nuevo.');
+    } finally {
+      setReservationLoading(false);
     }
   };
 
@@ -210,18 +220,16 @@ const ProductDetailPage = () => {
 
   const images = product.imageUrls && product.imageUrls.length > 0 ? 
     product.imageUrls.map((url, index) => {
-      // Corregir las URLs que vienen con /src/assets/ para que funcionen en producción
-      let correctedUrl = placeholderImage; // default fallback
+      // Usar las URLs directamente ya que ahora vienen con rutas correctas
+      let finalUrl = placeholderImage; // default fallback
       
       if (url && url !== '' && !url.includes('undefined')) {
-        correctedUrl = url.replace('/src/assets/', '/assets/');
-        // Si la URL corregida no funciona, usar placeholder
-        // El navegador intentará cargar la imagen y si falla, mostrará el placeholder
+        finalUrl = url;
       }
       
       return { 
         id: index, 
-        url: correctedUrl, 
+        url: finalUrl, 
         alt: `${product.name} ${index + 1}`,
         fallback: placeholderImage
       };
@@ -440,11 +448,23 @@ const ProductDetailPage = () => {
 
       {/* Modal de confirmación de reserva */}
       {showReservationModal && selectedDates && (
-        <div className="reservation-modal-overlay">
+        <div 
+          className="reservation-modal-overlay"
+          onClick={(e) => {
+            // Solo cerrar si se hace clic en el overlay y no está cargando
+            if (e.target === e.currentTarget && !reservationLoading) {
+              closeReservationModal();
+            }
+          }}
+        >
           <div className="reservation-modal">
             <div className="reservation-modal-header">
               <h3>Confirmar Reserva</h3>
-              <button onClick={closeReservationModal} className="close-modal-btn">
+              <button 
+                onClick={closeReservationModal} 
+                className="close-modal-btn"
+                disabled={reservationLoading}
+              >
                 <i className="fas fa-times"></i>
               </button>
             </div>
@@ -484,12 +504,29 @@ const ProductDetailPage = () => {
             </div>
 
             <div className="reservation-modal-actions">
-              <button onClick={closeReservationModal} className="cancel-reservation-btn">
+              <button 
+                onClick={closeReservationModal} 
+                className="cancel-reservation-btn"
+                disabled={reservationLoading}
+              >
                 Cancelar
               </button>
-              <button onClick={confirmReservation} className="confirm-reservation-btn">
-                <i className="fas fa-check"></i>
-                Confirmar Reserva
+              <button 
+                onClick={confirmReservation} 
+                className="confirm-reservation-btn"
+                disabled={reservationLoading}
+              >
+                {reservationLoading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    Procesando...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-check"></i>
+                    Confirmar Reserva
+                  </>
+                )}
               </button>
             </div>
           </div>

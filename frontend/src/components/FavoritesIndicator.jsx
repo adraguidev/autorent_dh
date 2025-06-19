@@ -22,7 +22,9 @@ const FavoritesIndicator = () => {
         title={`${favoritesCount} producto${favoritesCount !== 1 ? 's' : ''} en favoritos`}
         aria-label={`${favoritesCount} productos en favoritos`}
       >
-        <i className="fas fa-heart"></i>
+        <div className="heart-container">
+          <i className={`fas fa-heart heart-icon ${favoritesCount > 0 ? 'heart-beating' : ''}`}></i>
+        </div>
         {favoritesCount > 0 && (
           <span className="favorites-count-badge">{favoritesCount}</span>
         )}

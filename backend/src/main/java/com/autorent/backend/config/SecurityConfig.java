@@ -38,6 +38,13 @@ public class SecurityConfig {
                 .requestMatchers("/api/reviews/**").permitAll() // Permitir endpoints de reseñas (temporalmente para pruebas)
                 .requestMatchers("/api/reservations/**").permitAll() // Permitir endpoints de reservas (temporalmente para pruebas)
                 .requestMatchers("/api/users/**").permitAll() // Permitir endpoints de usuarios/favoritos (temporalmente para pruebas)
+                // Permitir acceso a Swagger/OpenAPI
+                .requestMatchers("/swagger-ui/**").permitAll() // Swagger UI
+                .requestMatchers("/swagger-ui.html").permitAll() // Swagger UI HTML
+                .requestMatchers("/v3/api-docs/**").permitAll() // OpenAPI 3 docs
+                .requestMatchers("/v3/api-docs.yaml").permitAll() // OpenAPI YAML
+                .requestMatchers("/swagger-resources/**").permitAll() // Swagger resources
+                .requestMatchers("/webjars/**").permitAll() // Webjars (dependencias de Swagger UI)
                 .anyRequest().authenticated() // Todas las demás rutas requieren autenticación (se configurará JWT más adelante)
             );
         return http.build();

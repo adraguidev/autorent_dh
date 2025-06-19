@@ -305,11 +305,22 @@
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   font-weight: 500;
-  text-decoration: none;
+  text-decoration: none !important; /* Prevenir subrayado de enlace */
   cursor: pointer;
   transition: var(--transition-base);
   min-height: 44px;
   white-space: nowrap;
+}
+
+/* Prevenir que los botones hereden colores de navegador */
+.btn:visited,
+.btn:link {
+  text-decoration: none !important;
+}
+
+.btn:hover,
+.btn:focus {
+  text-decoration: none !important;
 }
 
 .btn:disabled {
@@ -328,6 +339,7 @@
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  color: var(--text-white) !important; /* Mantener texto blanco */
   transform: translateY(-1px);
 }
 
@@ -340,6 +352,7 @@
 .btn-danger:hover:not(:disabled) {
   background: var(--danger-hover);
   border-color: var(--danger-hover);
+  color: var(--text-white) !important; /* Mantener texto blanco */
   transform: translateY(-1px);
 }
 
@@ -352,6 +365,7 @@
 .btn-success:hover:not(:disabled) {
   background: var(--success-hover);
   border-color: var(--success-hover);
+  color: var(--text-white) !important; /* Mantener texto blanco */
   transform: translateY(-1px);
 }
 
@@ -363,6 +377,7 @@
 
 .btn-outline:hover:not(:disabled) {
   background: var(--bg-primary);
+  color: var(--text-primary) !important; /* Mantener color de texto */
   transform: translateY(-1px);
 }
 
@@ -374,7 +389,7 @@
 
 .btn-outline-primary:hover:not(:disabled) {
   background: var(--accent-color);
-  color: var(--text-white);
+  color: var(--text-white) !important; /* Mantener texto blanco */
   transform: translateY(-1px);
 }
 

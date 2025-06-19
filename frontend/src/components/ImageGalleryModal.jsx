@@ -46,9 +46,13 @@ const ImageGalleryModal = ({ images, initialImageIndex = 0, onClose }) => {
         
         <div className="gallery-modal-image-container">
           <img 
-            src={placeholderImage} // Siempre usamos el placeholder por ahora
+            src={currentImage.url || placeholderImage} 
             alt={currentImage.alt} 
-            className="gallery-modal-main-image" 
+            className="gallery-modal-main-image"
+            onError={(e) => {
+              // Si falla la carga de la imagen, usar placeholder
+              e.target.src = placeholderImage;
+            }}
           />
         </div>
 
@@ -67,18 +71,24 @@ const ImageGalleryModal = ({ images, initialImageIndex = 0, onClose }) => {
           {currentIndex + 1} / {images.length}
         </div>
         
-        {/* Opcional: Grilla de miniaturas dentro del modal */}
-        {/* <div className="gallery-modal-thumbnails">
-          {images.map((img, index) => (
-            <img
-              key={img.id || index}
-              src={placeholderImage}
-              alt={img.alt}
-              className={`gallery-modal-thumbnail ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => setCurrentIndex(index)}
-            />
-          ))}
-        </div> */}
+        {/* Miniaturas en el modal */}
+        {images.length > 1 && (
+          <div className="gallery-modal-thumbnails">
+            {images.map((img, index) => (
+              <img
+                key={img.id || index}
+                src={img.url || placeholderImage}
+                alt={img.alt}
+                className={`gallery-modal-thumbnail ${index === currentIndex ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                onError={(e) => {
+                  // Si falla la carga de la miniatura, usar placeholder
+                  e.target.src = placeholderImage;
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

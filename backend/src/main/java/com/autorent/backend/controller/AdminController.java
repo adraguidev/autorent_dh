@@ -3,6 +3,15 @@ package com.autorent.backend.controller;
 import com.autorent.backend.dto.UserDto;
 import com.autorent.backend.model.User;
 import com.autorent.backend.service.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +23,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:5173")
+@Tag(name = "Administración", description = "Operaciones administrativas del sistema")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminController {
 
     private final AdminService adminService;
@@ -23,9 +34,16 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    /**
-     * Obtiene todos los usuarios registrados
-     */
+    @Operation(
+        summary = "Obtener todos los usuarios",
+        description = "Recupera la lista completa de usuarios registrados en el sistema (solo para administradores)"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida exitosamente",
+                content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+        @ApiResponse(responseCode = "401", description = "No autorizado"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado - se requieren permisos de administrador")
+    })
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         try {
@@ -73,11 +91,20 @@ public class AdminController {
         }
     }
 
-    /**
-     * Otorga permisos de administrador a un usuario
-     */
+    @Operation(
+        summary = "Otorgar permisos de administrador",
+        description = "Concede permisos de administrador a un usuario específico"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Permisos otorgados exitosamente",
+                content = @Content(schema = @Schema(implementation = UserDto.class))),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "401", description = "No autorizado"),
+        @ApiResponse(responseCode = "403", description = "Acceso denegado - se requieren permisos de administrador")
+    })
     @PostMapping("/users/{userId}/grant-admin")
-    public ResponseEntity<UserDto> grantAdminPermissions(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> grantAdminPermissions(
+            @Parameter(description = "ID del usuario") @PathVariable Long userId) {
         try {
             User updatedUser = adminService.grantAdminPermissions(userId);
             UserDto userDto = new UserDto(

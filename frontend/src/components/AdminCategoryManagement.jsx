@@ -11,6 +11,16 @@ const AdminCategoryManagement = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [productsInCategory, setProductsInCategory] = useState(0);
+  
+  // Estados para edición
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    description: '',
+    imageUrl: ''
+  });
+  const [editLoading, setEditLoading] = useState(false);
   const location = useLocation();
 
   // Datos mock de categorías
@@ -95,6 +105,62 @@ const AdminCategoryManagement = () => {
     setProductsInCategory(0);
   };
 
+  // Funciones para edición
+  const handleEditClick = (category) => {
+    setCategoryToEdit(category);
+    setEditFormData({
+      name: category.name,
+      description: category.description,
+      imageUrl: category.imageUrl || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editFormData.name.trim() || !editFormData.description.trim()) {
+      NotificationService.error('Error de validación', 'El nombre y la descripción son obligatorios.');
+      return;
+    }
+
+    setEditLoading(true);
+    try {
+      const updatedCategory = await api.updateCategory(categoryToEdit.id, editFormData);
+      
+      // Actualizar la lista de categorías localmente
+      setCategories(prevCategories => 
+        prevCategories.map(cat => 
+          cat.id === categoryToEdit.id ? { ...cat, ...updatedCategory } : cat
+        )
+      );
+      
+      NotificationService.toast.success(`Categoría "${editFormData.name}" actualizada exitosamente.`);
+      cancelEdit();
+    } catch (error) {
+      console.error('Error updating category:', error);
+      NotificationService.error('Error al actualizar la categoría', 'Por favor, verifica los datos e intenta de nuevo.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setShowEditModal(false);
+    setCategoryToEdit(null);
+    setEditFormData({
+      name: '',
+      description: '',
+      imageUrl: ''
+    });
+  };
+
+  const handleEditInputChange = (field, value) => {
+    setEditFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   if (loading) {
     return (
       <MainLayout
@@ -113,7 +179,6 @@ const AdminCategoryManagement = () => {
 
   const stats = [
     { number: categories.length, label: 'Total Categorías' },
-    { number: categories.reduce((total, cat) => total + cat.productCount, 0), label: 'Productos Totales' },
     { number: categories.filter(cat => cat.productCount === 0).length, label: 'Categorías Vacías' }
   ];
 
@@ -162,6 +227,7 @@ const AdminCategoryManagement = () => {
                 <div className="flex">
                   <button 
                     className="btn btn-primary btn-sm"
+                    onClick={() => handleEditClick(category)}
                     title="Editar categoría"
                   >
                     <i className="fas fa-edit"></i>
@@ -199,7 +265,87 @@ const AdminCategoryManagement = () => {
         </div>
       )}
 
-      {/* El modal se mantiene igual por ahora - se puede mejorar después */}
+      {/* Modal de Edición */}
+      {showEditModal && categoryToEdit && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal" style={{ maxWidth: '600px' }}>
+            <div className="delete-modal-header">
+              <h3>Editar Categoría</h3>
+              <button onClick={cancelEdit} className="close-modal-btn">
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="delete-modal-content">
+              <div className="form-group">
+                <label className="form-label">Nombre de la categoría:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={editFormData.name}
+                  onChange={(e) => handleEditInputChange('name', e.target.value)}
+                  placeholder="Ej: Vehículos Compactos"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Descripción:</label>
+                <textarea
+                  className="form-control"
+                  value={editFormData.description}
+                  onChange={(e) => handleEditInputChange('description', e.target.value)}
+                  placeholder="Descripción de la categoría..."
+                  rows="3"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">URL de imagen (opcional):</label>
+                <input
+                  type="url"
+                  className="form-control"
+                  value={editFormData.imageUrl}
+                  onChange={(e) => handleEditInputChange('imageUrl', e.target.value)}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                />
+              </div>
+
+              <div className="delete-modal-actions">
+                <button type="button" onClick={cancelEdit} className="cancel-delete-btn">
+                  <i className="fas fa-times"></i>
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-success"
+                  disabled={editLoading}
+                  style={{ 
+                    background: 'var(--success-color)', 
+                    borderColor: 'var(--success-color)',
+                    color: 'white'
+                  }}
+                >
+                  {editLoading ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin"></i>
+                      Actualizando...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-save"></i>
+                      Guardar Cambios
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Eliminación */}
       {showDeleteModal && categoryToDelete && (
         <div className="delete-modal-overlay">
           <div className="delete-modal">

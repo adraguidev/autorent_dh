@@ -4,6 +4,15 @@ import com.autorent.backend.dto.ReservationRequestDto;
 import com.autorent.backend.dto.ReservationResponseDto;
 import com.autorent.backend.model.Reservation;
 import com.autorent.backend.service.ReservationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reservations")
 @CrossOrigin(origins = "*")
+@Tag(name = "Reservas", description = "Gestión de reservas de vehículos")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -24,8 +34,21 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @Operation(
+        summary = "Crear nueva reserva",
+        description = "Crea una nueva reserva para un vehículo en fechas específicas"
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Reserva creada exitosamente",
+                content = @Content(schema = @Schema(implementation = ReservationResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o fechas no disponibles"),
+        @ApiResponse(responseCode = "404", description = "Producto o usuario no encontrado"),
+        @ApiResponse(responseCode = "401", description = "No autorizado")
+    })
     @PostMapping
-    public ResponseEntity<?> createReservation(@RequestBody ReservationRequestDto requestDto) {
+    public ResponseEntity<?> createReservation(
+            @Parameter(description = "Datos de la nueva reserva") @RequestBody ReservationRequestDto requestDto) {
         try {
             ReservationResponseDto createdReservation = reservationService.createReservation(requestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdReservation);

@@ -4,6 +4,7 @@ import com.autorent.backend.dto.RatingStatsDto;
 import com.autorent.backend.dto.ReviewRequestDto;
 import com.autorent.backend.dto.ReviewResponseDto;
 import com.autorent.backend.service.ReviewService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/reviews")
 @CrossOrigin(origins = "*")
+@Tag(name = "Reseñas", description = "Gestión de reseñas y calificaciones de productos")
 public class ReviewController {
 
     private final ReviewService reviewService;

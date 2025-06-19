@@ -19,8 +19,9 @@
   padding: 20px;
   border-radius: 8px;
   position: relative;
-  max-width: 90vw; /* Máximo ancho */
-  max-height: 90vh; /* Máximo alto */
+  max-width: 85vw; /* Reducido de 90vw a 85vw */
+  max-height: 85vh; /* Reducido de 90vh a 85vh */
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,6 +39,7 @@
   cursor: pointer;
   line-height: 1;
   padding: 0;
+  z-index: 10;
 }
 
 .gallery-modal-close-button:hover {
@@ -45,96 +47,133 @@
 }
 
 .gallery-modal-image-container {
-  width: 100%;
-  max-height: calc(90vh - 120px); /* Ajustar para dejar espacio a controles y contador */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
+  position: relative;
+  /* Establecer dimensiones máximas más controladas */
+  max-width: 800px; /* Ancho máximo fijo */
+  max-height: 600px; /* Alto máximo fijo */
+  width: auto;
+  height: auto;
 }
 
 .gallery-modal-main-image {
-  max-width: 100%;
-  max-height: 100%; /* La imagen se ajusta al contenedor */
-  height: auto; /* Mantiene la proporción */
-  width: auto; /* Mantiene la proporción */
+  /* Dimensiones máximas más conservadoras */
+  max-width: 800px;
+  max-height: 600px;
+  width: auto;
+  height: auto;
   object-fit: contain; /* Para que se vea completa sin recortar */
   border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .gallery-modal-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 10px;
+  pointer-events: none; /* Los botones tendrán pointer-events: auto */
 }
 
 .gallery-modal-nav-button {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 12px 16px;
   font-size: 1.5rem;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-  position: absolute; /* Posicionar sobre la imagen */
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.gallery-modal-nav-button.prev {
-  left: 25px; /* Ajustar según padding del modal-content */
-}
-
-.gallery-modal-nav-button.next {
-  right: 25px; /* Ajustar según padding del modal-content */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
 }
 
 .gallery-modal-nav-button:hover {
   background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.gallery-modal-nav-button.prev {
+  margin-left: -25px; /* Posicionar fuera del contenedor de imagen */
+}
+
+.gallery-modal-nav-button.next {
+  margin-right: -25px; /* Posicionar fuera del contenedor de imagen */
 }
 
 .gallery-modal-counter {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #555;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  background: #f8f9fa;
+  padding: 8px 16px;
+  border-radius: 20px;
 }
 
-/* Estilos opcionales para miniaturas dentro del modal */
+/* Estilos para miniaturas dentro del modal */
 .gallery-modal-thumbnails {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  max-height: 80px; /* Limitar altura de la tira de miniaturas */
+  gap: 10px;
+  max-height: 100px; /* Aumentado ligeramente */
   overflow-y: auto;
-  padding-top: 10px;
+  padding: 15px 0;
   border-top: 1px solid #eee;
   width: 100%;
+  max-width: 800px; /* Limitar ancho de las miniaturas */
 }
 
 .gallery-modal-thumbnail {
-  width: 60px;
-  height: 45px;
+  width: 70px; /* Aumentado de 60px */
+  height: 50px; /* Aumentado de 45px */
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .gallery-modal-thumbnail:hover {
   border-color: #aaa;
+  transform: scale(1.05);
 }
 
 .gallery-modal-thumbnail.active {
-  border-color: #007bff; /* O tu color primario */
+  border-color: #f5a623; /* Color primario del sistema */
+  box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
 }
 
 /* Responsividad para el modal */
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
+  .gallery-modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  
+  .gallery-modal-image-container {
+    max-width: 700px;
+    max-height: 500px;
+  }
+  
+  .gallery-modal-main-image {
+    max-width: 700px;
+    max-height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
   .gallery-modal-content {
     padding: 15px;
     max-width: 95vw;
@@ -147,19 +186,38 @@
     right: 10px;
   }
 
-  .gallery-modal-nav-button {
-    padding: 8px 12px;
-    font-size: 1.2rem;
+  .gallery-modal-image-container {
+    max-width: 100%;
+    max-height: 400px;
   }
+  
+  .gallery-modal-main-image {
+    max-width: 100%;
+    max-height: 400px;
+  }
+
+  .gallery-modal-nav-button {
+    padding: 10px 12px;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+  }
+  
   .gallery-modal-nav-button.prev {
-    left: 10px; 
+    margin-left: -20px;
   }
   
   .gallery-modal-nav-button.next {
-    right: 10px; 
+    margin-right: -20px;
   }
-
-  .gallery-modal-image-container {
-    max-height: calc(95vh - 100px); 
+  
+  .gallery-modal-thumbnails {
+    max-height: 80px;
+    gap: 8px;
+  }
+  
+  .gallery-modal-thumbnail {
+    width: 60px;
+    height: 45px;
   }
 }

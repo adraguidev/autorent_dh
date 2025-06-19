@@ -337,7 +337,7 @@ const ReservationHistory = () => {
                 <div className="reservation-actions">
                   <Link 
                     to={`/product/${reservation.productId}`}
-                    className="btn btn-primary btn-block"
+                    className="btn btn-primary"
                   >
                     <i className="fas fa-eye"></i>
                     Ver Producto
@@ -345,7 +345,7 @@ const ReservationHistory = () => {
                   {canCancelReservation(reservation) && (
                     <button
                       onClick={() => handleCancelReservation(reservation.id)}
-                      className="btn btn-danger btn-block"
+                      className="btn btn-danger"
                     >
                       <i className="fas fa-times"></i>
                       Cancelar
