@@ -175,7 +175,7 @@ const AdminProductListPage = ({ products, handleDeleteProduct, handleEditProduct
             <p>La lista de productos no está disponible para dispositivos móviles. Por favor, accede desde una computadora de escritorio o laptop.</p>
             <Link to="/administracion" className="btn btn-primary">← Volver al Panel</Link>
           </div>
-        </div>
+      </div>
       </MainLayout>
     );
   }
@@ -191,7 +191,7 @@ const AdminProductListPage = ({ products, handleDeleteProduct, handleEditProduct
           <Link to="/admin/add-product" className="btn btn-success">
             <i className="fas fa-plus"></i>
             Agregar Producto
-          </Link>
+        </Link>
           <Link to="/administracion" className="btn btn-outline-primary">← Volver al Panel</Link>
         </div>
       }
@@ -213,10 +213,10 @@ const AdminProductListPage = ({ products, handleDeleteProduct, handleEditProduct
                     <th style={{ padding: 'var(--spacing-md)', textAlign: 'left', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Nombre</th>
                     <th style={{ padding: 'var(--spacing-md)', textAlign: 'left', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Categoría</th>
                     <th style={{ padding: 'var(--spacing-md)', textAlign: 'center', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
                     <tr key={product.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                       <td style={{ padding: 'var(--spacing-md)', fontWeight: '500', color: 'var(--text-secondary)' }}>{product.id}</td>
                       <td style={{ padding: 'var(--spacing-md)', fontWeight: '600', color: 'var(--text-primary)' }}>{product.name}</td>
@@ -643,7 +643,7 @@ const AdminProductListPage = ({ products, handleDeleteProduct, handleEditProduct
               </div>
             </form>
           </div>
-        </div>
+    </div>
       )}
     </MainLayout>
   );
