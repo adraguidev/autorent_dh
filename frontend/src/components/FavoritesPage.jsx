@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useAuth } from '../contexts/AuthContext';
 import ProductCard from './ProductCard';
+import MainLayout from './MainLayout';
 import './FavoritesPage.css';
 
 const FavoritesPage = ({ products }) => {
@@ -23,75 +24,80 @@ const FavoritesPage = ({ products }) => {
 
   if (!isAuthenticated()) {
     return (
-      <div className="favorites-page">
-        <div className="favorites-header">
-          <h1>Mis Favoritos</h1>
-          <Link to="/" className="back-link">← Volver al inicio</Link>
-        </div>
-        <div className="favorites-empty">
+      <MainLayout
+        title="Mis Favoritos"
+        subtitle="Acceso requerido"
+        icon="fas fa-heart"
+        containerSize="medium"
+        headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
+      >
+        <div className="empty-state">
           <div className="empty-icon">
             <i className="fas fa-heart"></i>
           </div>
-          <h2>Inicia sesión para ver tus favoritos</h2>
+          <h3>Inicia sesión para ver tus favoritos</h3>
           <p>Debes iniciar sesión para poder guardar y ver tus productos favoritos.</p>
-          <div className="empty-actions">
+          <div className="flex flex-center">
             <Link to="/login" className="btn btn-primary">Iniciar sesión</Link>
-            <Link to="/register" className="btn btn-secondary">Crear cuenta</Link>
+            <Link to="/register" className="btn btn-outline-primary">Crear cuenta</Link>
           </div>
         </div>
-      </div>
+      </MainLayout>
     );
   }
 
   if (loading) {
     return (
-      <div className="favorites-page">
-        <div className="favorites-header">
-          <h1>Mis Favoritos</h1>
-          <Link to="/" className="back-link">← Volver al inicio</Link>
-        </div>
-        <div className="favorites-loading">
+      <MainLayout
+        title="Mis Favoritos"
+        subtitle="Cargando productos favoritos..."
+        icon="fas fa-heart"
+        containerSize="large"
+        headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
+      >
+        <div className="loading-state">
           <i className="fas fa-spinner fa-spin"></i>
           <span>Cargando favoritos...</span>
         </div>
-      </div>
+      </MainLayout>
     );
   }
 
-  return (
-    <div className="favorites-page">
-      <div className="favorites-header">
-        <h1>Mis Favoritos</h1>
-        <Link to="/" className="back-link">← Volver al inicio</Link>
-      </div>
+  const stats = [
+    { number: favoriteProducts.length, label: 'Productos Favoritos' },
+    { number: favoriteProducts.filter(p => p.price).length, label: 'Con Precio' },
+    { number: favoriteProducts.filter(p => p.available !== false).length, label: 'Disponibles' }
+  ];
 
+  return (
+    <MainLayout
+      title="Mis Favoritos"
+      subtitle={`${favoriteProducts.length} producto${favoriteProducts.length !== 1 ? 's' : ''} guardados en tu lista de favoritos`}
+      icon="fas fa-heart"
+      showStats={favoriteProducts.length > 0}
+      stats={stats}
+      containerSize="large"
+      headerActions={<Link to="/" className="btn btn-outline-primary">← Volver al inicio</Link>}
+    >
       {favoriteProducts.length === 0 ? (
-        <div className="favorites-empty">
+        <div className="empty-state">
           <div className="empty-icon">
             <i className="far fa-heart"></i>
           </div>
-          <h2>No tienes productos favoritos</h2>
+          <h3>No tienes productos favoritos</h3>
           <p>Explora nuestro catálogo y marca los productos que más te gusten haciendo clic en el corazón.</p>
-          <div className="empty-actions">
-            <Link to="/" className="btn btn-primary">Explorar productos</Link>
-          </div>
+          <Link to="/" className="btn btn-primary">Explorar productos</Link>
         </div>
       ) : (
-        <div className="favorites-content">
-          <div className="favorites-summary">
-            <p>
-              {favoriteProducts.length} producto{favoriteProducts.length !== 1 ? 's' : ''} en favoritos
-            </p>
-          </div>
-          
-          <div className="favorites-grid">
-            {favoriteProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+        <div className="grid grid-3">
+          {favoriteProducts.map(product => (
+            <div key={product.id} className="animate-slide-up">
+              <ProductCard product={product} />
+            </div>
+          ))}
         </div>
       )}
-    </div>
+    </MainLayout>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import ErrorMessage from './ErrorMessage';
+import MainLayout from './MainLayout';
 import './AdminUserManagement.css';
 
 const AdminUserManagement = () => {
@@ -59,110 +60,166 @@ const AdminUserManagement = () => {
   // Verificar si el usuario actual es administrador
   if (!user?.isAdmin) {
     return (
-      <div className="admin-access-denied">
-        <h2>Acceso Denegado</h2>
-        <p>No tienes permisos para acceder a esta sección.</p>
-      </div>
+      <MainLayout
+        title="Acceso Denegado"
+        subtitle="Permisos insuficientes"
+        icon="fas fa-exclamation-triangle"
+        containerSize="medium"
+      >
+        <div className="empty-state">
+          <div className="empty-icon">
+            <i className="fas fa-user-shield" style={{ fontSize: '4rem', color: 'var(--danger-color)' }}></i>
+          </div>
+          <h3>Sin permisos de administrador</h3>
+          <p>No tienes permisos para acceder a la gestión de usuarios.</p>
+        </div>
+      </MainLayout>
     );
   }
 
-  return (
-    <div className="admin-user-management">
-      <div className="admin-header">
-        <h1>Gestión de Usuarios</h1>
-        <p>Administra los usuarios registrados y sus permisos de administrador</p>
-      </div>
+  if (loading) {
+    return (
+      <MainLayout
+        title="Gestión de Usuarios"
+        subtitle="Cargando información de usuarios..."
+        icon="fas fa-users"
+        containerSize="large"
+      >
+        <div className="loading-state">
+          <i className="fas fa-spinner fa-spin"></i>
+          <span>Cargando usuarios...</span>
+        </div>
+      </MainLayout>
+    );
+  }
 
-      <ErrorMessage message={error} type="error" />
+  const stats = [
+    { number: users.length, label: 'Total Usuarios' },
+    { number: users.filter(u => u.isAdmin).length, label: 'Administradores' },
+    { number: users.filter(u => !u.isAdmin).length, label: 'Usuarios Regulares' }
+  ];
+
+  return (
+    <MainLayout
+      title="Gestión de Usuarios"
+      subtitle="Administra los usuarios registrados y sus permisos de administrador"
+      icon="fas fa-users"
+      showStats={true}
+      stats={stats}
+      containerSize="large"
+    >
+      {error && (
+        <div className="error-message">
+          <i className="fas fa-exclamation-triangle"></i>
+          {error}
+        </div>
+      )}
+      
       {successMessage && (
-        <ErrorMessage message={successMessage} type="success" />
+        <div className="card" style={{ background: '#d1edff', borderColor: '#28a745', color: '#155724', marginBottom: 'var(--spacing-lg)' }}>
+          <div className="card-body">
+            <i className="fas fa-check-circle" style={{ color: '#28a745', marginRight: 'var(--spacing-sm)' }}></i>
+            {successMessage}
+          </div>
+        </div>
       )}
 
-      {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Cargando usuarios...</p>
+      {users.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <i className="fas fa-users"></i>
+          </div>
+          <h3>No hay usuarios registrados</h3>
+          <p>No hay usuarios registrados en el sistema.</p>
         </div>
       ) : (
-        <div className="users-container">
-          <div className="users-stats">
-            <div className="stat-card">
-              <h3>Total Usuarios</h3>
-              <span className="stat-number">{users.length}</span>
-            </div>
-            <div className="stat-card">
-              <h3>Administradores</h3>
-              <span className="stat-number">{users.filter(u => u.isAdmin).length}</span>
-            </div>
-            <div className="stat-card">
-              <h3>Usuarios Regulares</h3>
-              <span className="stat-number">{users.filter(u => !u.isAdmin).length}</span>
-            </div>
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">
+              <i className="fas fa-table"></i>
+              Lista de Usuarios
+            </h2>
           </div>
-
-          <div className="users-table-container">
-            <table className="users-table">
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Email</th>
-                  <th>Rol</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(userData => (
-                  <tr key={userData.id}>
-                    <td>
-                      <div className="user-info">
-                        <div className="user-avatar">
-                          {getInitials(userData.firstName, userData.lastName)}
+          <div className="card-body p-0">
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead style={{ background: 'var(--bg-primary)' }}>
+                  <tr>
+                    <th style={{ padding: 'var(--spacing-md)', textAlign: 'left', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Usuario</th>
+                    <th style={{ padding: 'var(--spacing-md)', textAlign: 'left', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Email</th>
+                    <th style={{ padding: 'var(--spacing-md)', textAlign: 'center', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Rol</th>
+                    <th style={{ padding: 'var(--spacing-md)', textAlign: 'center', borderBottom: '2px solid var(--border-color)', fontWeight: '600' }}>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(userData => (
+                    <tr key={userData.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                      <td style={{ padding: 'var(--spacing-md)' }}>
+                        <div className="flex">
+                          <div style={{ 
+                            width: '40px', 
+                            height: '40px', 
+                            borderRadius: '50%', 
+                            background: 'var(--primary-color)', 
+                            color: 'white', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            fontWeight: '600',
+                            marginRight: 'var(--spacing-sm)'
+                          }}>
+                            {getInitials(userData.firstName, userData.lastName)}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>
+                              {userData.firstName} {userData.lastName}
+                            </div>
+                            <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
+                              ID: {userData.id}
+                            </div>
+                          </div>
                         </div>
-                        <div className="user-details">
-                          <span className="user-name">
-                            {userData.firstName} {userData.lastName}
-                          </span>
-                          <span className="user-id">ID: {userData.id}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="user-email">{userData.email}</span>
-                    </td>
-                    <td>
-                      <span className={`role-badge ${userData.isAdmin ? 'admin' : 'user'}`}>
-                        {userData.isAdmin ? 'Administrador' : 'Usuario'}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="actions-container">
+                      </td>
+                      <td style={{ padding: 'var(--spacing-md)', color: 'var(--text-secondary)' }}>
+                        {userData.email}
+                      </td>
+                      <td style={{ padding: 'var(--spacing-md)', textAlign: 'center' }}>
+                        <span className={userData.isAdmin ? 'btn btn-success btn-sm' : 'btn btn-outline btn-sm'} style={{ pointerEvents: 'none' }}>
+                          {userData.isAdmin ? 'Administrador' : 'Usuario'}
+                        </span>
+                      </td>
+                      <td style={{ padding: 'var(--spacing-md)', textAlign: 'center' }}>
                         {userData.id !== user.id ? (
                           <button
-                            className={`toggle-admin-btn ${userData.isAdmin ? 'revoke' : 'grant'}`}
+                            className={userData.isAdmin ? 'btn btn-danger btn-sm' : 'btn btn-primary btn-sm'}
                             onClick={() => handleToggleAdmin(userData.id, userData.isAdmin)}
                             title={userData.isAdmin ? 'Revocar permisos de admin' : 'Otorgar permisos de admin'}
                           >
-                            {userData.isAdmin ? 'Revocar Admin' : 'Hacer Admin'}
+                            {userData.isAdmin ? (
+                              <>
+                                <i className="fas fa-user-minus"></i>
+                                Revocar Admin
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-user-plus"></i>
+                                Hacer Admin
+                              </>
+                            )}
                           </button>
                         ) : (
-                          <span className="current-user-note">Tú</span>
+                          <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Tú mismo</span>
                         )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {users.length === 0 && (
-            <div className="no-users">
-              <p>No hay usuarios registrados en el sistema.</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
         </div>
       )}
-    </div>
+    </MainLayout>
   );
 };
 

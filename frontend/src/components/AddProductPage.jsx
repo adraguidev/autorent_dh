@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import ErrorMessage from './ErrorMessage';
+import MainLayout from './MainLayout';
 import './AddProductPage.css';
 
 const AddProductPage = ({ handleAddProduct }) => {
@@ -104,146 +105,198 @@ const AddProductPage = ({ handleAddProduct }) => {
   // Verificar si el usuario actual es administrador
   if (!user?.isAdmin) {
     return (
-      <div className="admin-access-denied">
-        <h2>Acceso Denegado</h2>
-        <p>No tienes permisos para agregar productos. Solo los administradores pueden realizar esta acción.</p>
-      </div>
+      <MainLayout
+        title="Acceso Denegado"
+        subtitle="Permisos insuficientes"
+        icon="fas fa-exclamation-triangle"
+        containerSize="medium"
+      >
+        <div className="empty-state">
+          <div className="empty-icon">
+            <i className="fas fa-user-shield" style={{ fontSize: '4rem', color: 'var(--danger-color)' }}></i>
+          </div>
+          <h3>Sin permisos de administrador</h3>
+          <p>No tienes permisos para agregar productos. Solo los administradores pueden realizar esta acción.</p>
+        </div>
+      </MainLayout>
     );
   }
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Cargando datos...</p>
-      </div>
+      <MainLayout
+        title="Agregar Nuevo Producto"
+        subtitle="Cargando datos del formulario..."
+        icon="fas fa-plus-circle"
+        containerSize="large"
+      >
+        <div className="loading-state">
+          <i className="fas fa-spinner fa-spin"></i>
+          <span>Cargando categorías y características...</span>
+        </div>
+      </MainLayout>
     );
   }
 
-  return (
-    <div className="add-product-page">
-      <div className="admin-header">
-        <h1>Agregar Nuevo Producto</h1>
-        <p>Completa la información del producto para agregarlo al catálogo</p>
-      </div>
+  const stats = [
+    { number: categories.length, label: 'Categorías Disponibles' },
+    { number: characteristics.length, label: 'Características' },
+    { number: selectedCharacteristics.length, label: 'Seleccionadas' }
+  ];
 
-      <ErrorMessage message={error} type="error" />
+  return (
+    <MainLayout
+      title="Agregar Nuevo Producto"
+      subtitle="Completa la información del producto para agregarlo al catálogo"
+      icon="fas fa-plus-circle"
+      showStats={true}
+      stats={stats}
+      containerSize="large"
+    >
+      {error && (
+        <div className="error-message">
+          <i className="fas fa-exclamation-triangle"></i>
+          {error}
+        </div>
+      )}
+      
       {successMessage && (
-        <ErrorMessage message={successMessage} type="success" />
+        <div className="card" style={{ background: '#d1edff', borderColor: '#28a745', color: '#155724', marginBottom: 'var(--spacing-lg)' }}>
+          <div className="card-body">
+            <i className="fas fa-check-circle" style={{ color: '#28a745', marginRight: 'var(--spacing-sm)' }}></i>
+            {successMessage}
+          </div>
+        </div>
       )}
 
-      <div className="form-container">
-        <form onSubmit={handleSubmit} className="add-product-form">
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="productName">Nombre del Producto: *</label>
-              <input 
-                type="text" 
-                id="productName" 
-                value={productName} 
-                onChange={(e) => setProductName(e.target.value)} 
-                placeholder="Ej: Sedán Familiar Confortable"
-                required 
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="productPrice">Precio: *</label>
-              <input 
-                type="text" 
-                id="productPrice" 
-                value={productPrice} 
-                onChange={(e) => setProductPrice(e.target.value)} 
-                placeholder="Ej: $40/día"
-                required 
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="productDescription">Descripción: *</label>
-            <textarea 
-              id="productDescription" 
-              value={productDescription} 
-              onChange={(e) => setProductDescription(e.target.value)} 
-              placeholder="Describe las características principales del vehículo..."
-              rows="4"
-              required 
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="productCategory">Categoría: *</label>
-            <select 
-              id="productCategory" 
-              value={selectedCategoryId} 
-              onChange={(e) => setSelectedCategoryId(e.target.value)} 
-              required
-            >
-              <option value="" disabled>Seleccione una categoría</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Características del Vehículo:</label>
-            <div className="characteristics-grid">
-              {characteristics.map(characteristic => (
-                <div 
-                  key={characteristic.id} 
-                  className={`characteristic-item ${selectedCharacteristics.includes(characteristic.id) ? 'selected' : ''}`}
-                  onClick={() => handleCharacteristicToggle(characteristic.id)}
-                >
-                  <i className={characteristic.icon}></i>
-                  <span>{characteristic.name}</span>
-                  {selectedCharacteristics.includes(characteristic.id) && (
-                    <i className="fas fa-check check-icon"></i>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p className="characteristics-help">
-              Selecciona las características que incluye este vehículo. Puedes seleccionar múltiples opciones.
-            </p>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="productImages">Imágenes del Producto:</label>
-            <input 
-              type="file" 
-              id="productImages" 
-              multiple 
-              accept="image/*"
-              onChange={handleImageChange} 
-            />
-            <p className="image-help">
-              Nota: Por el momento se usará una imagen placeholder. La funcionalidad de subida de imágenes se implementará próximamente.
-            </p>
-            <div className="image-preview-container">
-              {productImages.length > 0 && productImages.map((image, index) => (
-                <img 
-                  key={index} 
-                  src={URL.createObjectURL(image)} 
-                  alt={`preview ${index}`} 
-                  className="image-preview"
+      <div className="card">
+        <div className="card-header">
+          <h2 className="card-title">
+            <i className="fas fa-car"></i>
+            Información del Producto
+          </h2>
+        </div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit} className="add-product-form">
+            <div className="grid grid-2">
+              <div className="form-group">
+                <label htmlFor="productName" className="form-label">Nombre del Producto: *</label>
+                <input 
+                  type="text" 
+                  id="productName" 
+                  className="form-control"
+                  value={productName} 
+                  onChange={(e) => setProductName(e.target.value)} 
+                  placeholder="Ej: Sedán Familiar Confortable"
+                  required 
                 />
-              ))}
-            </div>
-          </div>
+              </div>
 
-          <div className="form-actions">
-            <button type="submit" className="submit-product-btn">
-              <i className="fas fa-plus"></i>
-              Guardar Producto
-            </button>
-          </div>
-        </form>
+              <div className="form-group">
+                <label htmlFor="productPrice" className="form-label">Precio: *</label>
+                <input 
+                  type="text" 
+                  id="productPrice" 
+                  className="form-control"
+                  value={productPrice} 
+                  onChange={(e) => setProductPrice(e.target.value)} 
+                  placeholder="Ej: $40/día"
+                  required 
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="productDescription" className="form-label">Descripción: *</label>
+              <textarea 
+                id="productDescription" 
+                className="form-control"
+                value={productDescription} 
+                onChange={(e) => setProductDescription(e.target.value)} 
+                placeholder="Describe las características principales del vehículo..."
+                rows="4"
+                required 
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="productCategory" className="form-label">Categoría: *</label>
+              <select 
+                id="productCategory" 
+                className="form-control"
+                value={selectedCategoryId} 
+                onChange={(e) => setSelectedCategoryId(e.target.value)} 
+                required
+              >
+                <option value="" disabled>Seleccione una categoría</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Características del Vehículo:</label>
+              <div className="grid grid-4" style={{ gap: 'var(--spacing-sm)' }}>
+                {characteristics.map(characteristic => (
+                  <div 
+                    key={characteristic.id} 
+                    className={`card ${selectedCharacteristics.includes(characteristic.id) ? 'bg-primary text-white' : ''}`}
+                    onClick={() => handleCharacteristicToggle(characteristic.id)}
+                    style={{ cursor: 'pointer', padding: 'var(--spacing-sm)', textAlign: 'center' }}
+                  >
+                    <i className={characteristic.icon} style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-xs)' }}></i>
+                    <div style={{ fontSize: 'var(--font-size-sm)' }}>{characteristic.name}</div>
+                    {selectedCharacteristics.includes(characteristic.id) && (
+                      <i className="fas fa-check" style={{ position: 'absolute', top: '5px', right: '5px' }}></i>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginTop: 'var(--spacing-sm)' }}>
+                Selecciona las características que incluye este vehículo. Puedes seleccionar múltiples opciones.
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="productImages" className="form-label">Imágenes del Producto:</label>
+              <input 
+                type="file" 
+                id="productImages" 
+                className="form-control"
+                multiple 
+                accept="image/*"
+                onChange={handleImageChange} 
+              />
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginTop: 'var(--spacing-xs)' }}>
+                Nota: Por el momento se usará una imagen placeholder. La funcionalidad de subida de imágenes se implementará próximamente.
+              </p>
+              {productImages.length > 0 && (
+                <div className="grid grid-4" style={{ marginTop: 'var(--spacing-sm)' }}>
+                  {productImages.map((image, index) => (
+                    <img 
+                      key={index} 
+                      src={URL.createObjectURL(image)} 
+                      alt={`preview ${index}`} 
+                      style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-end">
+              <button type="submit" className="btn btn-success btn-lg">
+                <i className="fas fa-plus"></i>
+                Guardar Producto
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../services/api';
 import NotificationService from '../services/notificationService';
+import MainLayout from './MainLayout';
 import './AdminCategoryManagement.css';
 
 const AdminCategoryManagement = () => {
@@ -96,116 +97,109 @@ const AdminCategoryManagement = () => {
 
   if (loading) {
     return (
-      <div className="admin-category-management">
-        <div className="loading-container">
+      <MainLayout
+        title="Gestión de Categorías"
+        subtitle="Cargando categorías del sistema..."
+        icon="fas fa-tags"
+        containerSize="large"
+      >
+        <div className="loading-state">
           <i className="fas fa-spinner fa-spin"></i>
           <span>Cargando categorías...</span>
         </div>
-      </div>
+      </MainLayout>
     );
   }
 
+  const stats = [
+    { number: categories.length, label: 'Total Categorías' },
+    { number: categories.reduce((total, cat) => total + cat.productCount, 0), label: 'Productos Totales' },
+    { number: categories.filter(cat => cat.productCount === 0).length, label: 'Categorías Vacías' }
+  ];
+
+  const headerActions = (
+    <div className="flex">
+      <Link to="/admin/add-category" className="btn btn-success">
+        <i className="fas fa-plus"></i>
+        Agregar Categoría
+      </Link>
+      <Link to="/administracion" className="btn btn-outline-primary">
+        <i className="fas fa-arrow-left"></i>
+        Volver
+      </Link>
+    </div>
+  );
+
   return (
-    <div className="admin-category-management">
-      <div className="admin-header">
-        <div className="admin-header-content">
-          <h1>Gestión de Categorías</h1>
-          <div className="admin-actions">
-            <Link to="/admin/add-category" className="add-category-btn">
-              <i className="fas fa-plus"></i>
-              Agregar Categoría
-            </Link>
-            <Link to="/administracion" className="back-btn">
-              <i className="fas fa-arrow-left"></i>
-              Volver
-            </Link>
-          </div>
-        </div>
-      </div>
+    <MainLayout
+      title="Gestión de Categorías"
+      subtitle="Organiza y administra las categorías de productos de tu catálogo"
+      icon="fas fa-tags"
+      showStats={true}
+      stats={stats}
+      containerSize="large"
+      headerActions={headerActions}
+    >
 
-      <div className="categories-container">
-        <div className="categories-stats">
-          <div className="stat-card">
-            <i className="fas fa-tags"></i>
-            <div className="stat-info">
-              <span className="stat-number">{categories.length}</span>
-              <span className="stat-label">Total Categorías</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <i className="fas fa-box"></i>
-            <div className="stat-info">
-              <span className="stat-number">
-                {categories.reduce((total, cat) => total + cat.productCount, 0)}
-              </span>
-              <span className="stat-label">Productos Totales</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <i className="fas fa-exclamation-triangle"></i>
-            <div className="stat-info">
-              <span className="stat-number">
-                {categories.filter(cat => cat.productCount === 0).length}
-              </span>
-              <span className="stat-label">Categorías Vacías</span>
-            </div>
-          </div>
-        </div>
-
-        {categories.length === 0 ? (
-          <div className="no-categories">
+      {categories.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
             <i className="fas fa-folder-open"></i>
-            <h3>No hay categorías disponibles</h3>
-            <p>Comienza agregando tu primera categoría</p>
-            <Link to="/admin/add-category" className="add-first-category-btn">
-              <i className="fas fa-plus"></i>
-              Agregar Primera Categoría
-            </Link>
           </div>
-        ) : (
-          <div className="categories-grid">
-            {categories.map((category) => (
-              <div key={category.id} className="category-card">
-                <div className="category-header">
-                  <h3 className="category-name">{category.name}</h3>
-                  <div className="category-actions">
-                    <button 
-                      className="edit-btn"
-                      title="Editar categoría"
-                    >
-                      <i className="fas fa-edit"></i>
-                    </button>
-                    <button 
-                      className="delete-btn"
-                      onClick={() => handleDeleteClick(category)}
-                      title="Eliminar categoría"
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
-                  </div>
+          <h3>No hay categorías disponibles</h3>
+          <p>Comienza agregando tu primera categoría para organizar tu catálogo de productos</p>
+          <Link to="/admin/add-category" className="btn btn-primary">
+            <i className="fas fa-plus"></i>
+            Agregar Primera Categoría
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-3">
+          {categories.map((category) => (
+            <div key={category.id} className="card animate-slide-up">
+              <div className="card-header">
+                <h3 className="card-title">{category.name}</h3>
+                <div className="flex">
+                  <button 
+                    className="btn btn-primary btn-sm"
+                    title="Editar categoría"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                  <button 
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteClick(category)}
+                    title="Eliminar categoría"
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
                 </div>
+              </div>
+              
+              <div className="card-body">
+                <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--spacing-md)' }}>
+                  {category.description}
+                </p>
                 
-                <p className="category-description">{category.description}</p>
-                
-                <div className="category-stats">
-                  <div className="stat-item">
-                    <i className="fas fa-cube"></i>
-                    <span>{category.productCount} productos</span>
+                <div className="flex flex-between">
+                  <div className="flex">
+                    <i className="fas fa-cube" style={{ color: 'var(--primary-color)', marginRight: 'var(--spacing-xs)' }}></i>
+                    <span style={{ fontWeight: '500' }}>{category.productCount} productos</span>
                   </div>
                   {category.productCount === 0 && (
-                    <div className="empty-category-warning">
+                    <div style={{ color: 'var(--warning-color)', fontSize: 'var(--font-size-sm)' }}>
                       <i className="fas fa-exclamation-triangle"></i>
-                      <span>Categoría vacía</span>
+                      <span style={{ marginLeft: 'var(--spacing-xs)' }}>Vacía</span>
                     </div>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
 
-      {/* Modal de confirmación de eliminación */}
+      {/* El modal se mantiene igual por ahora - se puede mejorar después */}
       {showDeleteModal && categoryToDelete && (
         <div className="delete-modal-overlay">
           <div className="delete-modal">
@@ -281,7 +275,7 @@ const AdminCategoryManagement = () => {
           </div>
         </div>
       )}
-    </div>
+    </MainLayout>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import ErrorMessage from './ErrorMessage';
+import MainLayout from './MainLayout';
 import './AdminCharacteristics.css';
 
 const AdminCharacteristics = () => {
@@ -124,34 +125,85 @@ const AdminCharacteristics = () => {
   // Verificar si el usuario actual es administrador
   if (!user?.isAdmin) {
     return (
-      <div className="admin-access-denied">
-        <h2>Acceso Denegado</h2>
-        <p>No tienes permisos para acceder a esta sección.</p>
-      </div>
+      <MainLayout
+        title="Acceso Denegado"
+        subtitle="No tienes permisos para acceder a esta sección"
+        icon="fas fa-lock"
+        containerSize="small"
+      >
+        <div className="error-message">
+          <i className="fas fa-exclamation-triangle"></i>
+          <p>Contacta al administrador si necesitas acceso a esta funcionalidad.</p>
+        </div>
+      </MainLayout>
     );
   }
 
-  return (
-    <div className="admin-characteristics">
-      <div className="admin-header">
-        <h1>Administrar Características</h1>
-        <p>Gestiona las características disponibles para los productos</p>
-      </div>
+  if (loading) {
+    return (
+      <MainLayout
+        title="Administrar Características"
+        subtitle="Cargando características del sistema..."
+        icon="fas fa-cog"
+        containerSize="large"
+      >
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Cargando características...</p>
+        </div>
+      </MainLayout>
+    );
+  }
 
+  // Calcular estadísticas
+  const totalCharacteristics = characteristics.length;
+  const systemCharacteristics = characteristics.filter(c => 
+    popularIcons.some(pi => pi.icon === c.icon)
+  ).length;
+  const customCharacteristics = totalCharacteristics - systemCharacteristics;
+
+  const stats = [
+    {
+      label: 'Total Características',
+      value: totalCharacteristics,
+      icon: 'fas fa-list'
+    },
+    {
+      label: 'Características del Sistema',
+      value: systemCharacteristics,
+      icon: 'fas fa-star'
+    },
+    {
+      label: 'Características Personalizadas',
+      value: customCharacteristics,
+      icon: 'fas fa-user-cog'
+    }
+  ];
+
+  const headerActions = (
+    <button 
+      className="btn btn-primary"
+      onClick={() => setShowForm(true)}
+      disabled={showForm}
+    >
+      <i className="fas fa-plus"></i>
+      Añadir Característica
+    </button>
+  );
+
+  return (
+    <MainLayout
+      title="Administrar Características"
+      subtitle="Gestiona las características disponibles para los productos"
+      icon="fas fa-cog"
+      stats={stats}
+      headerActions={headerActions}
+      containerSize="large"
+    >
       <ErrorMessage message={error} type="error" />
       {successMessage && (
         <ErrorMessage message={successMessage} type="success" />
       )}
-
-      <div className="characteristics-actions">
-        <button 
-          className="btn-primary"
-          onClick={() => setShowForm(true)}
-          disabled={showForm}
-        >
-          + Añadir Nueva Característica
-        </button>
-      </div>
 
       {showForm && (
         <div className="characteristic-form-overlay">
@@ -163,10 +215,11 @@ const AdminCharacteristics = () => {
             
             <form onSubmit={handleSubmit} className="characteristic-form">
               <div className="form-group">
-                <label htmlFor="name">Nombre de la Característica:</label>
+                <label htmlFor="name" className="form-label">Nombre de la Característica:</label>
                 <input
                   type="text"
                   id="name"
+                  className="form-control"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Ej: Aire Acondicionado"
@@ -175,7 +228,7 @@ const AdminCharacteristics = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="icon">Ícono Seleccionado:</label>
+                <label htmlFor="icon" className="form-label">Ícono Seleccionado:</label>
                 <div className="selected-icon">
                   {formData.icon && (
                     <>
@@ -188,7 +241,7 @@ const AdminCharacteristics = () => {
               </div>
 
               <div className="form-group">
-                <label>Seleccionar Ícono:</label>
+                <label className="form-label">Seleccionar Ícono:</label>
                 <div className="icon-grid">
                   {popularIcons.map((iconData, index) => (
                     <div 
@@ -204,10 +257,11 @@ const AdminCharacteristics = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="customIcon">O ingresar ícono personalizado:</label>
+                <label htmlFor="customIcon" className="form-label">O ingresar ícono personalizado:</label>
                 <input
                   type="text"
                   id="customIcon"
+                  className="form-control"
                   value={formData.icon}
                   onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                   placeholder="Ej: fas fa-car"
@@ -215,10 +269,10 @@ const AdminCharacteristics = () => {
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={handleCancelForm}>
+                <button type="button" className="btn btn-outline" onClick={handleCancelForm}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn-primary">
+                <button type="submit" className="btn btn-primary">
                   {editingCharacteristic ? 'Actualizar' : 'Crear'} Característica
                 </button>
               </div>
@@ -227,80 +281,83 @@ const AdminCharacteristics = () => {
         </div>
       )}
 
-      {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Cargando características...</p>
+      {characteristics.length === 0 ? (
+        <div className="empty-state">
+          <i className="fas fa-list-alt"></i>
+          <h3>No hay características registradas</h3>
+          <p>Comienza creando la primera característica para tus productos</p>
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            <i className="fas fa-plus"></i>
+            Crear Primera Característica
+          </button>
         </div>
       ) : (
-        <div className="characteristics-container">
-          <div className="characteristics-stats">
-            <div className="stat-card">
-              <h3>Total Características</h3>
-              <span className="stat-number">{characteristics.length}</span>
-            </div>
+        <div className="card">
+          <div className="card-header">
+            <h3>Características del Sistema</h3>
+            <p>Gestiona todas las características disponibles</p>
           </div>
-
-          <div className="characteristics-table-container">
-            <table className="characteristics-table">
-              <thead>
-                <tr>
-                  <th>Ícono</th>
-                  <th>Nombre</th>
-                  <th>Clase del Ícono</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {characteristics.map(characteristic => (
-                  <tr key={characteristic.id}>
-                    <td>
-                      <div className="characteristic-icon">
-                        <i className={characteristic.icon}></i>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="characteristic-name">{characteristic.name}</span>
-                    </td>
-                    <td>
-                      <span className="characteristic-icon-class">{characteristic.icon}</span>
-                    </td>
-                    <td>
-                      <div className="actions-container">
-                        <button
-                          className="btn-edit"
-                          onClick={() => handleEdit(characteristic)}
-                          title="Editar característica"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => handleDelete(characteristic.id)}
-                          title="Eliminar característica"
-                        >
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      </div>
-                    </td>
+          <div className="card-body">
+            <div className="table-container">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Ícono</th>
+                    <th>Nombre</th>
+                    <th>Clase del Ícono</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {characteristics.length === 0 && (
-            <div className="no-characteristics">
-              <i className="fas fa-list-alt"></i>
-              <p>No hay características registradas en el sistema.</p>
-              <button className="btn-primary" onClick={() => setShowForm(true)}>
-                Crear Primera Característica
-              </button>
+                </thead>
+                <tbody>
+                  {characteristics.map((characteristic, index) => {
+                    const isSystemIcon = popularIcons.some(pi => pi.icon === characteristic.icon);
+                    return (
+                      <tr key={characteristic.id} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+                        <td>
+                          <div className="characteristic-icon">
+                            <i className={characteristic.icon}></i>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="characteristic-name">{characteristic.name}</span>
+                        </td>
+                        <td>
+                          <code className="icon-class">{characteristic.icon}</code>
+                        </td>
+                        <td>
+                          <span className={`badge ${isSystemIcon ? 'badge-success' : 'badge-info'}`}>
+                            {isSystemIcon ? 'Sistema' : 'Personalizada'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="actions-container">
+                            <button
+                              className="btn btn-sm btn-outline"
+                              onClick={() => handleEdit(characteristic)}
+                              title="Editar característica"
+                            >
+                              <i className="fas fa-edit"></i>
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDelete(characteristic.id)}
+                              title="Eliminar característica"
+                            >
+                              <i className="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
         </div>
       )}
-    </div>
+    </MainLayout>
   );
 };
 

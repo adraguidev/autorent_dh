@@ -1,6 +1,7 @@
 // src/components/AdminPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import MainLayout from './MainLayout';
 import './AdminPage.css';
 
 const AdminPage = () => {
@@ -18,115 +19,134 @@ const AdminPage = () => {
 
   if (isMobileView) {
     return (
-      <div className="admin-page-container mobile-message-container">
-        <p className="mobile-unavailable-message">
-          El panel de administración no está disponible para dispositivos móviles.
-        </p>
-      </div>
+      <MainLayout
+        title="Panel de Administración"
+        subtitle="Acceso restringido"
+        icon="fas fa-mobile-alt"
+        containerSize="medium"
+      >
+        <div className="card text-center">
+          <div className="card-body">
+            <i className="fas fa-mobile-alt" style={{ fontSize: '4rem', color: 'var(--warning-color)', marginBottom: 'var(--spacing-lg)' }}></i>
+            <h3>Dispositivo no compatible</h3>
+            <p>El panel de administración no está disponible para dispositivos móviles. Por favor, accede desde una computadora de escritorio o laptop.</p>
+          </div>
+        </div>
+      </MainLayout>
     );
   }
 
+  const stats = [
+    { number: '15', label: 'Productos Activos' },
+    { number: '15', label: 'Categorías' },
+    { number: '--', label: 'Usuarios Registrados' }
+  ];
+
   return (
-    <div className="admin-page-container">
-      <header className="admin-page-header">
-        <h1>Panel de Administración</h1>
-      </header>
-      <nav className="admin-menu">
-        <ul className="admin-menu-list">
-          <li className="admin-menu-item">
-            <Link to="/admin/add-product" className="admin-menu-link">
-              <i className="fas fa-plus-circle"></i>
-              Agregar Nuevo Producto
-            </Link>
-          </li>
-          <li className="admin-menu-item">
-            <Link to="/administracion/productos" className="admin-menu-link">
-              <i className="fas fa-list"></i>
-              Lista de Productos
-            </Link>
-          </li>
-          <li className="admin-menu-item">
-            <Link to="/admin/categories" className="admin-menu-link">
-              <i className="fas fa-tags"></i>
-              Gestionar Categorías
-            </Link>
-          </li>
-          <li className="admin-menu-item">
-            <Link to="/admin/add-category" className="admin-menu-link">
-              <i className="fas fa-plus"></i>
-              Agregar Categoría
-            </Link>
-          </li>
-          <li className="admin-menu-item">
-            <Link to="/admin/characteristics" className="admin-menu-link">
-              <i className="fas fa-cogs"></i>
-              Gestionar Características
-            </Link>
-          </li>
-          <li className="admin-menu-item">
-            <Link to="/admin/users" className="admin-menu-link">
-              <i className="fas fa-users"></i>
-              Gestionar Usuarios
-            </Link>
-          </li>
-          {/* Aquí se podrán añadir más enlaces a futuras funciones de administración */}
-          {/* <li className="admin-menu-item">
-            <Link to="/administracion/ver-reservas" className="admin-menu-link">
-              <i className="fas fa-calendar-check"></i>
-              Ver Reservas
-            </Link>
-          </li> */}
-        </ul>
-      </nav>
-      <main className="admin-content-area">
-        <div className="admin-welcome">
-          <h2>Bienvenido al Panel de Administración</h2>
-          <p>Desde aquí puedes gestionar todos los aspectos de tu aplicación de alquiler de vehículos.</p>
-          
-          <div className="admin-stats">
-            <div className="stat-card">
-              <i className="fas fa-car"></i>
-              <div className="stat-info">
-                <span className="stat-number">15</span>
-                <span className="stat-label">Productos Activos</span>
-              </div>
-            </div>
-            <div className="stat-card">
-              <i className="fas fa-tags"></i>
-              <div className="stat-info">
-                <span className="stat-number">15</span>
-                <span className="stat-label">Categorías</span>
-              </div>
-            </div>
-            <div className="stat-card">
-              <i className="fas fa-users"></i>
-              <div className="stat-info">
-                <span className="stat-number">--</span>
-                <span className="stat-label">Usuarios Registrados</span>
-              </div>
-            </div>
+    <MainLayout
+      title="Panel de Administración"
+      subtitle="Gestiona todos los aspectos de tu aplicación de alquiler de vehículos"
+      icon="fas fa-cogs"
+      showStats={true}
+      stats={stats}
+      containerSize="large"
+    >
+      <div className="grid grid-2">
+        {/* Menú de navegación */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">
+              <i className="fas fa-list-ul"></i>
+              Menú de Administración
+            </h2>
           </div>
-          
-          <div className="quick-actions">
-            <h3>Acciones Rápidas</h3>
-            <div className="quick-actions-grid">
-              <Link to="/admin/add-product" className="quick-action-btn primary">
+          <div className="card-body">
+            <div className="grid">
+              <Link to="/admin/add-product" className="btn btn-primary">
                 <i className="fas fa-plus-circle"></i>
-                <span>Nuevo Producto</span>
+                Agregar Nuevo Producto
               </Link>
-              <Link to="/admin/categories" className="quick-action-btn secondary">
-                <i className="fas fa-tags"></i>
-                <span>Gestionar Categorías</span>
-              </Link>
-              <Link to="/administracion/productos" className="quick-action-btn secondary">
+              <Link to="/administracion/productos" className="btn btn-outline-primary">
                 <i className="fas fa-list"></i>
-                <span>Ver Productos</span>
+                Lista de Productos
+              </Link>
+              <Link to="/admin/categories" className="btn btn-outline-primary">
+                <i className="fas fa-tags"></i>
+                Gestionar Categorías
+              </Link>
+              <Link to="/admin/add-category" className="btn btn-outline-primary">
+                <i className="fas fa-plus"></i>
+                Agregar Categoría
+              </Link>
+              <Link to="/admin/characteristics" className="btn btn-outline-primary">
+                <i className="fas fa-cogs"></i>
+                Gestionar Características
+              </Link>
+              <Link to="/admin/users" className="btn btn-outline-primary">
+                <i className="fas fa-users"></i>
+                Gestionar Usuarios
               </Link>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+
+        {/* Acciones rápidas */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">
+              <i className="fas fa-bolt"></i>
+              Acciones Rápidas
+            </h2>
+          </div>
+          <div className="card-body">
+            <p className="mb-3">Accede rápidamente a las funciones más utilizadas del panel de administración.</p>
+            <div className="grid grid-3">
+              <Link to="/admin/add-product" className="btn btn-success btn-lg">
+                <i className="fas fa-plus-circle"></i>
+                Nuevo Producto
+              </Link>
+              <Link to="/admin/categories" className="btn btn-outline">
+                <i className="fas fa-tags"></i>
+                Gestionar Categorías
+              </Link>
+              <Link to="/administracion/productos" className="btn btn-outline">
+                <i className="fas fa-list"></i>
+                Ver Productos
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Información adicional */}
+      <div className="card mt-4">
+        <div className="card-header">
+          <h2 className="card-title">
+            <i className="fas fa-info-circle"></i>
+            Información del Sistema
+          </h2>
+        </div>
+        <div className="card-body">
+          <div className="grid grid-3">
+            <div className="text-center">
+              <i className="fas fa-car" style={{ fontSize: '2rem', color: 'var(--primary-color)', marginBottom: 'var(--spacing-sm)' }}></i>
+              <h4>Productos</h4>
+              <p>Gestiona tu flota de vehículos, agregar nuevos productos y editar los existentes.</p>
+            </div>
+            <div className="text-center">
+              <i className="fas fa-users" style={{ fontSize: '2rem', color: 'var(--accent-color)', marginBottom: 'var(--spacing-sm)' }}></i>
+              <h4>Usuarios</h4>
+              <p>Administra los usuarios registrados en tu plataforma de alquiler.</p>
+            </div>
+            <div className="text-center">
+              <i className="fas fa-chart-line" style={{ fontSize: '2rem', color: 'var(--success-color)', marginBottom: 'var(--spacing-sm)' }}></i>
+              <h4>Reportes</h4>
+              <p>Próximamente: análisis detallados y reportes de tu negocio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 

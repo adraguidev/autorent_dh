@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { parseDateLocal } from '../utils/dateUtils';
+import MainLayout from './MainLayout';
 import './ReservationHistory.css';
 
 const ReservationHistory = () => {
@@ -162,101 +163,94 @@ const ReservationHistory = () => {
 
   if (loading) {
     return (
-      <div className="reservation-history-container">
+      <MainLayout>
         <div className="loading-state">
           <i className="fas fa-spinner fa-spin"></i>
           <span>Cargando historial de reservas...</span>
         </div>
-      </div>
+      </MainLayout>
     );
   }
 
   const filteredReservations = getFilteredAndSortedReservations();
 
+  const stats = [
+    { number: reservations.length, label: 'Total Reservas' },
+    { number: reservations.filter(r => r.status === 'CONFIRMED').length, label: 'Activas' },
+    { number: reservations.filter(r => r.status === 'COMPLETED').length, label: 'Completadas' }
+  ];
+
   return (
-    <div className="reservation-history-container">
-      <div className="history-header">
-        <div className="header-content">
-          <h1>
-            <i className="fas fa-history"></i>
-            Mi Historial de Reservas
-          </h1>
-          <p className="header-subtitle">
-            Aquí puedes ver todas tus reservas pasadas y futuras
-          </p>
-        </div>
-        
-        <div className="header-stats">
-          <div className="stat-item">
-            <span className="stat-number">{reservations.length}</span>
-            <span className="stat-label">Total Reservas</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">
-              {reservations.filter(r => r.status === 'CONFIRMED').length}
-            </span>
-            <span className="stat-label">Activas</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">
-              {reservations.filter(r => r.status === 'COMPLETED').length}
-            </span>
-            <span className="stat-label">Completadas</span>
-          </div>
-        </div>
-      </div>
+    <MainLayout
+      title="Mi Historial de Reservas"
+      subtitle="Aquí puedes ver todas tus reservas pasadas y futuras"
+      icon="fas fa-history"
+      showStats={true}
+      stats={stats}
+      containerSize="large"
+    >
 
       {error && (
         <div className="error-message">
           <i className="fas fa-exclamation-triangle"></i>
           {error}
-          <button onClick={loadReservations} className="retry-btn">
+          <button onClick={loadReservations} className="btn btn-danger btn-sm">
             <i className="fas fa-redo"></i>
             Reintentar
           </button>
         </div>
       )}
 
-      <div className="filters-section">
-        <div className="filter-group">
-          <label>Filtrar por estado:</label>
-          <select 
-            value={filter} 
-            onChange={(e) => setFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">Todas las reservas</option>
-            <option value="pending">Pendientes</option>
-            <option value="confirmed">Confirmadas</option>
-            <option value="active">Activas</option>
-            <option value="completed">Completadas</option>
-            <option value="cancelled">Canceladas</option>
-          </select>
+      <div className="card">
+        <div className="card-header">
+          <h2 className="card-title">
+            <i className="fas fa-filter"></i>
+            Filtros y Ordenación
+          </h2>
         </div>
+        <div className="card-body">
+          <div className="flex flex-wrap">
+            <div className="form-group">
+              <label className="form-label">Filtrar por estado:</label>
+              <select 
+                value={filter} 
+                onChange={(e) => setFilter(e.target.value)}
+                className="form-control"
+              >
+                <option value="all">Todas las reservas</option>
+                <option value="pending">Pendientes</option>
+                <option value="confirmed">Confirmadas</option>
+                <option value="active">Activas</option>
+                <option value="completed">Completadas</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+            </div>
 
-        <div className="filter-group">
-          <label>Ordenar por:</label>
-          <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-            className="filter-select"
-          >
-            <option value="newest">Más recientes</option>
-            <option value="oldest">Más antiguas</option>
-            <option value="startDate">Fecha de inicio</option>
-          </select>
-        </div>
+            <div className="form-group">
+              <label className="form-label">Ordenar por:</label>
+              <select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                className="form-control"
+              >
+                <option value="newest">Más recientes</option>
+                <option value="oldest">Más antiguas</option>
+                <option value="startDate">Fecha de inicio</option>
+              </select>
+            </div>
 
-        <div className="filter-group">
-          <label>Ordenar:</label>
-          <select 
-            value={sortOrder} 
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="filter-select"
-          >
-            <option value="asc">Ascendente</option>
-            <option value="desc">Descendente</option>
-          </select>
+            <div className="form-group">
+              <label className="form-label">Orden:</label>
+              <select 
+                value={sortOrder} 
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="form-control"
+              >
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -272,15 +266,15 @@ const ReservationHistory = () => {
               : `No tienes reservas con estado "${filter}".`
             }
           </p>
-          <Link to="/" className="explore-btn">
+          <Link to="/" className="btn btn-primary">
             <i className="fas fa-search"></i>
             Explorar Productos
           </Link>
         </div>
       ) : (
-        <div className="reservations-list">
+        <div className="grid">
           {filteredReservations.map((reservation) => (
-            <div key={reservation.id} className="reservation-card">
+            <div key={reservation.id} className="card animate-slide-up">
               <div className="reservation-header">
                 <div className="reservation-title">
                   <h3>{reservation.productName}</h3>
@@ -343,7 +337,7 @@ const ReservationHistory = () => {
                 <div className="reservation-actions">
                   <Link 
                     to={`/product/${reservation.productId}`}
-                    className="action-btn view-product-btn"
+                    className="btn btn-primary btn-block"
                   >
                     <i className="fas fa-eye"></i>
                     Ver Producto
@@ -351,7 +345,7 @@ const ReservationHistory = () => {
                   {canCancelReservation(reservation) && (
                     <button
                       onClick={() => handleCancelReservation(reservation.id)}
-                      className="action-btn cancel-btn"
+                      className="btn btn-danger btn-block"
                     >
                       <i className="fas fa-times"></i>
                       Cancelar
@@ -363,7 +357,7 @@ const ReservationHistory = () => {
           ))}
         </div>
       )}
-    </div>
+    </MainLayout>
   );
 };
 

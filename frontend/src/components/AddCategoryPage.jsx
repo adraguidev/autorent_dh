@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import NotificationService from '../services/notificationService';
+import MainLayout from './MainLayout';
 import './AddCategoryPage.css';
 
 const AddCategoryPage = () => {
@@ -82,129 +83,145 @@ const AddCategoryPage = () => {
   };
 
   return (
-    <div className="add-category-page">
-      <div className="add-category-container">
-        <div className="add-category-header">
-          <h1>Agregar Nueva Categoría</h1>
-          <p>Complete la información para crear una nueva categoría de vehículos</p>
+    <MainLayout
+      title="Agregar Nueva Categoría"
+      subtitle="Complete la información para crear una nueva categoría de vehículos"
+      icon="fas fa-plus-circle"
+      containerSize="medium"
+    >
+      {error && (
+        <div className="error-message">
+          <i className="fas fa-exclamation-circle"></i>
+          {error}
         </div>
+      )}
 
-        <form onSubmit={handleSubmit} className="add-category-form">
-          {error && (
-            <div className="error-message">
-              <i className="fas fa-exclamation-circle"></i>
-              {error}
+      {success && (
+        <div className="card" style={{ background: '#d1edff', borderColor: '#28a745', color: '#155724', marginBottom: 'var(--spacing-lg)' }}>
+          <div className="card-body">
+            <i className="fas fa-check-circle" style={{ color: '#28a745', marginRight: 'var(--spacing-sm)' }}></i>
+            {success}
+          </div>
+        </div>
+      )}
+
+      <div className="card">
+        <div className="card-header">
+          <h2 className="card-title">
+            <i className="fas fa-tag"></i>
+            Información de la Categoría
+          </h2>
+        </div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name" className="form-label">Nombre de la Categoría: *</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="form-control"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Ej: Compacto, SUV, Deportivo..."
+                required
+                maxLength="100"
+              />
             </div>
-          )}
 
-          {success && (
-            <div className="success-message">
-              <i className="fas fa-check-circle"></i>
-              {success}
+            <div className="form-group">
+              <label htmlFor="description" className="form-label">Descripción: *</label>
+              <textarea
+                id="description"
+                name="description"
+                className="form-control"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Describe las características principales de esta categoría de vehículos..."
+                required
+                maxLength="1000"
+                rows="4"
+              />
+              <small style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginTop: 'var(--spacing-xs)' }}>
+                {formData.description.length}/1000 caracteres
+              </small>
             </div>
-          )}
 
-          <div className="form-group">
-            <label htmlFor="name">Nombre de la Categoría: *</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Ej: Compacto, SUV, Deportivo..."
-              required
-              maxLength="100"
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="image" className="form-label">URL de la Imagen: *</label>
+              <input
+                type="url"
+                id="image"
+                name="image"
+                className="form-control"
+                value={formData.image}
+                onChange={handleInputChange}
+                placeholder="https://ejemplo.com/imagen-categoria.jpg"
+                required
+              />
+              <small style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginTop: 'var(--spacing-xs)' }}>
+                Proporciona una URL válida para la imagen representativa de la categoría
+              </small>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="description">Descripción: *</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Describe las características principales de esta categoría de vehículos..."
-              required
-              maxLength="1000"
-              rows="4"
-            />
-            <small className="char-count">
-              {formData.description.length}/1000 caracteres
-            </small>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="image">URL de la Imagen: *</label>
-            <input
-              type="url"
-              id="image"
-              name="image"
-              value={formData.image}
-              onChange={handleInputChange}
-              placeholder="https://ejemplo.com/imagen-categoria.jpg"
-              required
-            />
-            <small className="help-text">
-              Proporciona una URL válida para la imagen representativa de la categoría
-            </small>
-          </div>
-
-          {formData.image && (
-            <div className="image-preview">
-              <label>Vista previa de la imagen:</label>
-              <div className="preview-container">
-                <img 
-                  src={formData.image} 
-                  alt="Vista previa" 
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'block';
-                  }}
-                  onLoad={(e) => {
-                    e.target.style.display = 'block';
-                    e.target.nextSibling.style.display = 'none';
-                  }}
-                />
-                <div className="preview-error" style={{display: 'none'}}>
-                  <i className="fas fa-image"></i>
-                  <span>No se pudo cargar la imagen</span>
+            {formData.image && (
+              <div className="form-group">
+                <label className="form-label">Vista previa de la imagen:</label>
+                <div style={{ border: '2px dashed var(--border-color)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-md)', textAlign: 'center', background: 'var(--bg-primary)' }}>
+                  <img 
+                    src={formData.image} 
+                    alt="Vista previa" 
+                    style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: 'var(--radius-md)' }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                    onLoad={(e) => {
+                      e.target.style.display = 'block';
+                      e.target.nextSibling.style.display = 'none';
+                    }}
+                  />
+                  <div style={{ display: 'none', color: 'var(--danger-color)' }}>
+                    <i className="fas fa-image" style={{ fontSize: '2rem', marginBottom: 'var(--spacing-sm)' }}></i>
+                    <br />
+                    <span>No se pudo cargar la imagen</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div className="form-actions">
-            <button 
-              type="button" 
-              onClick={handleCancel}
-              className="cancel-btn"
-              disabled={loading}
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              className="submit-btn"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <i className="fas fa-spinner fa-spin"></i>
-                  Creando...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-plus"></i>
-                  Crear Categoría
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+            <div className="flex flex-end" style={{ gap: 'var(--spacing-sm)' }}>
+              <button 
+                type="button" 
+                onClick={handleCancel}
+                className="btn btn-outline"
+                disabled={loading}
+              >
+                <i className="fas fa-times"></i>
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                className="btn btn-success"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    Creando...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-plus"></i>
+                    Crear Categoría
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 
